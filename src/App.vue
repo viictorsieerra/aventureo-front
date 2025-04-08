@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import Header from './components/Header.vue';
 import TipoAlojamiento from './components/TipoAlojamiento.vue';
- import DestinosPopulares from './components/DestinosPopulares.vue';
+import DestinosPopulares from './components/DestinosPopulares.vue';
+import Footer from './components/Footer.vue';
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import TipoAlojamiento from './components/TipoAlojamiento.vue';
   </div>
   <TipoAlojamiento/>
   <DestinosPopulares/>
+  <Footer/>
 </template>
 
 <style>

@@ -28,6 +28,7 @@ const destinos: Destino[] = [
     nombre: 'París',
     imagen: 'https://www.eldigitaldecanarias.net/images/aaa-2018/June/16/Pedido_1159.jpg',
     ruta: '/destinos/paris',
+    
   },
   {
     nombre: 'Tokio',
@@ -45,6 +46,9 @@ const destinos: Destino[] = [
     ruta: '/destinos/barcelona',
   },
 ];
+import { ref } from 'vue'
+
+  const rating = ref(3)
   </script>
   
   <style scoped>
