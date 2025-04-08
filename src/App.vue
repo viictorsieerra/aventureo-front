@@ -1,16 +1,16 @@
 <script setup lang="ts">
-
-
 import Header from './components/Header.vue';
-import Footer from './components/Footer.vue';
+import TipoAlojamiento from './components/TipoAlojamiento.vue';
+ import DestinosPopulares from './components/DestinosPopulares.vue';
 </script>
 
 <template>
   <div class="app">
-    <Header />
-    <RouterView />
-    <Footer />
+   <Header/>
+   
   </div>
+  <TipoAlojamiento/>
+  <DestinosPopulares/>
 </template>
 
 <style>
