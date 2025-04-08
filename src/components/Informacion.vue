@@ -3,11 +3,11 @@
       <h2 class="title">Disfruta de tu plataforma favorita para tener el mejor viaje!</h2>
       
       <div class="steps-container">
-        <div class="step">
-          <div class="step-number">🌎</div>
-          <p class="step-description">Compra y ahorra gracias a nuestras súper ofertas</p>
+        <div class="step"@click="scrollToSection('ofertas')">
+            <div class="step-number">🌎</div>
+            <p class="step-description">Compra y ahorra gracias a nuestras súper ofertas</p>
         </div>
-        <div class="step">
+        <div class="step"@click="scrollToSection('vuelos')">
           <div class="step-number">✈️🚆</div>
           <p class="step-description">Elige la forma que mas se ajuste a tus necesidades para viajar</p>
         </div>
@@ -22,7 +22,17 @@
 </template>
   
   <script>
-  export default {};
+  export default {
+  methods: {
+    scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    },
+  },
+};
+  
   </script>
   
   <style scoped lang="scss">

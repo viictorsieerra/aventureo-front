@@ -5,12 +5,12 @@
         <h1 class="logo">Aventureo</h1>
     
         <nav class="nav">
-          <button class="nav-item">Alojamiento</button>
-          <button class="nav-item">Vuelos</button>
-          <button class="nav-item">Vuelo + hotel</button>
-          <button class="nav-item">Atracciones</button>
-          <button class="nav-item">Trenes</button>
-        </nav>
+  <button class="nav-item">Alojamiento</button>
+  <button class="nav-item" id="vuelos">Vuelos</button>
+  <button class="nav-item">Vuelo + hotel</button>
+  <button class="nav-item">Atracciones</button>
+  <button class="nav-item">Trenes</button>
+</nav>
     
         <div class="actions">
           <button class="login-button">Iniciar sesión</button>
