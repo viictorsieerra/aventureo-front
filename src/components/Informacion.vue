@@ -15,8 +15,32 @@
           <div class="step-number">💰</div>
           <p class="step-description">Realiza el pago y listo! Disfruta del viaje!</p>
         </div>
-        
+        <h2 class="subtitle"> Tus vacaciones empiezan aquí</h2>
       </div>
+
+
+      <div class="client-types">
+      <div class="client-type">
+        <div class="icon">💎</div>
+        <p class="client-description">Te ofrecemos vacaciones por todo el mundo, mostrándote cada rincón y sus secretos</p>
+      </div>
+      <div class="client-type">
+        <div class="icon">🏠</div>
+        <p class="client-description">Promociones y ofertas seleccionadas para ti. ¡Tenemos los mejores chollos!</p>
+      </div>
+      <div class="client-type">
+        <div class="icon">🌍</div>
+        <p class="client-description">Reserva tu viaje de forma rápida y sencilla desde cualquier dispositivo</p>
+      </div>
+      <div class="client-type">
+        <div class="icon">🌍</div>
+        <p class="client-description">Asesores especializados te ayudarán a elegir y planificar tus vacaciones para tu disfrute</p>
+      </div>
+      <div class="client-type">
+        <div class="icon">🌍</div>
+        <p class="client-description">Viaja tranquilo: te ofrecemos gratis asistencia 24 horas en destino los 365 días del año</p>
+      </div>
+    </div>
     </div>
     
 </template>
