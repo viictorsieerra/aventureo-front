@@ -3,6 +3,7 @@ import Header from './components/Header.vue';
 import TipoAlojamiento from './components/TipoAlojamiento.vue';
 import DestinosPopulares from './components/DestinosPopulares.vue';
 import Footer from './components/Footer.vue';
+import Informacion from './components/Informacion.vue';
 </script>
 
 <template>
@@ -11,7 +12,9 @@ import Footer from './components/Footer.vue';
    
   </div>
   <TipoAlojamiento/>
+  <Informacion/>
   <DestinosPopulares/>
+
   <Footer/>
 </template>
 

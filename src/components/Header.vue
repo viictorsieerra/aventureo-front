@@ -9,6 +9,7 @@
           <button class="nav-item">Vuelos</button>
           <button class="nav-item">Vuelo + hotel</button>
           <button class="nav-item">Atracciones</button>
+          <button class="nav-item">Trenes</button>
         </nav>
     
         <div class="actions">
@@ -47,6 +48,7 @@
             </div>
         </div>
     </header>  
+    
 </template>
   
 <script setup lang="ts">
