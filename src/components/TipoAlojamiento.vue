@@ -1,10 +1,10 @@
 <template>
     <section class="alojamiento-section">
       <h2 class="section-title">Busca por tipo de alojamiento</h2>
-      <div class="alojamiento-grid">
-        <div 
-          v-for="tipo in tiposAlojamiento" 
-          :key="tipo.nombre" 
+      <div class="alojamiento-carousel">
+        <div
+          v-for="tipo in tiposAlojamiento"
+          :key="tipo.nombre"
           class="alojamiento-card"
         >
           <img :src="tipo.imagen" :alt="tipo.nombre" class="alojamiento-img" />
@@ -37,15 +37,27 @@
       nombre: 'Chalets',
       imagen: 'https://propertynational.com/wp-content/uploads/2021/04/chalet.png',
     },
+    {
+      nombre: 'Hostales',
+      imagen: 'https://www.hostalaliste.net/fotos/habitaciones/303/IMG_20240725_113606.jpg',
+    },
+    {
+      nombre: 'Cabañas',
+      imagen: 'https://media.revistaad.es/photos/675333fcdcb35fca26b2c679/4:3/w_1600%2Cc_limit/5ebdf805-e717-4e3d-9c3a-fdba1234.png',
+    },
+    {
+      nombre: 'Albergues',
+      imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYtk1DcG2Ggk0wWlA3xSh1vlenV7GIdQBygw&s',
+    },
   ];
   </script>
   
   <style scoped>
   .alojamiento-section {
-    padding: 32px 50px;
+    padding: 32px 16px;
     background-color: #f5f5f5;
     text-align: center;
-    margin-top: 10%;
+    margin-top: 64px;
   }
   
   .section-title {
@@ -53,13 +65,19 @@
     margin-bottom: 24px;
   }
   
-  .alojamiento-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+  .alojamiento-carousel {
+    display: flex;
+    overflow-x: auto;
     gap: 16px;
+    padding-bottom: 16px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
   }
   
   .alojamiento-card {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    width: 220px;
     background: white;
     border-radius: 12px;
     overflow: hidden;
@@ -68,32 +86,28 @@
   }
   
   .alojamiento-card:hover {
-    transform: scale(1.02);
+    transform: scale(1.03);
   }
   
   .alojamiento-img {
     width: 100%;
-    height: 180px;
+    height: 150px;
     object-fit: cover;
   }
   
   .alojamiento-nombre {
     padding: 12px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
   }
   
-  
-  @media (min-width: 640px) {
-    .alojamiento-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+
+  .alojamiento-carousel::-webkit-scrollbar {
+    display: none;
   }
-  
-  @media (min-width: 1024px) {
-    .alojamiento-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
+  .alojamiento-carousel {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   </style>
   
