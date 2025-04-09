@@ -1,48 +1,62 @@
 <template>
-    <div class="container mx-auto text-center p-8">
-      <h2 class="title">Disfruta de tu plataforma favorita para tener el mejor viaje!</h2>
-      
-      <div class="steps-container">
-        <div class="step"@click="scrollToSection('ofertas')">
-            <div class="step-number">🌎</div>
-            <p class="step-description">Compra y ahorra gracias a nuestras súper ofertas</p>
-        </div>
-        <div class="step"@click="scrollToSection('vuelos')">
-          <div class="step-number">✈️🚆</div>
-          <p class="step-description">Elige la forma que mas se ajuste a tus necesidades para viajar</p>
-        </div>
-        <div class="step">
-          <div class="step-number">💰</div>
-          <p class="step-description">Realiza el pago y listo! Disfruta del viaje!</p>
-        </div>
-        <h2 class="subtitle"> Tus vacaciones empiezan aquí</h2>
+  <div class="container mx-auto text-center p-8">
+    <h2 class="title">Disfruta de tu plataforma favorita para tener el mejor viaje!</h2>
+
+    <div class="steps-container">
+      <div class="step" @click="scrollToSection('ofertas')">
+        <div class="step-number">🌎</div>
+        <p class="step-description">Compra y ahorra gracias a nuestras súper ofertas</p>
       </div>
+      <div class="step" @click="scrollToSection('vuelos')">
+        <div class="step-number">✈️🚆</div>
+        <p class="step-description">Elige la forma que mas se ajuste a tus necesidades para viajar</p>
+      </div>
+      <div class="step">
+        <div class="step-number">💰</div>
+        <p class="step-description">Realiza el pago y listo! Disfruta del viaje!</p>
+      </div>
+    </div>
 
-
-      <div class="client-types">
+    <h2 class="subtitle">Tus vacaciones empiezan aquí</h2>
+    <div class="client-types">
       <div class="client-type">
-        <div class="icon">💎</div>
+        <div class="icon">🏖️</div>
+        <p class="client-description">Encuentra el destino perfecto para tus vacaciones soñadas</p>
+      </div>
+      <div class="client-type">
+        <div class="icon">🏨</div>
+        <p class="client-description">Reserva tu hotel y disfruta de una experiencia única</p>
+      </div>
+      <div class="client-type">
+        <div class="icon">🍽️</div>
+        <p class="client-description">Disfruta de la mejor gastronomía local en cada destino</p>
+      </div>
+      <div class="client-type">
+        <div class="icon">🌏</div>
         <p class="client-description">Te ofrecemos vacaciones por todo el mundo, mostrándote cada rincón y sus secretos</p>
       </div>
       <div class="client-type">
-        <div class="icon">🏠</div>
+        <div class="icon">💲</div>
         <p class="client-description">Promociones y ofertas seleccionadas para ti. ¡Tenemos los mejores chollos!</p>
       </div>
       <div class="client-type">
-        <div class="icon">🌍</div>
+        <div class="icon">📱</div>
         <p class="client-description">Reserva tu viaje de forma rápida y sencilla desde cualquier dispositivo</p>
       </div>
       <div class="client-type">
-        <div class="icon">🌍</div>
+        <div class="icon">🤵</div>
         <p class="client-description">Asesores especializados te ayudarán a elegir y planificar tus vacaciones para tu disfrute</p>
       </div>
       <div class="client-type">
-        <div class="icon">🌍</div>
+        <div class="icon">📞</div>
         <p class="client-description">Viaja tranquilo: te ofrecemos gratis asistencia 24 horas en destino los 365 días del año</p>
       </div>
+      <div class="client-type">
+        <div class="icon">🛡️</div>
+        <p class="client-description">Te ofrecemos la mejor protección para que viajes seguro</p>
     </div>
     </div>
-    
+  </div>
 </template>
   
   <script>
@@ -137,43 +151,63 @@
   }
   
   .subtitle {
-    @include responsive-font-size(1.5rem);
-    margin-top: 3rem;
-    font-weight: bold;
-    color: $secondary-color;
+  text-align: center;
+  margin-bottom: 2rem; 
+  font-size: 1.5rem; 
+  font-weight: bold;
+  color: $secondary-color;
+
+  @media (min-width: 1024px) {
+    font-size: 2.5rem; 
   }
+}
   
-  .client-types {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-  
-    @media (min-width: 768px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
+.client-types {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-items: center; 
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); 
   }
-  
-  .client-type {
-    text-align: center;
-    padding: 1rem;
-    border: 1px solid $border-color;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    background-color: $background-color;
-  
-    @media (min-width: 768px) {
-      padding: 2rem;
-    }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 2rem; 
   }
+}
+
   
-  .icon {
-    font-size: 2rem;
-  
-    @media (min-width: 768px) {
-      font-size: 2.5rem;
-    }
+.client-type {
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid $border-color;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: $background-color;
+
+  @media (min-width: 768px) {
+    padding: 2rem;
   }
+
+  @media (min-width: 1024px) {
+    padding: 2.5rem; 
+  }
+}
+  
+.icon {
+  font-size: 2rem;
+
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 3rem; 
+  }
+}
   
   .client-title {
     margin-top: 0.5rem;
@@ -185,4 +219,28 @@
     margin-top: 0.5rem;
     color: $text-color;
   }
+  .client-types {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-items: center; 
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr); 
+  }
+}
+
+.subtitle {
+  text-align: center; 
+  margin-bottom: 2rem; 
+  font-size: 2rem; 
+  font-weight: bold;
+  color: $secondary-color;
+  margin-top: 10%;
+}
   </style>
