@@ -13,8 +13,33 @@
       <v-divider class="my-2" thickness="2" width="50"></v-divider>
   
       <div class="text-caption font-weight-regular opacity-60">
-        Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet. Mauris cursus commodo interdum. Praesent ut risus eget metus luctus accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim a sit amet dui. Duis commodo vitae velit et faucibus. Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-      </div>
+  <div class="footer-columns">
+    <div class="footer-column">
+      <h3>Sobre Nosotros</h3>
+      <ul>
+        <li><a href="#">Quiénes somos</a></li>
+        <li><a href="#">Nuestro equipo</a></li>
+        <li><a href="#">Carreras</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Ayuda</h3>
+      <ul>
+        <li><a href="#">Preguntas frecuentes</a></li>
+        <li><a href="#">Soporte</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Síguenos</h3>
+      <ul>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">Twitter</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
   
       <v-divider></v-divider>
   
@@ -24,10 +49,45 @@
     </v-footer>
   </template>
   <script setup>
-    const icons = [
-      'mdi-facebook',
-      'mdi-twitter',
-      'mdi-linkedin',
-      'mdi-instagram',
-    ]
+   
   </script>
+  <style scoped lang="scss">
+   .footer-columns {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 1.5rem;
+  text-align: left;
+  margin-top: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr); 
+  }
+}
+
+.footer-column {
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: white;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 0.5rem;
+
+      a {
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.8);
+        transition: color 0.3s;
+
+        &:hover {
+          color: white;
+        }
+      }
+    }
+  }
+}
+</style>
