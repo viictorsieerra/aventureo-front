@@ -8,7 +8,7 @@
   <button class="nav-item">Alojamiento</button>
   <button class="nav-item" id="vuelos">Vuelos</button>
   <button class="nav-item">Vuelo + hotel</button>
-  <button class="nav-item">Actividades</button>
+  <router-link to="actividades"><button class="nav-item">Actividades</button></router-link>
   <button class="nav-item">Trenes</button>
 </nav>
     

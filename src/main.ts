@@ -13,9 +13,10 @@ import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 import App from './App.vue'
-//import router from './router'
+import router from './router'
 
-// import './assets/styles/main.scss';
+// Mapas
+
 
 const app = createApp(App)
 const vuetify = createVuetify({
@@ -26,7 +27,7 @@ const pinia = createPinia()
 pinia.use(piniaPersist)
 app.use(vuetify)
 app.use(pinia)
-//app.use(router)
+app.use(router)
 export default createVuetify({
     icons: {
       defaultSet: 'mdi',
