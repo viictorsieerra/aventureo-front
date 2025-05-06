@@ -11,6 +11,7 @@
           <option>Transporte</option>
           <option>Alojamiento</option>
           <option>Ocio</option>
+          <option>Otros</option>
         </select>
         <button type="submit">Añadir gasto</button>
       </form>
