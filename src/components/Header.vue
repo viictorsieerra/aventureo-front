@@ -9,7 +9,7 @@
   <button class="nav-item" id="vuelos">Vuelos</button>
   <button class="nav-item">Vuelo + hotel</button>
   <router-link to="actividades"><button class="nav-item">Actividades</button></router-link>
-  <button class="nav-item">Trenes</button>
+  <router-link to="planificador"><button class="nav-item">Planificador</button></router-link>
 </nav>
     
         <div class="actions">
