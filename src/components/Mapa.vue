@@ -1,40 +1,27 @@
 <template>
-    <v-card
-      height="300"
-      image="https://cdn.vuetifyjs.com/images/toolbar/map.jpg"
-      border
-      flat
-    >
-      <template v-slot:text>
-        <v-toolbar rounded="lg" border floating>
-          <div class="px-4">
-            <v-text-field
-              density="compact"
-              placeholder="Search"
-              prepend-inner-icon="mdi-magnify"
-              variant="solo"
-              width="200"
-              flat
-              hide-details
-              single-line
-            ></v-text-field>
-          </div>
+  <v-container>
+    <div id="map" style="height: 500px; margin-top: 16px;"></div>
+  </v-container>
+</template>
+
+<script setup>
+import { ref, watch, onMounted } from 'vue'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+let map = null
+
+onMounted(() => {
+  map = L.map('map').setView([41.5280185, -1.3116027], 5)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map)
+})
+</script>
+
+<style scoped>
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+</style>
   
-          <template v-slot:append>
-            <v-btn
-              color="medium-emphasis"
-              density="comfortable"
-              icon="mdi-crosshairs-gps"
-            ></v-btn>
-  
-            <v-btn
-              class="ms-1"
-              color="medium-emphasis"
-              density="comfortable"
-              icon="mdi-dots-vertical"
-            ></v-btn>
-          </template>
-        </v-toolbar>
-      </template>
-    </v-card>
-  </template>

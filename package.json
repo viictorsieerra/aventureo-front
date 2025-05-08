@@ -1,5 +1,5 @@
 {
-  "name": "moneykeeper-front",
+  "name": "aventureo-front",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -13,7 +13,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@vue-leaflet/vue-leaflet": "^0.10.1",
+    "@fortawesome/fontawesome-free": "^6.7.2",
+    "esri-leaflet-geocoder": "^3.1.5",
     "leaflet": "^1.9.4",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",

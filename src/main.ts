@@ -11,11 +11,14 @@ import * as directives from 'vuetify/directives'
 //icons Vuetify
 
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import '@fortawesome/fontawesome-free/css/all.css';
 
 import App from './App.vue'
 import router from './router'
 
 // Mapas
+import 'leaflet/dist/leaflet.css'
+import 'esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css'
 
 
 const app = createApp(App)
