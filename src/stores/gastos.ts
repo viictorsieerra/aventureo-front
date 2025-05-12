@@ -23,7 +23,6 @@ export const useGastosStore = defineStore('gastos', () => {
     return gastos.value.reduce((sum, g) => sum + g.importe, 0)
   })
 
-  // Guardar en localStorage cada vez que cambien los gastos
   watch(gastos, (nuevoValor) => {
     localStorage.setItem('gastos', JSON.stringify(nuevoValor))
   }, { deep: true })

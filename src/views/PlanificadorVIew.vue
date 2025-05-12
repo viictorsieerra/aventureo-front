@@ -1,56 +1,107 @@
 <template>
-    <div class="planificador">
-      <h2>Planificador de Gastos</h2>
-  
-      <form @submit.prevent="agregarNuevoGasto">
-        <input v-model="nuevoGasto.concepto" placeholder="Concepto" required />
-        <input v-model.number="nuevoGasto.importe" type="number" placeholder="Importe (€)" required />
-        <select v-model="nuevoGasto.categoria" required>
-          <option disabled value="">Categoría</option>
-          <option>Comida</option>
-          <option>Transporte</option>
-          <option>Alojamiento</option>
-          <option>Ocio</option>
-          <option>Otros</option>
-        </select>
-        <button type="submit">Añadir gasto</button>
-      </form>
-  
-      <h3>Gastos registrados:</h3>
-      <ul>
-        <li v-for="gasto in store.gastos" :key="gasto.id">
-          {{ gasto.concepto }} - {{ gasto.importe }}€ ({{ gasto.categoria }})
-          <button @click="store.eliminarGasto(gasto.id)">❌</button>
-        </li>
-      </ul>
-  
-      <h3>Total: {{ store.total }}€</h3>
+  <div class="planificador">
+    <h2>Planificador de Gastos</h2>
+
+    
+    <input
+      v-model="viaje.nombre"
+      placeholder="Nombre del viaje"
+      required
+    />
+
+   
+    <div
+      v-for="(gasto, index) in viaje.gastos"
+      :key="index"
+      class="gasto-item"
+    >
+      <select v-model="gasto.categoria" required>
+        <option disabled value="0">Categoría</option>
+        <option :value="0">Vuelo</option>
+        <option :value="1">Transporte</option>
+        <option :value="2">Comida</option>
+        <option :value="3">Alojamiento</option>
+        <option :value="4">Ocio</option>
+        <option :value="5">Otros</option>
+      </select>
+
+      <input
+        v-model.number="gasto.cantidad"
+        type="number"
+        min="0"
+        placeholder="Cantidad (€)"
+        required
+      />
+
+      <button type="button" @click="eliminarGasto(index)">🗑</button>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { reactive } from 'vue'
-  import { useGastosStore, type Gasto } from '@/stores/gastos'
-  
-  const store = useGastosStore()
-  
-  type NuevoGasto = Omit<Gasto, 'id'>
-  
-  const nuevoGasto = reactive<NuevoGasto>({
-    concepto: '',
-    importe: 0,
-    categoria: ''
-  })
-  
-  const agregarNuevoGasto = () => {
-    store.agregarGasto({ ...nuevoGasto })
-    nuevoGasto.concepto = ''
-    nuevoGasto.importe = 0
-    nuevoGasto.categoria = ''
+
+   
+    <button type="button" class="add-button" @click="añadirGasto">
+      + Añadir Gasto
+    </button>
+
+    
+    <h3>Total: €{{ totalGastos }}</h3>
+
+   
+    <button class="save-button" @click="guardarViaje">Guardar Viaje</button>
+
+    <div v-if="error" class="error">{{ error }}</div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { addGasto } from '@/services/GastoService';
+
+export default defineComponent({
+  name: 'PlanificadorView',
+  data() {
+    return {
+      viaje: {
+        nombre: '',
+        gastos: [{ categoria: 0, cantidad: 0 }]
+      },
+      error: null as string | null
+    };
+  },
+  computed: {
+    totalGastos(): number {
+      return this.viaje.gastos.reduce((acc, gasto) => acc + (gasto.cantidad || 0), 0);
+    }
+  },
+  methods: {
+    añadirGasto() {
+      this.viaje.gastos.push({ categoria: 0, cantidad: 0 });
+    },
+    eliminarGasto(index: number) {
+      this.viaje.gastos.splice(index, 1);
+    },
+    async guardarViaje() {
+      try {
+        for (const gasto of this.viaje.gastos) {
+          await addGasto({
+            nombre: `${this.viaje.nombre} - Categoría ${gasto.categoria}`,
+            cantidad: gasto.cantidad,
+            idCategoria: gasto.categoria,
+            idViaje: 1 
+          });
+        }
+
+        alert('Viaje y gastos guardados');
+        this.viaje = { nombre: '', gastos: [{ categoria: 0, cantidad: 0 }] };
+        this.error = null;
+      } catch (err) {
+        this.error = 'Error al guardar los gastos';
+        console.error(err);
+      }
+    }
   }
-  </script>
-  
-  <style scoped>
+});
+</script>
+
+<style scoped>
 .planificador {
   max-width: 600px;
   margin: 40px auto;
@@ -68,17 +119,11 @@
   color: #333;
 }
 
-.planificador form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
 .planificador input,
 .planificador select {
-  flex: 1 1 200px;
+  flex: 1 1 45%;
   padding: 12px 15px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px;
@@ -87,14 +132,38 @@
 
 .planificador input:focus,
 .planificador select:focus {
-  border-color: #007BFF;
+  border-color: #007bff;
   outline: none;
 }
 
-.planificador button {
-  flex: 1 1 100%;
+.gasto-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.gasto-item button {
+  background-color: transparent;
+  border: none;
+  color: #ff4c4c;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.gasto-item button:hover {
+  color: #c20000;
+}
+
+.add-button,
+.save-button {
+  display: block;
+  width: 100%;
   padding: 12px;
-  background-color:#48a259;
+  margin-top: 10px;
+  background-color: #48a259;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -103,53 +172,23 @@
   transition: background-color 0.3s ease;
 }
 
-.planificador button:hover {
-  background-color:#316e3c;
+.add-button:hover,
+.save-button:hover {
+  background-color: #316e3c;
 }
 
 .planificador h3 {
   margin-top: 20px;
   font-size: 22px;
   color: #444;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 6px;
-}
-
-.planificador ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.planificador li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #F9F9F9;
-  padding: 10px 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #333;
-}
-
-.planificador li button {
-  background-color: transparent;
-  border: none;
-  color: #FF4C4C;
-  font-size: 18px;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.planificador li button:hover {
-  color: #c20000;
-}
-
-.planificador h3:last-of-type {
+  border-top: 2px solid #eee;
+  padding-top: 10px;
   text-align: right;
-  font-size: 24px;
-  margin-top: 30px;
-  color: #222;
+}
+
+.error {
+  margin-top: 15px;
+  color: red;
+  text-align: center;
 }
 </style>
