@@ -7,6 +7,7 @@
    
       <div v-if="selectedLocation" class="location-plans">
         <h3>Planes en {{ selectedLocation.name }}</h3>
+        <h5>Ver Planes</h5>
         <v-list>
           <v-list-item 
             v-for="(plan, index) in locationPlans" 
