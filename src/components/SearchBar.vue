@@ -5,6 +5,7 @@
             v-model="textSearched"
             :loading="props.loading"
             density="compact"
+            clearable
             hide-details
             class="search-bar__field"
             variant="outlined"
