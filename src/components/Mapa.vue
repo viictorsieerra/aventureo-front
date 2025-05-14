@@ -3,11 +3,10 @@
   <v-container>
     <div class="map-container">
       <div id="map" ref="mapElement"></div>
-      
-   
+
       <div v-if="selectedLocation" class="location-plans">
         <h3>Planes en {{ selectedLocation.name }}</h3>
-        <h5>Ver Planes</h5>
+        <router-link to="planes"><button class="nav-item">Ver planes</button></router-link>
         <v-list>
           <v-list-item 
             v-for="(plan, index) in locationPlans" 
@@ -23,6 +22,7 @@
   </v-container>
 </template>
 
+
 <script setup>
 import { ref, onMounted, defineProps, defineEmits, watch, onUnmounted } from 'vue'
 import L from 'leaflet'
@@ -30,6 +30,9 @@ import 'leaflet/dist/leaflet.css'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+
+
+
 
 const props = defineProps({
   locations: {

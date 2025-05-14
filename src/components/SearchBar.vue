@@ -6,7 +6,7 @@
         clearable
         hide-details
         variant="outlined"
-        placeholder="Buscar destino (ej. Zaragoza)"
+        placeholder="Buscar destino"
         @keyup.enter="search"
         :loading="isLoading"
       >
@@ -61,4 +61,5 @@
     max-width: 600px;
     margin: 0 auto;
   }
+
   </style>
