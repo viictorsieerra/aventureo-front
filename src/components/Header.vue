@@ -19,34 +19,13 @@
       </nav>
 
       <div v-if="menuOpen || isDesktop" class="actions">
-        <button class="login-button">Iniciar sesión</button>
-        <button class="signup-button">Registrarse</button>
+        <router-link to="/login"><button class="login-button">Iniciar sesión</button></router-link>
+        <router-link to="/registro"><button class="signup-button">Registrarse</button></router-link>
       </div>
     </div>
 
     <div class="header-title">
       <h1 class="first-title">Piensa un lugar y disfruta del viaje!</h1>
-    </div>
-
-    <div class="help-icon" @click="showOverlay = !showOverlay">
-      <span>?</span>
-    </div>
-
-    <div v-if="showOverlay" class="overlay">
-      <div class="overlay-content">
-        <div class="close-btn" @click="showOverlay = false">×</div>
-        <v-stepper :items="['Step 1', 'Step 2', 'Step 3']">
-          <template v-slot:item.1>
-            <v-card title="Step One" flat>Para empezar selecciona lo que quieras buscar, alojamiento, vuelo o ambas!!</v-card>
-          </template>
-          <template v-slot:item.2>
-            <v-card title="Step Two" flat>Indica las fechas y destinos.</v-card>
-          </template>
-          <template v-slot:item.3>
-            <v-card title="Step Three" flat>Elige la opción que más te guste.</v-card>
-          </template>
-        </v-stepper>
-      </div>
     </div>
   </header>
 </template>
@@ -54,10 +33,12 @@
   
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-const showOverlay = ref(false);
 const menuOpen = ref(false);
 const isDesktop = ref(false);
+
+const router = useRouter();
 
 const checkViewport = () => {
   isDesktop.value = window.innerWidth >= 768;
@@ -68,9 +49,7 @@ onMounted(() => {
   checkViewport();
   window.addEventListener('resize', checkViewport);
 });
-
-
-  </script>
+</script>
   
   <style scoped lang="scss">
   .navbar {
