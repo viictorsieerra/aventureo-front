@@ -24,10 +24,18 @@
 
       
       <div class="map-section">
-        <SearchBar class="custom-searchbar" @search="handleSearch" @error="showError" />
+  <SearchBar 
+    class="custom-searchbar"
+    @search="handleSearch"
+    @error="showError"
+  />
+  <Mapa 
+    :locations="mapLocations" 
+    @location-selected="showLocationDetails"
+    @plan-selected="showPlanDetails"
+  />
+</div>
 
-        <Mapa :locations="mapLocations" @location-selected="showLocationDetails" @plan-selected="showPlanDetails" />
-      </div>
     </div>
 
     <v-snackbar v-model="showSnackbar" :color="snackbarColor">
@@ -89,7 +97,7 @@ const destinos = [
 .info-section {
   text-align: center;
   padding: 1rem;
-  background: #f5f5f5;
+  background: #c8ecff;
   border-radius: 12px;
 }
 
@@ -137,11 +145,11 @@ const destinos = [
     flex: 2;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+     gap: 0px;
   }
   .custom-searchbar {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 }
 

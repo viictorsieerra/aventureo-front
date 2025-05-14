@@ -163,12 +163,15 @@ watch(() => props.locations, (newLocations) => {
   margin-top: 16px;
   border-radius: 8px;
   overflow: hidden;
+  justify-items: center;
 }
 
 #map {
-  height: 100%;
+  aspect-ratio: 1 / 1; /* cuadrado */
   width: 100%;
+  max-width: 600px;
 }
+
 
 .location-plans {
   position: absolute;

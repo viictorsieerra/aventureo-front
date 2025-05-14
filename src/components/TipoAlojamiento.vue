@@ -55,7 +55,7 @@
   <style scoped>
   .alojamiento-section {
     padding: 32px 16px;
-    background-color: #f5f5f5;
+    background-color: #c8ecff;;
     text-align: center;
     margin-top: 64px;
   }

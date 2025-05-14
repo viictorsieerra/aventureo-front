@@ -1,65 +1,80 @@
 <template>
-    <header class="navbar">
-      <div class="container">
-    
-        <h1 class="logo">Aventureo</h1>
-    
-        <nav class="nav">
-  <button class="nav-item">Alojamiento</button>
-  <button class="nav-item" id="vuelos">Vuelos</button>
-  <button class="nav-item">Vuelo + hotel</button>
-  <router-link to="actividades"><button class="nav-item">Actividades</button></router-link>
-  <button class="nav-item">Trenes</button>
-</nav>
-    
-        <div class="actions">
-          <button class="login-button">Iniciar sesión</button>
-          <button class="signup-button">Registrarse</button>
-        </div>
-      </div>
-    
-      <div class="header-title">
-          <h1 class="first-title">Piensa un lugar y disfruta del viaje!</h1>
-      </div>
-  
-     
-        <div class="help-icon" @click="showOverlay = !showOverlay">
-            <span>?</span>
-        </div>
-  
-     
-        <div v-if="showOverlay" class="overlay">
-            <div class="overlay-content">
-                 
-                <div class="close-btn" @click="showOverlay = false">×</div>
-                <v-stepper :items="['Step 1', 'Step 2', 'Step 3']">
-                    <template v-slot:item.1>
-                        <v-card title="Step One" flat>Para empezar selecciona lo que quieras buscar, alojamiento, vuelo o ambas!!</v-card>
-                    </template>
+  <header class="navbar">
+    <div class="container">
+      <h1 class="logo">Aventureo</h1>
 
-                    <template v-slot:item.2>
-                        <v-card title="Step Two" flat>Una vez lo hayas seleccionado, indica las fechas de ida y de vuelta junto el lugar del que quieres salir y al que quieres acudir.</v-card>
-                    </template>
+      <!-- Botón hamburguesa móvil -->
+      <button class="menu-toggle" @click="menuOpen = !menuOpen">
+        <span v-if="!menuOpen">☰</span>
+        <span v-else>×</span>
+      </button>
 
-                    <template v-slot:item.3>
-                        <v-card title="Step Three" flat>Y ya para terminar, observa todas las opciones y elige la que mas te guste.</v-card>
-                    </template>
-                </v-stepper>
-            </div>
-        </div>
-    </header>  
-    
+      <!-- Navegación -->
+      <nav v-if="menuOpen || isDesktop" class="nav">
+        <button class="nav-item">Alojamiento</button>
+        <button class="nav-item">Vuelos</button>
+        <button class="nav-item">Vuelo + hotel</button>
+        <router-link to="actividades"><button class="nav-item">Actividades</button></router-link>
+        <button class="nav-item">Trenes</button>
+      </nav>
+
+      <div v-if="menuOpen || isDesktop" class="actions">
+        <button class="login-button">Iniciar sesión</button>
+        <button class="signup-button">Registrarse</button>
+      </div>
+    </div>
+
+    <div class="header-title">
+      <h1 class="first-title">Piensa un lugar y disfruta del viaje!</h1>
+    </div>
+
+    <div class="help-icon" @click="showOverlay = !showOverlay">
+      <span>?</span>
+    </div>
+
+    <div v-if="showOverlay" class="overlay">
+      <div class="overlay-content">
+        <div class="close-btn" @click="showOverlay = false">×</div>
+        <v-stepper :items="['Step 1', 'Step 2', 'Step 3']">
+          <template v-slot:item.1>
+            <v-card title="Step One" flat>Para empezar selecciona lo que quieras buscar, alojamiento, vuelo o ambas!!</v-card>
+          </template>
+          <template v-slot:item.2>
+            <v-card title="Step Two" flat>Indica las fechas y destinos.</v-card>
+          </template>
+          <template v-slot:item.3>
+            <v-card title="Step Three" flat>Elige la opción que más te guste.</v-card>
+          </template>
+        </v-stepper>
+      </div>
+    </div>
+  </header>
 </template>
+
   
 <script setup lang="ts">
-  import { ref } from 'vue';
-  
-  const showOverlay = ref(false);
+import { ref, onMounted } from 'vue';
+
+const showOverlay = ref(false);
+const menuOpen = ref(false);
+const isDesktop = ref(false);
+
+const checkViewport = () => {
+  isDesktop.value = window.innerWidth >= 768;
+  if (isDesktop.value) menuOpen.value = false;
+};
+
+onMounted(() => {
+  checkViewport();
+  window.addEventListener('resize', checkViewport);
+});
+
+
   </script>
   
   <style scoped lang="scss">
   .navbar {
-    background-color: #48a259;
+    background-color:#0288D1;
     color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 16px;
@@ -128,7 +143,7 @@
   }
   
   .signup-button {
-    background-color: #ffffbf;
+    background-color: #4DD0E1;
     color: black;
   }
   
@@ -139,7 +154,7 @@
   }
   
   .signup-button:hover {
-    background-color: #d78d00;
+    background-color: #4DD0E1;
   }
   
   .header-title {
@@ -151,7 +166,28 @@
     font-size: 1.5rem;
     margin-top: 140px;
   }
-  
+  .menu-toggle {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  transition: color 0.3s ease;
+}
+
+.menu-toggle:hover {
+  color: #ffffbf;
+}
+
+@media (min-width: 768px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
   @media (min-width: 768px) {
     .container {
       flex-direction: row;
@@ -189,7 +225,7 @@
     }
   
     .header-title {
-      padding: 60px 24px;
+      padding: 10px 24px;
     }
   }
   
