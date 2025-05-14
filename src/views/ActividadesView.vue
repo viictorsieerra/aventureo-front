@@ -84,6 +84,8 @@ const destinos = [
   { name: 'París', image: 'https://www.101viajes.com/sites/default/files/puesta-sol-paris.jpg' }
 
 ]
+console.log('hola')
+console.log('BASE URL:', import.meta.env.VITE_API_BASE_URL);
 </script>
 
 <style scoped>

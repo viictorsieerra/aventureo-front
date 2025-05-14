@@ -4,11 +4,11 @@
     <form @submit.prevent="submitForm">
       <div class="form-group">
         <label for="email">Correo electrónico</label>
-        <input v-model="form.email" type="email" id="email" required />
+        <input v-model="loginUser.value.email" type="email" id="email" required />
       </div>
       <div class="form-group">
         <label for="password">Contraseña</label>
-        <input v-model="form.password" type="password" id="password" required />
+        <input v-model="loginUser.value.email" type="password" id="password" required />
       </div>
       <button type="submit" class="login-button">Iniciar sesión</button>
     </form>
@@ -16,16 +16,18 @@
 </template>
 
 <script setup lang="ts">
+import { useJWTStore } from '@/stores/JwtStore';
+import LoginUser from '@/models/LoginUser';
 import { ref } from 'vue';
 
-const form = ref({
-  email: '',
-  password: '',
-});
+const store = useJWTStore();
+const loginUser = ref(new LoginUser())
 
 const submitForm = () => {
+
+  store.loginUser(loginUser)
  
-  console.log("Formulario de inicio de sesión enviado", form.value);
+  console.log("Formulario de inicio de sesión enviado", loginUser.value);
 };
 </script>
 

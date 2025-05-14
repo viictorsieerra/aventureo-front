@@ -4,6 +4,7 @@ import TipoAlojamiento from '@/components/TipoAlojamiento.vue';
 import Informacion from '@/components/Informacion.vue';
 import DestinosPopulares from '@/components/DestinosPopulares.vue';
 import Footer from '@/components/Footer.vue';
+
 </script>
 <template>
 
