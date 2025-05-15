@@ -7,7 +7,7 @@
         <input
           type="text"
           id="firstName"
-          v-model="form.firstName"
+          v-model="registerUser.nombre"
           required
           placeholder="Ingresa tu nombre"
         />
@@ -17,7 +17,7 @@
         <input
           type="text"
           id="lastName"
-          v-model="form.lastName"
+          v-model="registerUser.apellidos"
           required
           placeholder="Ingresa tus apellidos"
         />
@@ -27,7 +27,7 @@
         <input
           type="date"
           id="birthDate"
-          v-model="form.birthDate"
+          v-model="registerUser.fecNacimiento"
           required
         />
       </div>
@@ -36,7 +36,7 @@
         <input
           type="email"
           id="email"
-          v-model="form.email"
+          v-model="registerUser.email"
           required
           placeholder="Ingresa tu correo"
         />
@@ -46,7 +46,7 @@
         <input
           type="password"
           id="password"
-          v-model="form.password"
+          v-model="registerUser.contrasena"
           required
           placeholder="Ingresa tu contraseña"
           :class="{'input-error': passwordError}"
@@ -58,7 +58,7 @@
         <input
           type="password"
           id="confirmPassword"
-          v-model="form.confirmPassword"
+          v-model="confirmPassword"
           required
           placeholder="Confirma tu contraseña"
           :class="{'input-error': confirmPasswordError}"
@@ -73,29 +73,27 @@
 </template>
 
 <script setup lang="ts">
+import RegisterUser from '@/models/RegisterUser';
+import { useJWTStore } from '@/stores/JwtStore';
 import { ref, computed } from 'vue';
 
-const form = ref({
-  firstName: '',
-  lastName: '',
-  birthDate: '',
-  email: '',
-  password: '',
-  confirmPassword: ''
-});
-
-const passwordError = computed(() => form.value.password.length > 0 && form.value.password.length < 6);
-const confirmPasswordError = computed(() => form.value.password !== form.value.confirmPassword && form.value.confirmPassword.length > 0);
+const registerUser = ref(new RegisterUser())
+const confirmPassword = ref('')
+const JwtStore = useJWTStore()
+const password = computed(() => registerUser.value.contrasena)
+const passwordError = computed(() => password.length> 0 && password.length < 6);
+const confirmPasswordError = computed(() => registerUser.value.contrasena !== confirmPassword.value && confirmPassword.value.length > 0);
 
 const isSubmitDisabled = computed(() => passwordError.value || confirmPasswordError.value);
 
 const submitForm = () => {
-  if (form.value.password !== form.value.confirmPassword) {
+  if (registerUser.value.contrasena !== confirmPassword.value) {
     alert("Las contraseñas no coinciden");
     return;
   }
-  // Aquí agregas la lógica de registro (por ejemplo, API)
-  console.log("Formulario de registro enviado", form.value);
+  console.log('SE VA A ENVIAR ESTE USUARIO', registerUser.value)
+  JwtStore.registerUser(registerUser.value)
+  console.log("Formulario de registro enviado", registerUser.value);
 };
 </script>
 

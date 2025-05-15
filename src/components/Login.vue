@@ -4,11 +4,11 @@
     <form @submit.prevent="submitForm">
       <div class="form-group">
         <label for="email">Correo electrónico</label>
-        <input v-model="loginUser.value.email" type="email" id="email" required />
+        <input v-model="loginUser.email" type="email" id="email" required />
       </div>
       <div class="form-group">
         <label for="password">Contraseña</label>
-        <input v-model="loginUser.value.email" type="password" id="password" required />
+        <input v-model="loginUser.contrasena" type="password" id="password" required />
       </div>
       <button type="submit" class="login-button">Iniciar sesión</button>
     </form>
@@ -24,8 +24,8 @@ const store = useJWTStore();
 const loginUser = ref(new LoginUser())
 
 const submitForm = () => {
-
-  store.loginUser(loginUser)
+  console.log('DATOS ENVIADOS: ', loginUser)
+  store.loginUser(loginUser.value)
  
   console.log("Formulario de inicio de sesión enviado", loginUser.value);
 };
