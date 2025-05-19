@@ -27,9 +27,14 @@ export const useJWTStore = defineStore('jwt', () => {
         console.log("Token recibido:", data);
         jwt.value = data.value;
         
+        const payload = parseJwt(data.value);
+        console.log("Payload decodificado:", payload);
+        usuario.value = payload.name; 
+      
+        router.push('/App.vue') 
       })
-      .catch(error => console.error("Error en login:", error));
-  }
+    }
+      
 
 
   function registerUser(registroUser: RegisterUser) {
@@ -47,6 +52,21 @@ export const useJWTStore = defineStore('jwt', () => {
       })
       .catch(error => console.log(error))
   }
+
+
+  function parseJwt (token: string) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = decodeURIComponent(atob(base64Url).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(base64);
+    } catch (e) {
+      console.error("Error al parsear JWT:", e);
+      return null;
+    }
+  }
+  
 
   function logOut() {
     // usuario.value = new UsuarioDTO()

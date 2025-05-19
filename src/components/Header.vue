@@ -19,9 +19,20 @@
       </nav>
 
       <div v-if="menuOpen || isDesktop" class="actions">
-        <router-link to="/login"><button class="login-button">Iniciar sesión</button></router-link>
-        <router-link to="/registro"><button class="signup-button">Registrarse</button></router-link>
+        <template v-if="!jwtStore.jwt">
+          <router-link to="/login">
+            <button class="login-button">Iniciar sesión</button>
+          </router-link>
+          <router-link to="/registro">
+            <button class="signup-button">Registrarse</button>
+          </router-link>
+        </template>
+        <template v-else>
+          <span class="username">Bienvenido, {{ jwtStore.usuario }}</span>
+          <button class="logout-button" @click="jwtStore.logOut">Cerrar sesión</button>
+        </template>
       </div>
+
     </div>
 
     <div class="header-title">
@@ -30,13 +41,17 @@
   </header>
 </template>
 
-  
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useJWTStore } from '@/stores/JwtStore'
 
 const menuOpen = ref(false);
 const isDesktop = ref(false);
+
+const jwtStore = useJWTStore();
+
 
 const router = useRouter();
 
@@ -50,102 +65,120 @@ onMounted(() => {
   window.addEventListener('resize', checkViewport);
 });
 </script>
-  
-  <style scoped lang="scss">
-  .navbar {
-    background-color:#0288D1;
-    color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    width: 100%;
-    position: static;
-    top: 0;
-    left: 0;
-    z-index: 50;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-  
-  .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .nav {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-  }
-  
-  .nav-item {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    width: 100%;
-    text-align: center;
-  }
-  
-  .nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-  }
-  
-  .actions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-  }
-  
-  .login-button,
-  .signup-button {
-    background-color: white;
-    color: #003580;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .signup-button {
-    background-color: #4DD0E1;
-    color: black;
-  }
-  
-  .login-button:hover,
-  .signup-button:hover {
-    background-color: #f7f7f7;
-    transform: translateY(-2px);
-  }
-  
-  .signup-button:hover {
-    background-color: #4DD0E1;
-  }
-  
-  .header-title {
-    text-align: center;
-    padding: 40px 16px;
-  }
-  
-  .first-title {
-    font-size: 1.5rem;
-    margin-top: 140px;
-  }
-  .menu-toggle {
+
+<style scoped lang="scss">
+.navbar {
+  background-color: #0288D1;
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  width: 100%;
+  position: static;
+  top: 0;
+  left: 0;
+  z-index: 50;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.username {
+  font-weight: bold;
+  color: #fff;
+}
+
+.logout-button {
+  background-color: #ff5e57;
+  border: none;
+  padding: 8px 14px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #e04b46;
+}
+
+
+.login-button,
+.signup-button {
+  background-color: white;
+  color: #003580;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.signup-button {
+  background-color: #4DD0E1;
+  color: black;
+}
+
+.login-button:hover,
+.signup-button:hover {
+  background-color: #f7f7f7;
+  transform: translateY(-2px);
+}
+
+.signup-button:hover {
+  background-color: #4DD0E1;
+}
+
+.header-title {
+  text-align: center;
+  padding: 40px 16px;
+}
+
+.first-title {
+  font-size: 1.5rem;
+  margin-top: 140px;
+}
+
+.menu-toggle {
   background: none;
   border: none;
   font-size: 2rem;
@@ -167,67 +200,67 @@ onMounted(() => {
   }
 }
 
-  @media (min-width: 768px) {
-    .container {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-  
-    .nav {
-      flex-direction: row;
-      gap: 24px;
-      width: auto;
-    }
-  
-    .actions {
-      flex-direction: row;
-      width: auto;
-      gap: 12px;
-    }
-  
-    .nav-item {
-      width: auto;
-    }
-  
-    .login-button,
-    .signup-button {
-      width: auto;
-    }
-  
-    .first-title {
-      font-size: 2rem;
-      margin-top: 5%;
-    }
-  
-    .header-title {
-      padding: 10px 24px;
-    }
-  }
-  
- 
-  .help-icon {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    font-size: 2rem;
-    color: white;
-    cursor: pointer;
-    display: flex;
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    transition: color 0.3s ease;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
   }
-  
-  .help-icon:hover {
-    color: #ffffbf;
+
+  .nav {
+    flex-direction: row;
+    gap: 24px;
+    width: auto;
   }
-  
- 
-  .overlay {
+
+  .actions {
+    flex-direction: row;
+    width: auto;
+    gap: 12px;
+  }
+
+  .nav-item {
+    width: auto;
+  }
+
+  .login-button,
+  .signup-button {
+    width: auto;
+  }
+
+  .first-title {
+    font-size: 2rem;
+    margin-top: 5%;
+  }
+
+  .header-title {
+    padding: 10px 24px;
+  }
+}
+
+
+.help-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.help-icon:hover {
+  color: #ffffbf;
+}
+
+
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -241,7 +274,7 @@ onMounted(() => {
 }
 
 .overlay-content {
-  position: relative; 
+  position: relative;
   background-color: white;
   color: #003580;
   padding: 24px;
@@ -250,8 +283,8 @@ onMounted(() => {
   width: 80%;
   max-width: 400px;
   font-size: 1.1rem;
-  max-height: 90vh; 
-  overflow-y: auto; 
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .close-btn {
@@ -265,7 +298,6 @@ onMounted(() => {
 }
 
 .close-btn:hover {
-  color: #d78d00; 
+  color: #d78d00;
 }
-  </style>
-  
+</style>
