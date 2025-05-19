@@ -31,7 +31,7 @@ export const useJWTStore = defineStore('jwt', () => {
         console.log("Payload decodificado:", payload);
         usuario.value = payload.name; 
       
-        router.push('/App.vue') 
+        router.push('/') 
       })
     }
       

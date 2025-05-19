@@ -4,70 +4,41 @@
     <form @submit.prevent="submitForm">
       <div class="form-group">
         <label for="firstName">Nombre</label>
-        <input
-          type="text"
-          id="firstName"
-          v-model="registerUser.nombre"
-          required
-          placeholder="Ingresa tu nombre"
-        />
+        <input type="text" id="firstName" v-model="registerUser.nombre" required placeholder="Ingresa tu nombre" />
       </div>
       <div class="form-group">
         <label for="lastName">Apellidos</label>
-        <input
-          type="text"
-          id="lastName"
-          v-model="registerUser.apellidos"
-          required
-          placeholder="Ingresa tus apellidos"
-        />
+        <input type="text" id="lastName" v-model="registerUser.apellidos" required
+          placeholder="Ingresa tus apellidos" />
       </div>
       <div class="form-group">
         <label for="birthDate">Fecha de Nacimiento</label>
-        <input
-          type="date"
-          id="birthDate"
-          v-model="registerUser.fecNacimiento"
-          required
-        />
+        <input type="date" id="birthDate" v-model="registerUser.fecNacimiento" required />
       </div>
       <div class="form-group">
         <label for="email">Correo Electrónico</label>
-        <input
-          type="email"
-          id="email"
-          v-model="registerUser.email"
-          required
-          placeholder="Ingresa tu correo"
-        />
+        <input type="email" id="email" v-model="registerUser.email" required placeholder="Ingresa tu correo" />
       </div>
       <div class="form-group">
         <label for="password">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          v-model="registerUser.contrasena"
-          required
-          placeholder="Ingresa tu contraseña"
-          :class="{'input-error': passwordError}"
-        />
+        <input type="password" id="password" v-model="registerUser.contrasena" required
+          placeholder="Ingresa tu contraseña" :class="{ 'input-error': passwordError }" />
         <small v-if="passwordError" class="error-message">La contraseña debe tener al menos 6 caracteres.</small>
       </div>
       <div class="form-group">
         <label for="confirmPassword">Confirmar Contraseña</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          v-model="confirmPassword"
-          required
-          placeholder="Confirma tu contraseña"
-          :class="{'input-error': confirmPasswordError}"
-        />
+        <input type="password" id="confirmPassword" v-model="confirmPassword" required
+          placeholder="Confirma tu contraseña" :class="{ 'input-error': confirmPasswordError }" />
         <small v-if="confirmPasswordError" class="error-message">Las contraseñas no coinciden.</small>
       </div>
       <div class="form-actions">
         <button type="submit" class="submit-btn" :disabled="isSubmitDisabled">Registrarse</button>
       </div>
+      
+      <p class="login-link">
+        ¿Ya tienes cuenta?
+        <router-link to="/login">Inicia sesión</router-link>
+      </p>
     </form>
   </div>
 </template>
@@ -81,7 +52,7 @@ const registerUser = ref(new RegisterUser())
 const confirmPassword = ref('')
 const JwtStore = useJWTStore()
 const password = computed(() => registerUser.value.contrasena)
-const passwordError = computed(() => password.length> 0 && password.length < 6);
+const passwordError = computed(() => password.value && password.value.length > 0 && password.value.length < 6);
 const confirmPasswordError = computed(() => registerUser.value.contrasena !== confirmPassword.value && confirmPassword.value.length > 0);
 
 const isSubmitDisabled = computed(() => passwordError.value || confirmPasswordError.value);
@@ -102,15 +73,15 @@ const submitForm = () => {
   background-color: #fff;
   padding: 24px;
   border-radius: 8px;
-  max-width: 450px; 
-  margin: 100px auto; 
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1); 
-  margin-bottom: 40px; 
+  max-width: 450px;
+  margin: 100px auto;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 24px; 
+  margin-bottom: 24px;
 }
 
 .form-group {
@@ -119,7 +90,7 @@ h2 {
 
 label {
   display: block;
-  margin-bottom: 8px; 
+  margin-bottom: 8px;
   font-size: 1rem;
   font-weight: bold;
 }
@@ -149,7 +120,7 @@ button {
   width: 100%;
   border: none;
   border-radius: 8px;
-  font-size: 1.2rem; 
+  font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -161,5 +132,23 @@ button:hover {
 button:disabled {
   background-color: #aaa;
   cursor: not-allowed;
+}
+.login-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.95rem;
+
+  a {
+    color: #4DD0E1;
+    text-decoration: none;
+    margin-left: 4px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #29b6b9;
+      text-decoration: underline;
+    }
+  }
 }
 </style>
