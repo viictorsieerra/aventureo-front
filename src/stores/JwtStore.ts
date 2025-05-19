@@ -11,21 +11,26 @@ export const useJWTStore = defineStore('jwt', () => {
   var jwt = ref('')
   var usuario = ref()
   const router = useRouter()
-  const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL)+'/JwtAuth'
+  const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/JwtAuth'
 
   function loginUser(loginUser: LoginDTO) {
-    fetch(baseUrl+'/Login', {
+    fetch(baseUrl + '/Login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(loginUser)
     })
-      .then(res => res.json())
-      .then(data => {
-        jwt.value = data[0].Value
-        // getUser()
+      .then(res => {
+        if (!res.ok) throw new Error("Error en login");
+        return res.json();
       })
-      .catch(error => console.log(error))
+      .then(data => {
+        console.log("Token recibido:", data);
+        jwt.value = data.value;
+        
+      })
+      .catch(error => console.error("Error en login:", error));
   }
+
 
   function registerUser(registroUser: RegisterUser) {
     fetch(baseUrl + "/Register", {
