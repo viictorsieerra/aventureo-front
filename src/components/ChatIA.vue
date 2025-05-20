@@ -9,28 +9,40 @@
     </div>
   </template>
   
-  <script>
-  import axios from 'axios'
-  
-  export default {
-    data() {
-      return {
-        userMessage: '', // <--- asegurarse de que está definido
-        respuestaIA: null
-      }
-    },
-    methods: {
-      async enviarMensaje() {
-        try {
-            const response = await axios.post("http://localhost:5138/api/chat/mensaje", { message: this.userMessage })
-          this.respuestaIA = response.data
-        } catch (error) {
-          console.error(error)
+ <script>
+export default {
+  data() {
+    return {
+      userMessage: '',
+      respuestaIA: null
+    }
+  },
+  methods: {
+    async enviarMensaje() {
+      try {
+        const response = await fetch("https://localhost:7333/api/chat/mensaje", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ texto: this.userMessage })
+        })
+
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`)
         }
+
+        const data = await response.json()
+        this.respuestaIA = data
+
+      } catch (error) {
+        console.error(error)
       }
     }
   }
-  </script>
+}
+</script>
+
   
   
   <style scoped>
