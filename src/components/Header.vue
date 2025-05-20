@@ -15,6 +15,7 @@
         <button class="nav-item">Vuelos</button>
         <button class="nav-item">Vuelo + hotel</button>
         <router-link to="actividades"><button class="nav-item">Actividades</button></router-link>
+        <router-link to="chat"><button class="nav-item">Chateta con la IA</button></router-link>
         <button class="nav-item">Trenes</button>
       </nav>
 

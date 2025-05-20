@@ -4,6 +4,7 @@ import ActividadesView from '@/views/ActividadesView.vue'
 import PlanesView from '@/views/PlanesView.vue'
 import Login from '@/components/Login.vue'
 import Register from '@/components/Registro.vue'
+import ChatIA from '@/components/ChatIA.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,7 +34,12 @@ const router = createRouter({
       name: 'Registro',
       component: Register
     },
-   
+    {
+      path: '/chat',
+      name: 'ChatIA',
+      component: ChatIA
+    }
+
     
   ],
 })
