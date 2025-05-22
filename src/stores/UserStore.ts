@@ -10,15 +10,15 @@ export const useUserStore = defineStore('user', () => {
     const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + "/User"
 
     function getUser() {
+        console.log("ESTE ES EL TOKEN: ", jwtStore.jwt)
         fetch(baseUrl + "/Auth", {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + jwtStore.jwt }
+            headers: { 'Authorization': `Bearer ${jwtStore.jwt}` }
         })
             .then(res => res.json())
             .then(data => {
-                console.log("USUARIO RECIBIDO : ", data)
+                user.value = data
             })
             .catch(ex => console.error(`ERROR : ${ex}`))
     }
-return {user, getUser}
-}, {persist: true})
+    return { user, getUser }
+}, { persist: true })
