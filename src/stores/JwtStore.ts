@@ -5,11 +5,12 @@ import { useRouter } from 'vue-router';
 import LoginDTO from '@/models/LoginUser'
 import { EnvironmentVariablesEnum, getEnvironmentVariable } from '@/helpers/EnvironmentVariablesHelpers';
 import type RegisterUser from '@/models/RegisterUser';
+import { useUserStore } from './UserStore';
 
 
 export const useJWTStore = defineStore('jwt', () => {
   var jwt = ref('')
-  var usuario = ref()
+  const userStore = useUserStore()
   const router = useRouter()
   const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/JwtAuth'
 
@@ -26,12 +27,8 @@ export const useJWTStore = defineStore('jwt', () => {
       .then(data => {
         console.log("Token recibido:", data);
         jwt.value = data.value;
-        
-        const payload = parseJwt(data.value);
-        console.log("Payload decodificado:", payload);
-        usuario.value = payload.name; 
-      
-        router.push('/App.vue') 
+        userStore.getUser()
+        router.push("/")
       })
     }
       
@@ -48,23 +45,10 @@ export const useJWTStore = defineStore('jwt', () => {
         console.log(data)
         jwt.value = data
         console.log(`Token: ${jwt}`)
-        // getUser()
+        router.push("/")
+        userStore.getUser()
       })
       .catch(error => console.log(error))
-  }
-
-
-  function parseJwt (token: string) {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = decodeURIComponent(atob(base64Url).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(base64);
-    } catch (e) {
-      console.error("Error al parsear JWT:", e);
-      return null;
-    }
   }
   
 
@@ -74,5 +58,7 @@ export const useJWTStore = defineStore('jwt', () => {
     router.push('/')
   }
 
-  return { jwt, usuario, loginUser, registerUser, logOut }
+
+
+  return { jwt, loginUser, registerUser, logOut }
 }, { persist: true })
