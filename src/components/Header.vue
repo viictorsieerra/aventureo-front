@@ -11,9 +11,7 @@
 
       <!-- Navegación -->
       <nav v-if="menuOpen || isDesktop" class="nav">
-        <button class="nav-item">Alojamiento</button>
-        <button class="nav-item">Vuelos</button>
-        <button class="nav-item">Vuelo + hotel</button>
+        <router-link to="booking"><button class="nav-item">Booking</button></router-link>
         <router-link to="actividades"><button class="nav-item">Actividades</button></router-link>
         <router-link to="chat"><button class="nav-item">Chateta con la IA</button></router-link>
         <button class="nav-item">Trenes</button>
@@ -29,7 +27,7 @@
           </router-link>
         </template>
         <template v-else>
-          <span class="username">Bienvenido, {{ jwtStore.usuario }}</span>
+          <span class="username">Bienvenido, {{ user.nombre }}</span>
           <button class="logout-button" @click="jwtStore.logOut">Cerrar sesión</button>
         </template>
       </div>
@@ -44,16 +42,21 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useJWTStore } from '@/stores/JwtStore'
+import { useUserStore } from '@/stores/UserStore';
+import { Usuario } from '@/models/Usuario';
 
 const menuOpen = ref(false);
 const isDesktop = ref(false);
 
 const jwtStore = useJWTStore();
+const userStore = useUserStore();
 
+const user = ref(new Usuario())
 
+user.value = computed(() => userStore.user)
 const router = useRouter();
 
 const checkViewport = () => {
