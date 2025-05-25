@@ -1,16 +1,17 @@
 <template>
   <v-container fluid>
-    <div class="actividades-container">
-     
-      <div class="info-section">
-        <h2>Explora nuevas aventuras</h2>
-        <p>
-          En esta ventana, puedes buscar el lugar al que quieras viajar y descubrir las actividades o planes que otras
-          personas han compartido. Encuentra experiencias únicas, lugares imperdibles y recomendaciones de otros
-          viajeros.
-        </p>
+    <v-row class="actividades-container" no-gutters>
+      
+      <!-- Columna izquierda -->
+      <v-col cols="12" md="6" class="left-column">
+        <div class="info-section">
+          <h2>Explora nuevas aventuras</h2>
+          <p>
+            En esta ventana, puedes buscar el lugar al que quieras viajar y descubrir las actividades o planes que otras
+            personas han compartido.
+          </p>
+        </div>
 
-    
         <div class="popular-destinations">
           <h3>Destinos más populares</h3>
           <div class="destination-list">
@@ -20,23 +21,39 @@
             </v-card>
           </div>
         </div>
-      </div>
+      </v-col>
 
-      
-      <div class="map-section">
-  <SearchBar 
-    class="custom-searchbar"
-    @search="handleSearch"
-    @error="showError"
-  />
-  <Mapa 
-    :locations="mapLocations" 
-    @location-selected="showLocationDetails"
-    @plan-selected="showPlanDetails"
-  />
-</div>
+      <!-- Columna derecha -->
+      <v-col cols="12" md="6" class="right-column">
+        <div class="map-section">
+          <SearchBar 
+            class="custom-searchbar"
+            @search="handleSearch"
+            @error="showError"
+          />
 
-    </div>
+          <Mapa 
+            :locations="mapLocations" 
+            @location-selected="showLocationDetails"
+          />
+
+          <div v-if="selectedLocation" class="location-plans">
+            <h3>Planes en {{ selectedLocation.name }}</h3>
+            <v-list>
+              <v-list-item 
+                v-for="(plan, index) in locationPlans" 
+                :key="index"
+                @click="selectPlan(plan)"
+              >
+                <v-list-item-title>{{ plan.name }}</v-list-item-title>
+                <v-list-item-subtitle>{{ plan.description }}</v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
+          </div>
+        </div>
+      </v-col>
+
+    </v-row>
 
     <v-snackbar v-model="showSnackbar" :color="snackbarColor">
       {{ snackbarMessage }}
@@ -44,24 +61,33 @@
   </v-container>
 </template>
 
-<script setup>
+
+<script setup lang="ts">
 import { ref } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import Mapa from '@/components/Mapa.vue'
 
 const mapLocations = ref([])
+const selectedLocation = ref(null)
+const locationPlans = ref([])
+
 const showSnackbar = ref(false)
 const snackbarMessage = ref('')
 const snackbarColor = ref('error')
 
 const handleSearch = (location) => {
+    console.log("LOCATION : ", location)
   mapLocations.value = [location]
+  selectedLocation.value = null
+  locationPlans.value = []
 
   if (mapLocations.value.length > 0) {
     snackbarMessage.value = `Mostrando resultados para ${location.name}`
     snackbarColor.value = 'success'
     showSnackbar.value = true
+    
   }
+
 }
 
 const showError = (message) => {
@@ -71,89 +97,71 @@ const showError = (message) => {
 }
 
 const showLocationDetails = (location) => {
-  console.log('Ubicación seleccionada:', location)
+  selectedLocation.value = location
+  locationPlans.value = getSamplePlans(location.name)
 }
 
-const showPlanDetails = (plan) => {
+const selectPlan = (plan) => {
   console.log('Plan seleccionado:', plan)
 }
 
+const getSamplePlans = (locationName) => {
+  const samplePlans = {
+    "Madrid": [
+      { name: "Tour histórico", description: "Recorrido por los lugares emblemáticos", price: "25€" },
+      { name: "Clase de cocina", description: "Aprende a hacer paella", price: "45€" }
+    ],
+    "Barcelona": [
+      { name: "Visita Sagrada Familia", description: "Tour guiado por la obra de Gaudí", price: "35€" }
+    ],
+    "Valencia": [
+      { name: "Tour de las Fallas", description: "Conoce la tradición fallera", price: "30€" },
+      { name: "Visita Ciudad de las Artes", description: "Recorrido por el complejo arquitectónico", price: "28€" }
+    ]
+  }
+
+  return samplePlans[locationName] || []
+}
 
 const destinos = [
   { name: 'Madrid', image: 'https://res.cloudinary.com/worldpackers/image/upload/c_fill,f_auto,q_auto,w_1024/v1/guides/article_cover/leqb8dgct7k0p6vyi6va?_a=BACADKGT' },
   { name: 'París', image: 'https://www.101viajes.com/sites/default/files/puesta-sol-paris.jpg' }
-
 ]
-console.log('hola')
-console.log('BASE URL:', import.meta.env.VITE_API_BASE_URL);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .actividades-container {
+  margin-top: 16px;
+}
+
+.left-column {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 16px;
 }
 
-.info-section {
-  text-align: center;
-  padding: 1rem;
-  background: #c8ecff;
-  border-radius: 12px;
-}
-
-.info-section h2 {
-  margin-bottom: 0.5rem;
-}
-
-.info-section p {
-  color: #555;
-  font-size: 1rem;
-}
-
-
-.popular-destinations {
-  margin-top: 2rem;
-}
-
-.popular-destinations h3 {
-  margin-bottom: 1rem;
-}
-
-.destination-list {
+.popular-destinations .destination-list {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .destination-card {
-  overflow: hidden;
-}
-
-
-@media (min-width: 960px) {
-  .actividades-container {
-    flex-direction: row;
-    gap: 2rem;
-  }
-
-  .info-section {
-    flex: 1;
-    text-align: left;
-  }
-
-  .map-section {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-     gap: 0px;
-  }
-  .custom-searchbar {
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 250px;
 }
 
+.map-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.location-plans {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
 }
 </style>
+

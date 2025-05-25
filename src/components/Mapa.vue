@@ -1,38 +1,18 @@
-
 <template>
   <v-container>
     <div class="map-container">
       <div id="map" ref="mapElement"></div>
-
-      <div v-if="selectedLocation" class="location-plans">
-        <h3>Planes en {{ selectedLocation.name }}</h3>
-        <router-link to="planes"><button class="nav-item">Ver planes</button></router-link>
-        <v-list>
-          <v-list-item 
-            v-for="(plan, index) in locationPlans" 
-            :key="index"
-            @click="selectPlan(plan)"
-          >
-            <v-list-item-title>{{ plan.name }}</v-list-item-title>
-            <v-list-item-subtitle>{{ plan.description }}</v-list-item-subtitle>
-          </v-list-item>
-        </v-list>
-      </div>
     </div>
   </v-container>
 </template>
 
-
 <script setup>
-import { ref, onMounted, defineProps, defineEmits, watch, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, defineProps, defineEmits, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
-
-
-
 
 const props = defineProps({
   locations: {
@@ -49,13 +29,11 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['location-selected', 'plan-selected'])
+const emit = defineEmits(['location-selected'])
 
 const map = ref(null)
 const mapElement = ref(null)
 const markers = ref([])
-const selectedLocation = ref(null)
-const locationPlans = ref([])
 
 const defaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -79,16 +57,15 @@ onUnmounted(() => {
 
 const initializeMap = () => {
   map.value = L.map(mapElement.value).setView(
-    [props.initialPosition.lat, props.initialPosition.lng], 
+    [props.initialPosition.lat, props.initialPosition.lng],
     props.initialZoom
   )
-  
+
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
     maxZoom: 18
   }).addTo(map.value)
-  
- 
+
   if (props.locations.length > 0) {
     addMarkers(props.locations)
   }
@@ -96,20 +73,20 @@ const initializeMap = () => {
 
 const addMarkers = (locations) => {
   clearMarkers()
-  
+
   locations.forEach(location => {
     const marker = L.marker([location.lat, location.lng], { icon: defaultIcon })
       .addTo(map.value)
-      .bindPopup(`<b>${location.name}</b><br>${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`)
+      .bindPopup(`<b>${location.name}</b>`)
       .on('click', () => {
-        selectLocation(location)
+        emit('location-selected', location)
       })
-    
+
     markers.value.push(marker)
   })
-  
+
   if (locations.length > 0) {
-    map.value.flyTo([locations[0].lat, locations[0].lng], 13) 
+    map.value.flyTo([locations[0].lat, locations[0].lng], 13)
   }
 }
 
@@ -118,34 +95,6 @@ const clearMarkers = () => {
     map.value.removeLayer(marker)
   })
   markers.value = []
-}
-
-const selectLocation = (location) => {
-  selectedLocation.value = location
-  locationPlans.value = getSamplePlans(location.name)
-  emit('location-selected', location)
-}
-
-const selectPlan = (plan) => {
-  emit('plan-selected', plan)
-}
-
-const getSamplePlans = (locationName) => {
-  const samplePlans = {
-    "Madrid": [
-      { name: "Tour histórico", description: "Recorrido por los lugares emblemáticos", price: "25€" },
-      { name: "Clase de cocina", description: "Aprende a hacer paella", price: "45€" }
-    ],
-    "Barcelona": [
-      { name: "Visita Sagrada Familia", description: "Tour guiado por la obra de Gaudí", price: "35€" }
-    ],
-    "Valencia": [
-      { name: "Tour de las Fallas", description: "Conoce la tradición fallera", price: "30€" },
-      { name: "Visita Ciudad de las Artes", description: "Recorrido por el complejo arquitectónico", price: "28€" }
-    ]
-  }
-  
-  return samplePlans[locationName] || []
 }
 
 watch(() => props.locations, (newLocations) => {
@@ -167,23 +116,8 @@ watch(() => props.locations, (newLocations) => {
 }
 
 #map {
-  aspect-ratio: 1 / 1; /* cuadrado */
+  aspect-ratio: 1 / 1;
   width: 100%;
   max-width: 600px;
-}
-
-
-.location-plans {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  z-index: 1000;
-  background: white;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-  max-width: 300px;
-  max-height: 400px;
-  overflow-y: auto;
 }
 </style>

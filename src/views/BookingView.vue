@@ -1,25 +1,80 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { usePlaces, type QueryPlaces } from '@/composables/usePlaces';
+import Mapa from '@/components/Mapa.vue';
+import SearchBar from '@/components/SearchBar.vue';
 
 const { GetPlacesByQuery } = usePlaces()
 
-const query: QueryPlaces = {
-    location: 'ghsdg',
-    radius: 5000
+
+
+const alojamientos = ref();
+const mapLocations = ref([])
+const selectedLocation = ref(null)
+const radiusSearch = ref(1)
+
+const showSnackbar = ref(false)
+const snackbarMessage = ref('')
+const snackbarColor = ref('error')
+
+const handleSearch = async (location) => {
+    mapLocations.value = [location]
+    selectedLocation.value = null
+
+    if (mapLocations.value.length > 0) {
+        snackbarMessage.value = `Mostrando resultados para ${location.name}`
+        snackbarColor.value = 'success'
+        showSnackbar.value = true
+    }
+    const query: QueryPlaces = {
+        location: location.lat + ", " + location.lng,
+        radius: radiusSearch.value * 1000
+    }
+    console.log('QUERY', query)
+    alojamientos.value = await GetPlacesByQuery(query)
+    console.log('ALOJAMIENTOS', alojamientos.value)
+
+
+
 }
 
-const alojamientos = ref(); // O tipa correctamente si tienes una interfaz
+const showError = (message) => {
+    snackbarMessage.value = message
+    snackbarColor.value = 'error'
+    showSnackbar.value = true
+}
 
-onMounted(async () => {
-  alojamientos.value = await GetPlacesByQuery(query);
-  console.log("ALOJAMIENTOS", alojamientos.value)
-});
-
+const showLocationDetails = (location) => {
+    console.log("LOCATION ", location)
+    selectedLocation.value = location
+}
 
 </script>
 
 <template>
+    <v-col class="right-column d-flex justify-center">
+        <div class="map-section" style="width: 100%;">
+
+            <!-- SearchBar y Slider en una misma fila -->
+            <v-row class="align-center mb-4" no-gutters>
+                <v-col cols="7">
+                    <SearchBar class="custom-searchbar" @search="handleSearch" @error="showError" />
+                </v-col>
+
+                <v-col cols="5">
+                    <div class="booking__slider">
+                        <div class="mb-2 font-weight-medium">RADIUS (KM)</div>
+                        <v-slider v-model="radiusSearch" :max="10" :min="1" :step="1" color="#0288D1" thumb-label />
+                    </div>
+                </v-col>
+            </v-row>
+
+            <!-- Mapa debajo -->
+            <Mapa :locations="mapLocations" @location-selected="showLocationDetails" />
+
+        </div>
+    </v-col>
+
     <v-col v-for="alojamiento in alojamientos" :key="alojamiento.place_id" cols="12" sm="6" md="4">
 
         <v-card class="mx-auto my-12" max-width="374">
@@ -40,8 +95,8 @@ onMounted(async () => {
 
             <v-card-text>
                 <v-row align="center" class="mx-0">
-                    <v-rating :model-value="alojamiento.rating" color="amber" density="compact" size="small" half-increments
-                        readonly></v-rating>
+                    <v-rating :model-value="alojamiento.rating" color="amber" density="compact" size="small"
+                        half-increments readonly></v-rating>
 
                     <div class="text-grey ms-4">{{ alojamiento.rating }} ({{ alojamiento.user_ratings_total }})</div>
                 </v-row>

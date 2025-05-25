@@ -58,7 +58,8 @@
   <style scoped>
   .search-bar {
     padding: 16px;
-    max-width: 600px;
+    max-width: 500px;
+    min-width: 300px;
     margin: 0 auto;
   }
 
