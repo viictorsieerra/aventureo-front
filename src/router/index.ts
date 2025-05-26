@@ -4,8 +4,10 @@ import ActividadesView from '@/views/ActividadesView.vue'
 import PlanesView from '@/views/PlanesView.vue'
 import Login from '@/views/LoginView.vue'
 import Register from '@/views/RegistroView.vue'
-import ChatIA from '@/components/ChatIA.vue'
+import ChatAI from '@/views/AIView.vue'
 import Booking from '@/views/BookingView.vue'
+import { useJWTStore } from '@/stores/JwtStore'
+import { useUserStore } from '@/stores/UserStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,17 +39,32 @@ const router = createRouter({
     },
     {
       path: '/chat',
-      name: 'ChatIA',
-      component: ChatIA
+      name: 'ChatAI',
+      component: ChatAI,
+      meta: { requiresAuth: true }
     },
     {
       path: '/booking',
       name: 'Booking',
-      component: Booking 
+      component: Booking
     }
 
-    
+
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const jwtStore = useJWTStore()
+  const userStore = useUserStore()
+  const requiresAuth = to.meta.requiresAuth
+
+  if (requiresAuth && (!jwtStore.jwt || !userStore.user )) {
+    next('/login')
+    alert("NO ESTÁ AUTORIZADO PARA ESTA VISTA")
+  }
+  else {
+    next()
+  }
 })
 
 export default router
