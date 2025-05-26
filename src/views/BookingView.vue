@@ -52,69 +52,179 @@ const showLocationDetails = (location) => {
 </script>
 
 <template>
-    <v-col class="right-column d-flex justify-center">
-        <div class="map-section" style="width: 100%;">
+  <div class="booking">
+    <v-col class="booking__map-column d-flex justify-center">
+      <div class="booking__map-section">
+        <v-row class="booking__controls align-center mb-4" no-gutters>
+          <v-col cols="7">
+            <SearchBar class="booking__searchbar" @search="handleSearch" @error="showError" />
+          </v-col>
+          <v-col cols="5">
+            <div class="booking__slider">
+              <div class="booking__slider-label">RADIUS (KM)</div>
+              <v-slider
+                v-model="radiusSearch"
+                :max="10"
+                :min="1"
+                :step="1"
+                color="#0288D1"
+                thumb-label
+                width="330px"
+              />
+            </div>
+          </v-col>
+        </v-row>
 
-            <!-- SearchBar y Slider en una misma fila -->
-            <v-row class="align-center mb-4" no-gutters>
-                <v-col cols="7">
-                    <SearchBar class="custom-searchbar" @search="handleSearch" @error="showError" />
-                </v-col>
+        <Mapa
+          :locations="mapLocations"
+          @location-selected="showLocationDetails"
+        />
+      </div>
+    </v-col>
 
-                <v-col cols="5">
-                    <div class="booking__slider">
-                        <div class="mb-2 font-weight-medium">RADIUS (KM)</div>
-                        <v-slider v-model="radiusSearch" :max="10" :min="1" :step="1" color="#0288D1" thumb-label />
-                    </div>
-                </v-col>
+    <v-row class="booking__cards">
+      <v-col
+        v-for="alojamiento in alojamientos"
+        :key="alojamiento.place_id"
+        cols="12"
+        sm="6"
+        md="4"
+        class="booking__card-col"
+      >
+        <v-card class="booking__card">
+          <template v-slot:loader="{ isActive }">
+            <v-progress-linear
+              :active="isActive"
+              color="deep-purple"
+              height="4"
+              indeterminate
+            />
+          </template>
+
+          <v-img
+            height="250"
+            src="https://i.pinimg.com/736x/88/a9/8c/88a98ce61ce7f5e6b750c263453c78ec.jpg"
+            cover
+          />
+
+          <v-card-item>
+            <v-card-title>{{ alojamiento.name }}</v-card-title>
+            <v-card-subtitle>
+              <span class="booking__location">{{ alojamiento.vicinity }}</span>
+            </v-card-subtitle>
+          </v-card-item>
+
+          <v-card-text>
+            <v-row align="center" class="mx-0">
+              <v-rating
+                :model-value="alojamiento.rating"
+                color="amber"
+                density="compact"
+                size="small"
+                half-increments
+                readonly
+              />
+              <div class="booking__rating-text">
+                {{ alojamiento.rating }} ({{ alojamiento.user_ratings_total }})
+              </div>
             </v-row>
 
-            <!-- Mapa debajo -->
-            <Mapa :locations="mapLocations" @location-selected="showLocationDetails" />
+            <div class="booking__category"> $ • Italian, Cafe </div>
+            <div class="booking__description">
+              Small plates, salads & sandwiches - an intimate setting with 12 indoor
+              seats plus patio seating.
+            </div>
+          </v-card-text>
 
-        </div>
-    </v-col>
+          <v-divider />
 
-    <v-col v-for="alojamiento in alojamientos" :key="alojamiento.place_id" cols="12" sm="6" md="4">
-
-        <v-card class="mx-auto my-12" max-width="374">
-            <template v-slot:loader="{ isActive }">
-                <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
-            </template>
-
-            <v-img height="250" src="https://i.pinimg.com/736x/88/a9/8c/88a98ce61ce7f5e6b750c263453c78ec.jpg"
-                cover></v-img>
-
-            <v-card-item>
-                <v-card-title>{{ alojamiento.name }}</v-card-title>
-
-                <v-card-subtitle>
-                    <span class="me-1">{{ alojamiento.vicinity }}</span>
-                </v-card-subtitle>
-            </v-card-item>
-
-            <v-card-text>
-                <v-row align="center" class="mx-0">
-                    <v-rating :model-value="alojamiento.rating" color="amber" density="compact" size="small"
-                        half-increments readonly></v-rating>
-
-                    <div class="text-grey ms-4">{{ alojamiento.rating }} ({{ alojamiento.user_ratings_total }})</div>
-                </v-row>
-
-                <div class="my-4 text-subtitle-1">$ • Italian, Cafe</div>
-
-                <div>
-                    Small plates, salads & sandwiches - an intimate setting with 12 indoor
-                    seats plus patio seating.
-                </div>
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-title>Tonight's availability</v-card-title>
+          <v-card-title>Tonight's availability</v-card-title>
         </v-card>
-
-    </v-col>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
-<style lang="scss"></style>
+
+<style scoped lang="scss">
+.booking {
+  padding-inline: 1rem;
+
+  &__map-section {
+    width: 100%;
+  }
+
+  &__controls {
+    margin: 20px;
+  }
+
+  &__slider {
+    display: grid;
+    justify-items: center;
+
+
+    &-label {
+      font-weight: 500;
+    }
+  }
+
+  &__searchbar {
+    width: 100%;
+  }
+
+  &__cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    justify-content: center;
+  }
+
+  &__card-col {
+    display: flex;
+    justify-content: center;
+    flex: 1 1 100%;
+    max-width: 100%;
+    padding: 0.5rem;
+  }
+
+  &__card {
+    max-width: 374px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  &__location {
+    margin-right: 0.5rem;
+  }
+
+  &__rating-text {
+    color: #757575;
+    margin-left: 1rem;
+  }
+
+  &__category {
+    margin: 1rem 0;
+    font-weight: 500;
+  }
+
+  &__description {
+    color: #555;
+  }
+
+  @media (min-width: 600px) {
+    &__card-col {
+      flex: 1 1 48%;
+      max-width: 48%;
+    }
+  }
+
+  @media (min-width: 900px) {
+    &__card-col {
+      flex: 1 1 30%;
+      max-width: 30%;
+    }
+  }
+}
+</style>
+
