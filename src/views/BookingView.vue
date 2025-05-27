@@ -1,52 +1,81 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { usePlaces, type QueryPlaces } from '@/composables/usePlaces';
+import { ref } from 'vue';
+import { usePlaces, type Place, type QueryPlaces } from '@/composables/usePlaces';
 import Mapa from '@/components/Mapa.vue';
 import SearchBar from '@/components/SearchBar.vue';
 
-const { GetPlacesByQuery } = usePlaces()
+const { GetPlacesByQuery, GetInfoPlace } = usePlaces()
 
 
 
-const alojamientos = ref();
+const alojamientos = ref<(Place | null)[]>([])
+const alojamientoSelected = ref<Place | null>(null)
 const mapLocations = ref([])
 const selectedLocation = ref(null)
 const radiusSearch = ref(1)
+
+const expandedCardId = ref<string | null>(null)
+
+const showInfoPlace = async (placeId: string) => {
+  expandedCardId.value = expandedCardId.value === placeId ? null : placeId
+
+  const index = alojamientos.value.findIndex(p => p?.place_id === placeId)
+
+  if (index !== -1) {
+    const alojamiento = alojamientos.value[index]
+
+    const faltaInfo =
+      !alojamiento?.international_phone_number ||
+      !alojamiento.website ||
+      !alojamiento.url
+
+    if (faltaInfo) {
+      const infoCompleta = await GetInfoPlace(placeId)
+      
+      if (infoCompleta) {
+        alojamientos.value[index] = { ...alojamiento, ...infoCompleta }
+        alojamientoSelected.value = alojamientos.value[index]
+      }
+    } else {
+      alojamientoSelected.value = alojamiento
+    }
+  }
+  
+  console.log('INFO DEL SITIO: ', alojamientoSelected.value)
+}
 
 const showSnackbar = ref(false)
 const snackbarMessage = ref('')
 const snackbarColor = ref('error')
 
 const handleSearch = async (location) => {
-    mapLocations.value = [location]
-    selectedLocation.value = null
+  mapLocations.value = [location]
+  selectedLocation.value = null
 
-    if (mapLocations.value.length > 0) {
-        snackbarMessage.value = `Mostrando resultados para ${location.name}`
-        snackbarColor.value = 'success'
-        showSnackbar.value = true
-    }
-    const query: QueryPlaces = {
-        location: location.lat + ", " + location.lng,
-        radius: radiusSearch.value * 1000
-    }
-    console.log('QUERY', query)
-    alojamientos.value = await GetPlacesByQuery(query)
-    console.log('ALOJAMIENTOS', alojamientos.value)
-
-
+  if (mapLocations.value.length > 0) {
+    snackbarMessage.value = `Mostrando resultados para ${location.name}`
+    snackbarColor.value = 'success'
+    showSnackbar.value = true
+  }
+  const query: QueryPlaces = {
+    location: location.lat + ", " + location.lng,
+    radius: radiusSearch.value * 1000
+  }
+  console.log('QUERY', query)
+  alojamientos.value = await GetPlacesByQuery(query)
+  console.log('ALOJAMIENTOS', alojamientos.value)
 
 }
 
 const showError = (message) => {
-    snackbarMessage.value = message
-    snackbarColor.value = 'error'
-    showSnackbar.value = true
+  snackbarMessage.value = message
+  snackbarColor.value = 'error'
+  showSnackbar.value = true
 }
 
 const showLocationDetails = (location) => {
-    console.log("LOCATION ", location)
-    selectedLocation.value = location
+  console.log("LOCATION ", location)
+  selectedLocation.value = location
 }
 
 </script>
@@ -61,51 +90,23 @@ const showLocationDetails = (location) => {
           </v-col>
           <v-col cols="5">
             <div class="booking__slider">
-              <div class="booking__slider-label">RADIUS (KM)</div>
-              <v-slider
-                v-model="radiusSearch"
-                :max="10"
-                :min="1"
-                :step="1"
-                color="#0288D1"
-                thumb-label
-                width="330px"
-              />
+              <div class="booking__slider-label">RADIUS {{ radiusSearch }} (KM)</div>
+              <v-slider v-model="radiusSearch" :max="10" :min="1" :step="1" color="#0288D1" thumb-label width="330px" />
             </div>
           </v-col>
         </v-row>
 
-        <Mapa
-          :locations="mapLocations"
-          @location-selected="showLocationDetails"
-        />
+        <Mapa :locations="mapLocations" @location-selected="showLocationDetails" />
       </div>
     </v-col>
 
     <v-row class="booking__cards">
-      <v-col
-        v-for="alojamiento in alojamientos"
-        :key="alojamiento.place_id"
-        cols="12"
-        sm="6"
-        md="4"
-        class="booking__card-col"
-      >
+      <v-col v-for="alojamiento in alojamientos" :key="alojamiento.place_id" cols="12" sm="6" md="4"
+        class="booking__card-col">
         <v-card class="booking__card">
           <template v-slot:loader="{ isActive }">
-            <v-progress-linear
-              :active="isActive"
-              color="deep-purple"
-              height="4"
-              indeterminate
-            />
+            <v-progress-linear :active="isActive" color="#0288D1" height="4" indeterminate />
           </template>
-
-          <v-img
-            height="250"
-            src="https://i.pinimg.com/736x/88/a9/8c/88a98ce61ce7f5e6b750c263453c78ec.jpg"
-            cover
-          />
 
           <v-card-item>
             <v-card-title>{{ alojamiento.name }}</v-card-title>
@@ -116,29 +117,27 @@ const showLocationDetails = (location) => {
 
           <v-card-text>
             <v-row align="center" class="mx-0">
-              <v-rating
-                :model-value="alojamiento.rating"
-                color="amber"
-                density="compact"
-                size="small"
-                half-increments
-                readonly
-              />
+              <v-rating :model-value="alojamiento.rating" color="amber" density="compact" size="small" half-increments
+                readonly />
               <div class="booking__rating-text">
                 {{ alojamiento.rating }} ({{ alojamiento.user_ratings_total }})
               </div>
             </v-row>
-
-            <div class="booking__category"> $ • Italian, Cafe </div>
-            <div class="booking__description">
-              Small plates, salads & sandwiches - an intimate setting with 12 indoor
-              seats plus patio seating.
-            </div>
           </v-card-text>
 
           <v-divider />
+          <v-card-actions>
+            <v-btn color="#0288D1" text="Más detalle" block border @click="showInfoPlace(alojamiento.place_id)"></v-btn>
+          </v-card-actions>
 
-          <v-card-title>Tonight's availability</v-card-title>
+          <div v-if="expandedCardId === alojamiento.place_id">
+            <v-divider></v-divider>
+            <v-card-text>
+              {{ alojamiento?.international_phone_number }}
+              <a :href="alojamiento.url" target="_blank" rel="noopener" class="text-decoration-none"> {{ alojamiento?.url }} </a>
+              {{ alojamiento?.website }}
+            </v-card-text>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -178,6 +177,7 @@ const showLocationDetails = (location) => {
     gap: 1.5rem;
     margin-top: 2rem;
     justify-content: center;
+    align-items: flex-start;
   }
 
   &__card-col {
@@ -227,4 +227,3 @@ const showLocationDetails = (location) => {
   }
 }
 </style>
-
