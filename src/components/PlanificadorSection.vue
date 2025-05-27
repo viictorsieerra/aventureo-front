@@ -41,7 +41,7 @@ import PlannerCanvas from '@/components/PlannerCanvas.vue'
 
 .planner-card {
   flex: 1 1 350px;
-  background: rgba(255, 255, 255, 0.85);
+  background-color: #ffffff;
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
