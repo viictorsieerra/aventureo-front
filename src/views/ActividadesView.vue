@@ -4,6 +4,7 @@
     <Mapa :locations="mapLocations" :initialPosition="{ lat: 40.4168, lng: -3.7038 }" :initialZoom="5"
       @location-selected="onLocationSelected" />
 
+    <!-- Mostrar lista de planes si hay -->
     <div v-if="locationPlans.length > 0" class="location-plans">
       <h3>Planes en {{ selectedLocation?.name }}</h3>
       <v-list>
@@ -18,7 +19,7 @@
         </v-list-item>
       </v-list>
 
-      <!-- Botón para añadir plan incluso si hay planes -->
+      <!-- Botón para añadir plan -->
       <v-row justify="center" class="mt-4">
         <v-col cols="auto">
           <v-btn
@@ -32,8 +33,8 @@
       </v-row>
     </div>
 
-    <!-- Mostrar botón y mensaje si NO hay planes -->
-    <div v-else style="margin-top: 16px; text-align: center;">
+    <!-- Si no hay planes, mostrar mensaje y botón solo si hay ciudad buscada -->
+    <div v-else-if="selectedLocation" style="margin-top: 16px; text-align: center;">
       <v-row justify="center">
         <v-col cols="auto">
           <v-btn
@@ -73,7 +74,6 @@
   </v-container>
 </template>
 
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { usePlans, CreatePlanDTO } from "@/composables/usePlans"
@@ -103,11 +103,6 @@ const onSearch = async (location) => {
   selectedLocation.value = location
   const plans = await getPlans(location.name)
   locationPlans.value = plans
-
-  if (plans.length === 0) {
-    showAddPlanDialog.value = true
-  }
-
   mapLocations.value = [location]
 }
 
@@ -118,15 +113,15 @@ const onLocationSelected = (location) => {
 const guardarPlan = async () => {
   if (!selectedLocation.value) return
 
-const dto: CreatePlanDTO = {
-  idUsuario: 1, // usa un valor fijo o variable según tu login
-  lugar: selectedLocation.value.name,
-  nombre: newPlan.value.nombre,
-  duracion: newPlan.value.duracion,
-  precioEstimado: newPlan.value.precioEstimado,
-  valoracion: newPlan.value.valoracion,
-  comentario: newPlan.value.comentario
-}
+  const dto: CreatePlanDTO = {
+    idUsuario: 1,
+    lugar: selectedLocation.value.name,
+    nombre: newPlan.value.nombre,
+    duracion: newPlan.value.duracion,
+    precioEstimado: newPlan.value.precioEstimado,
+    valoracion: newPlan.value.valoracion,
+    comentario: newPlan.value.comentario
+  }
 
   await createPlan(dto)
   showSnackbar.value = true
@@ -134,6 +129,7 @@ const dto: CreatePlanDTO = {
   snackbarColor.value = 'success'
   showAddPlanDialog.value = false
 
+  // Limpiar datos
   newPlan.value = {
     nombre: '',
     duracion: 1,
@@ -141,9 +137,12 @@ const dto: CreatePlanDTO = {
     valoracion: 1,
     comentario: ''
   }
+
+  // Recargar planes de esa ciudad
+  const plans = await getPlans(selectedLocation.value.name)
+  locationPlans.value = plans
 }
 </script>
-
 
 <style scoped lang="scss">
 .actividades-container {
