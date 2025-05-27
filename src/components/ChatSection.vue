@@ -36,7 +36,6 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
   flex-wrap: wrap;
   gap: 2rem;
   padding: 2rem;
-  background-image:  url('https://img.freepik.com/foto-gratis/fondo-mar-playa-vacio_74190-4002.jpg?semt=ais_hybrid&w=740');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

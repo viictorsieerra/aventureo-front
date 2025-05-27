@@ -2,7 +2,7 @@
   <div class="planner-section">
     <!-- Columna Izquierda: Card con texto -->
     <div class="planner-card">
-      <h2>Organiza tu viaje a medida</h2>
+      <h2>Organiza tu viaje a medida!</h2>
       <p>
         ¿Quieres tener todo tu viaje controlado? Crea planes personalizados para cada escapada: 
         asigna presupuesto, transporte, alojamiento y actividades. Gestiona tus gastos y lleva 

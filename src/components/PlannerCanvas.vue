@@ -56,7 +56,7 @@ onMounted(() => {
     ctx.textBaseline = 'middle'
     ctx.fillText(text, x + width / 2, y + height / 2)
     
-    ctx.textAlign = 'start' // reset alignment
+    ctx.textAlign = 'start' 
     ctx.textBaseline = 'alphabetic'
   }
 
@@ -160,7 +160,7 @@ onMounted(() => {
 canvas {
   width: 100%;
   height: 100%;
-  background-color: #e8f5f9;
+  
   border-radius: 12px;
 }
 </style>

@@ -5,56 +5,16 @@
     <div class="steps-container">
       <div class="step" @click="scrollToSection('ofertas')">
         <div class="step-number">🌎</div>
-        <p class="step-description">Compra y ahorra gracias a nuestras súper ofertas</p>
+        <p class="step-description">Busca las mejores actividades por todo el mundo!</p>
       </div>
       <div class="step" @click="scrollToSection('vuelos')">
         <div class="step-number">✈️🚆</div>
-        <p class="step-description">Elige la forma que mas se ajuste a tus necesidades para viajar</p>
+        <p class="step-description">Chatea con nuestra IA Ventu y disfruta de todas sus sugerencias para tu viaje!</p>
       </div>
       <div class="step">
         <div class="step-number">💰</div>
-        <p class="step-description">Realiza el pago y listo! Disfruta del viaje!</p>
+        <p class="step-description">Ahorra tiempo y dinero con nuestro planificador de viajes!</p>
       </div>
-    </div>
-
-    <h2 class="subtitle">Tus vacaciones empiezan aquí</h2>
-    <div class="client-types">
-      <div class="client-type">
-        <div class="icon">🏖️</div>
-        <p class="client-description">Encuentra el destino perfecto para tus vacaciones soñadas</p>
-      </div>
-      <div class="client-type">
-        <div class="icon">🏨</div>
-        <p class="client-description">Reserva tu hotel y disfruta de una experiencia única</p>
-      </div>
-      <div class="client-type">
-        <div class="icon">🍽️</div>
-        <p class="client-description">Disfruta de la mejor gastronomía local en cada destino</p>
-      </div>
-      <div class="client-type">
-        <div class="icon">🌏</div>
-        <p class="client-description">Te ofrecemos vacaciones por todo el mundo, mostrándote cada rincón y sus secretos</p>
-      </div>
-      <div class="client-type">
-        <div class="icon">💲</div>
-        <p class="client-description">Promociones y ofertas seleccionadas para ti. ¡Tenemos los mejores chollos!</p>
-      </div>
-      <div class="client-type">
-        <div class="icon">📱</div>
-        <p class="client-description">Reserva tu viaje de forma rápida y sencilla desde cualquier dispositivo</p>
-      </div>
-      <div class="client-type">
-        <div class="icon">🤵</div>
-        <p class="client-description">Asesores especializados te ayudarán a elegir y planificar tus vacaciones para tu disfrute</p>
-      </div>
-      <div class="client-type">
-        <div class="icon">📞</div>
-        <p class="client-description">Viaja tranquilo: te ofrecemos gratis asistencia 24 horas en destino los 365 días del año</p>
-      </div>
-      <div class="client-type">
-        <div class="icon">🛡️</div>
-        <p class="client-description">Te ofrecemos la mejor protección para que viajes seguro</p>
-    </div>
     </div>
   </div>
 </template>
@@ -92,7 +52,7 @@
   .title {
     @include responsive-font-size(1.5rem);
     font-weight: bold;
-    color: $secondary-color;
+    color: #ffff;
   }
   
   .steps-container {
