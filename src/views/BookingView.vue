@@ -31,7 +31,7 @@ const showInfoPlace = async (placeId: string) => {
 
     if (faltaInfo) {
       const infoCompleta = await GetInfoPlace(placeId)
-      
+
       if (infoCompleta) {
         alojamientos.value[index] = { ...alojamiento, ...infoCompleta }
         alojamientoSelected.value = alojamientos.value[index]
@@ -40,7 +40,7 @@ const showInfoPlace = async (placeId: string) => {
       alojamientoSelected.value = alojamiento
     }
   }
-  
+
   console.log('INFO DEL SITIO: ', alojamientoSelected.value)
 }
 
@@ -85,57 +85,69 @@ const showLocationDetails = (location) => {
     <v-col class="booking__map-column d-flex justify-center">
       <div class="booking__map-section">
         <v-row class="booking__controls align-center mb-4" no-gutters>
-          <v-col cols="7">
+          <v-col cols="12" md="7">
             <SearchBar class="booking__searchbar" @search="handleSearch" @error="showError" />
           </v-col>
-          <v-col cols="5">
+
+          <v-col cols="12" md="5">
             <div class="booking__slider">
               <div class="booking__slider-label">RADIUS {{ radiusSearch }} (KM)</div>
-              <v-slider v-model="radiusSearch" :max="10" :min="1" :step="1" color="#0288D1" thumb-label width="330px" />
+              <v-slider v-model="radiusSearch" :max="10" :min="1" :step="1" color="#0288D1" thumb-label class="w-50" />
             </div>
           </v-col>
         </v-row>
+
 
         <Mapa :locations="mapLocations" @location-selected="showLocationDetails" />
       </div>
     </v-col>
 
     <v-row class="booking__cards">
-      <v-col v-for="alojamiento in alojamientos" :key="alojamiento.place_id" cols="12" sm="6" md="4"
+      <v-col v-for="alojamiento in alojamientos" :key="alojamiento?.place_id" cols="12" sm="6" md="4"
         class="booking__card-col">
-        <v-card class="booking__card">
+        <v-card class="booking__card" color="#0288D1">
           <template v-slot:loader="{ isActive }">
             <v-progress-linear :active="isActive" color="#0288D1" height="4" indeterminate />
           </template>
 
           <v-card-item>
-            <v-card-title>{{ alojamiento.name }}</v-card-title>
+            <v-card-title>{{ alojamiento?.name }}</v-card-title>
             <v-card-subtitle>
-              <span class="booking__location">{{ alojamiento.vicinity }}</span>
+              <span class="booking__location">{{ alojamiento?.vicinity }}</span>
             </v-card-subtitle>
           </v-card-item>
 
           <v-card-text>
             <v-row align="center" class="mx-0">
-              <v-rating :model-value="alojamiento.rating" color="amber" density="compact" size="small" half-increments
+              <v-rating :model-value="alojamiento?.rating" color="amber" density="compact" size="small" half-increments
                 readonly />
               <div class="booking__rating-text">
-                {{ alojamiento.rating }} ({{ alojamiento.user_ratings_total }})
+                {{ alojamiento?.rating }} ({{ alojamiento?.user_ratings_total }})
               </div>
             </v-row>
           </v-card-text>
 
           <v-divider />
           <v-card-actions>
-            <v-btn color="#0288D1" text="Más detalle" block border @click="showInfoPlace(alojamiento.place_id)"></v-btn>
+            <v-btn color="#0288D1" text="Más detalle" block border
+              @click="showInfoPlace(alojamiento?.place_id)"></v-btn>
           </v-card-actions>
 
-          <div v-if="expandedCardId === alojamiento.place_id">
+          <div v-if="expandedCardId === alojamiento?.place_id">
             <v-divider></v-divider>
             <v-card-text>
               {{ alojamiento?.international_phone_number }}
-              <a :href="alojamiento.url" target="_blank" rel="noopener" class="text-decoration-none"> {{ alojamiento?.url }} </a>
-              {{ alojamiento?.website }}
+              <v-icon color="#0288D1" icon="mdi-phone" size="small"></v-icon>
+            </v-card-text>
+            <v-card-text>
+              <a :href="alojamiento?.url" target="_blank" color="#0288D1" rel="noopener" class="text-decoration-none">
+                {{
+                  alojamiento?.url }} </a>
+            </v-card-text>
+            <v-card-text>
+              <a :href="alojamiento?.website" target="_blank" color="#0288D1" rel="noopener"
+                class="text-decoration-none"> {{
+                  alojamiento?.website }} </a>
             </v-card-text>
           </div>
         </v-card>
@@ -164,6 +176,7 @@ const showLocationDetails = (location) => {
 
     &-label {
       font-weight: 500;
+      font-weight: bold;
     }
   }
 
@@ -176,6 +189,7 @@ const showLocationDetails = (location) => {
     flex-wrap: wrap;
     gap: 1.5rem;
     margin-top: 2rem;
+    margin-bottom: 2rem;
     justify-content: center;
     align-items: flex-start;
   }
@@ -192,6 +206,10 @@ const showLocationDetails = (location) => {
     max-width: 374px;
     width: 100%;
     margin: 0 auto;
+
+    a {
+      color: #0288D1;
+    }
   }
 
   &__location {
