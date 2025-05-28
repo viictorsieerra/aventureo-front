@@ -6,6 +6,7 @@ import Login from '@/views/LoginView.vue'
 import Register from '@/views/RegistroView.vue'
 import ChatAI from '@/views/AIView.vue'
 import Booking from '@/views/BookingView.vue'
+import PlanificadorGastosView from '@/views/PlanificadorGastosView.vue'
 import { useJWTStore } from '@/stores/JwtStore'
 import { useUserStore } from '@/stores/UserStore'
 
@@ -47,6 +48,11 @@ const router = createRouter({
       path: '/booking',
       name: 'Booking',
       component: Booking
+    },
+    {
+      path: '/planificador',
+      name: 'Planificador',
+      component: PlanificadorGastosView
     }
 
 
