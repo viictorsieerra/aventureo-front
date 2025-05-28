@@ -77,7 +77,14 @@
           <v-text-field v-model="newPlan.nombre" label="Nombre" />
           <v-text-field v-model="newPlan.duracion" label="Duración (días)" type="number" />
           <v-text-field v-model="newPlan.precioEstimado" label="Precio estimado (€)" type="number" />
-          <v-text-field v-model="newPlan.valoracion" label="Valoración (1-5)" type="number" />
+          <div class="valoracion-container">
+            <v-label>Valoración</v-label>
+            <v-rating v-model="newPlan.valoracion" length="5" color="amber" background-color="grey lighten-2"
+              half-increments size="30" />
+          </div>
+
+
+
           <v-textarea v-model="newPlan.comentario" label="Comentario" />
         </v-card-text>
         <v-card-actions>
@@ -86,6 +93,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
   </v-container>
 </template>
 
@@ -198,6 +206,12 @@ const guardarPlan = async () => {
   border-radius: 8px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
   margin-top: 24px;
+}
+.valoracion-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  margin-bottom: 12px; 
 }
 
 .v-btn {
