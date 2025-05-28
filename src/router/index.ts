@@ -6,6 +6,7 @@ import Login from '@/views/LoginView.vue'
 import Register from '@/views/RegistroView.vue'
 import ChatIA from '@/components/ChatIA.vue'
 import Booking from '@/views/BookingView.vue'
+import DetallesPlanView from '@/views/DetallesPlanView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,7 +45,14 @@ const router = createRouter({
       path: '/booking',
       name: 'Booking',
       component: Booking 
+    },
+    {
+      path: '/planes/:id',
+      name: 'DetallesPlan',
+      component: () => import('@/views/DetallesPlanView.vue')
     }
+    
+    
 
     
   ],

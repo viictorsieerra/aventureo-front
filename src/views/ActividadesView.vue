@@ -1,55 +1,70 @@
 <template>
   <v-container>
     <SearchBar @search="onSearch" />
-    <Mapa :locations="mapLocations" :initialPosition="{ lat: 40.4168, lng: -3.7038 }" :initialZoom="5"
-      @location-selected="onLocationSelected" />
 
-    <!-- Mostrar lista de planes si hay -->
+    <v-row>
+      <!-- Columna izquierda: Card explicativa -->
+      <v-col cols="12" md="4">
+        <v-card class="info-card">
+          <v-card-title>Planifica tu aventura</v-card-title>
+          <v-card-text>
+            Aquí puedes buscar una ciudad para ver los planes que han creado otros viajeros.
+            <br /><br />
+            Si no encuentras ningún plan, puedes añadir el tuyo propio haciendo clic en el botón
+            <v-icon color="primary" class="mx-1">mdi-plus</v-icon>.
+            <br /><br />
+            Los planes incluyen nombre, duración, precio estimado y valoración, además de un comentario.
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- Columna derecha: Mapa -->
+      <v-col cols="12" md="8">
+        <Mapa :locations="mapLocations" :initialPosition="{ lat: 40.4168, lng: -3.7038 }" :initialZoom="5"
+          @location-selected="onLocationSelected" />
+      </v-col>
+    </v-row>
+
+    <!-- Mostrar lista de planes -->
     <div v-if="locationPlans.length > 0" class="location-plans">
       <h3>Planes en {{ selectedLocation?.name }}</h3>
       <v-list>
-        <v-list-item v-for="plan in locationPlans" :key="plan.id">
+        <v-list-item v-for="plan in locationPlans" :key="plan.idPlan" @click="() => irADetalle(plan.idPlan)"
+          style="cursor: pointer;">
+
           <v-list-item-content>
             <v-list-item-title>{{ plan.nombre }}</v-list-item-title>
             <v-list-item-subtitle>
-              Duración: {{ plan.duracion }} días | Precio: {{ plan.precioEstimado }}€ | Valoración: {{ plan.valoracion }}
+              Duración: {{ plan.duracion }} días | Precio: {{ plan.precioEstimado }}€ | Valoración: {{ plan.valoracion
+              }}
             </v-list-item-subtitle>
             <p>{{ plan.comentario }}</p>
           </v-list-item-content>
         </v-list-item>
       </v-list>
 
-      <!-- Botón para añadir plan -->
+
+
       <v-row justify="center" class="mt-4">
         <v-col cols="auto">
-          <v-btn
-            color="primary"
-            density="compact"
-            icon="mdi-plus"
-            @click="showAddPlanDialog = true"
-            title="Añadir nuevo plan"
-          ></v-btn>
+          <v-btn color="primary" density="compact" icon="mdi-plus" @click="showAddPlanDialog = true"
+            title="Añadir nuevo plan"></v-btn>
         </v-col>
       </v-row>
     </div>
 
-    <!-- Si no hay planes, mostrar mensaje y botón solo si hay ciudad buscada -->
+    <!-- Si no hay planes -->
     <div v-else-if="selectedLocation" style="margin-top: 16px; text-align: center;">
       <v-row justify="center">
         <v-col cols="auto">
-          <v-btn
-            color="primary"
-            density="compact"
-            icon="mdi-plus"
-            @click="showAddPlanDialog = true"
-            title="Añadir nuevo plan"
-          ></v-btn>
+          <v-btn color="primary" density="compact" icon="mdi-plus" @click="showAddPlanDialog = true"
+            title="Añadir nuevo plan"></v-btn>
         </v-col>
       </v-row>
       <div>No hay planes para {{ selectedLocation?.name }}. Pulsa + para crear uno.</div>
     </div>
 
-    <!-- Snackbar de notificación -->
+    <!-- Snackbar -->
     <v-snackbar v-model="showSnackbar" :color="snackbarColor">
       {{ snackbarMessage }}
     </v-snackbar>
@@ -79,6 +94,14 @@ import { ref } from 'vue'
 import { usePlans, CreatePlanDTO } from "@/composables/usePlans"
 import Mapa from "@/components/Mapa.vue"
 import SearchBar from "@/components/SearchBar.vue"
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const irADetalle = (id) => {
+  console.log("Navegando al plan con id:", id)
+  router.push(`/planes/${id}`)
+}
 
 const { getPlans, createPlan } = usePlans()
 
@@ -149,6 +172,14 @@ const guardarPlan = async () => {
   margin-top: 16px;
 }
 
+.info-card {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 9%;
+}
+
 .left-column {
   display: flex;
   flex-direction: column;
@@ -166,6 +197,7 @@ const guardarPlan = async () => {
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 24px;
 }
 
 .v-btn {

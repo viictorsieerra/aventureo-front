@@ -6,12 +6,17 @@ export const usePlans = () => {
 
   // Obtener todos los planes
   const getPlans = async (destino: string) => {
-  const res = await fetch(baseUrl)
-  const data = await res.json()
-  // Filtrar por destino
-  return data.filter((plan: any) => plan.lugar.toLowerCase() === destino.toLowerCase())
-}
+    const res = await fetch(baseUrl)
+    const data = await res.json()
+    return data.filter((plan: any) => plan.lugar.toLowerCase() === destino.toLowerCase())
+  }
 
+  // Obtener un plan por id
+  const getPlanById = async (id: number) => {
+    const res = await fetch(`${baseUrl}/${id}`)
+    if (!res.ok) throw new Error("No se pudo obtener el plan")
+    return await res.json()
+  }
 
   // Crear un nuevo plan
   const createPlan = (plan: CreatePlanDTO) => {
@@ -25,7 +30,7 @@ export const usePlans = () => {
     })
   }
 
-  return { getPlans, createPlan }
+  return { getPlans, getPlanById, createPlan }
 }
 
 // DTO Type para crear un plan
