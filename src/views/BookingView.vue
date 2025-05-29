@@ -105,7 +105,7 @@ const showLocationDetails = (location) => {
     <v-row class="booking__cards">
       <v-col v-for="alojamiento in alojamientos" :key="alojamiento?.place_id" cols="12" sm="6" md="4"
         class="booking__card-col">
-        <v-card class="booking__card" color="#0288D1">
+        <v-card class="booking__card" >
           <template v-slot:loader="{ isActive }">
             <v-progress-linear :active="isActive" color="#0288D1" height="4" indeterminate />
           </template>

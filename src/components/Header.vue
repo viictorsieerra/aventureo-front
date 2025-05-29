@@ -27,13 +27,14 @@
         <template v-else>
           <v-menu open-on-click>
             <template v-slot:activator="{ props }">
-              <v-btn color="red" v-bind="props" class="header__actions-avatar">
-                {{ user.nombre.charAt(0) }}
+              <v-btn color="white" v-bind="props" class="header__actions-avatar">
+                <span style="color: #0288D1;">{{ user.nombre.charAt(0) }}</span>
               </v-btn>
             </template>
             <v-list>
               <v-list-item>
                 <v-list-item-title class="header__actions-avatar__item">
+                   <router-link to="/planificador">Planificador de gastos</router-link>
                 </ v-list-item-title>
                 <v-list-item-title class="header__actions-avatar__item" @click="jwtStore.logOut">
                   Cerrar Sesión
