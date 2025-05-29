@@ -31,45 +31,43 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
 
 <style scoped>
 .chat-section {
-    z-index: 100000;
+  z-index: 100000;
   display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  padding: 2rem;
+  flex-direction: column; /* Mobile first: columnas apiladas */
+  gap: 1.5rem;
+  padding: 1.5rem;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-
   border-radius: 16px;
 }
 
 .chat-card {
-  flex: 1 1 350px;
   background: #ffffff;
   border-radius: 16px;
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .chat-card h2 {
-  font-size: 2rem;
+  font-size: 1.75rem;
   color: #1f2937;
   margin-bottom: 1rem;
 }
 
 .chat-card p {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: #4b5563;
   margin-bottom: 1.5rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .chat-card button {
   background-color: #4DD0E1;
   color: #ffffff;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.65rem 1.25rem;
   border-radius: 12px;
   font-size: 1rem;
   cursor: pointer;
@@ -81,35 +79,55 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
 }
 
 .chat-canvas-container {
-  flex: 1 1 500px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 500px;
+  min-height: 300px;
+  margin-top: 1rem;
 }
 
 .canvas-wrapper {
-  width: 90%;
-  max-width: 600px;
-  height: 500px;
+  width: 100%;
+  max-width: 100%;
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
+/* Desktop y tablets grandes */
+@media (min-width: 768px) {
   .chat-section {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  .chat-card {
+    flex: 1 1 350px;
+    padding: 2rem;
+  }
+
+  .chat-card h2 {
+    font-size: 2rem;
+  }
+
+  .chat-card p {
+    font-size: 1.125rem;
+    line-height: 1.6;
   }
 
   .chat-canvas-container {
-    min-height: 400px;
+    flex: 1 1 500px;
+    min-height: 500px;
+    margin-top: 0;
   }
 
   .canvas-wrapper {
-    width: 100%;
-    height: 400px;
+    width: 90%;
+    max-width: 600px;
+    height: 500px;
   }
 }
+
 </style>

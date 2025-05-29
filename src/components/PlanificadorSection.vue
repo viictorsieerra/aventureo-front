@@ -1,6 +1,5 @@
 <template>
   <div class="planner-section">
-    <!-- Columna Izquierda: Card con texto -->
     <div class="planner-card">
       <h2>Organiza tu viaje a medida!</h2>
       <p>
@@ -11,7 +10,6 @@
       <button>Empieza tu plan</button>
     </div>
 
-    <!-- Columna Derecha: Canvas -->
     <div class="planner-canvas-container">
       <div class="canvas-wrapper">
         <PlannerCanvas />
@@ -29,8 +27,9 @@ import PlannerCanvas from '@/components/PlannerCanvas.vue'
   z-index: 100000;
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
-  padding: 2rem;
+  gap: 2.5rem;            
+  padding: 3rem 3rem 4rem; 
+  margin: 2rem auto;      
   border-radius: 16px;
   background-image: url('/playa-grande.jpg');
   background-size: cover;
@@ -43,9 +42,11 @@ import PlannerCanvas from '@/components/PlannerCanvas.vue'
   flex: 1 1 350px;
   background-color: #ffffff;
   border-radius: 16px;
-  padding: 2rem;
+  padding: 2.5rem;          
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
+
+
 
 .planner-card h2 {
   font-size: 2rem;

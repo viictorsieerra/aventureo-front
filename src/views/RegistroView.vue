@@ -102,10 +102,13 @@ const submitForm = () => {
   background-color: #fff;
   padding: 24px;
   border-radius: 8px;
-  max-width: 450px; 
-  margin: 100px auto; 
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1); 
-  margin-bottom: 40px; 
+  max-width: 450px;
+  margin: 100px auto 40px auto;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+
+  margin-left: 12px;
+  margin-right: 12px;
+  max-width: calc(100% - 24px);
 }
 
 h2 {

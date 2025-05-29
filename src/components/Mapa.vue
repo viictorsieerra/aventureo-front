@@ -109,15 +109,31 @@ watch(() => props.locations, (newLocations) => {
   position: relative;
   height: 500px;
   width: 100%;
-  margin-top: 16px;
+  margin: 24px auto 16px; 
   border-radius: 8px;
   overflow: hidden;
-  justify-items: center;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
 }
 
 #map {
-  aspect-ratio: 1 / 1;
   width: 100%;
   max-width: 600px;
+  height: 100%; 
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
+@media (max-width: 600px) {
+  .map-container {
+    height: 300px;
+    margin: 16px auto;
+  }
+
+  #map {
+    max-width: 100%;
+  }
+}
+
 </style>

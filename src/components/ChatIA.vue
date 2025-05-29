@@ -66,34 +66,37 @@ const sendMessage = async () => {
 
 <style scoped lang="scss">
 .chat {
-  max-width: 600px;
-  margin: 3rem auto;
+  max-width: 100%;
+  margin: 2rem 1rem; 
+  padding: 1.5rem;    
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;
   border-radius: 12px;
-  padding: 1.5rem;
   background: #fefefe;
   font-family: 'Segoe UI', sans-serif;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-  height: 600px;
+  height: 80vh;
+  max-height: 600px;
+
+
 
   &__messages {
     flex-grow: 1;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 0.75rem;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     background: #fff;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
     scrollbar-width: thin;
     scrollbar-color: #ccc transparent;
 
     &::-webkit-scrollbar {
-      width: 10px;
+      width: 8px;
     }
 
     &::-webkit-scrollbar-thumb {
@@ -103,11 +106,11 @@ const sendMessage = async () => {
   }
 
   &__message {
-    max-width: 80%;
-    padding: 1rem 1.4rem;
+    max-width: 85%;
+    padding: 0.75rem 1rem;
     border-radius: 14px;
-    font-size: 1.05rem;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 1.4;
     word-wrap: break-word;
 
     &--tú {
@@ -129,22 +132,23 @@ const sendMessage = async () => {
       background-color: #eee;
       color: #555;
       font-style: italic;
-      padding: 0.8rem 1.2rem;
+      padding: 0.6rem 1rem;
       border-radius: 10px;
       max-width: 90%;
+      font-size: 0.9rem;
     }
   }
 
   &__input {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
 
     &-field {
       flex-grow: 1;
-      padding: 0.9rem 1.2rem;
+      padding: 0.75rem 1rem;
       border: 1px solid #ccc;
       border-radius: 30px;
-      font-size: 1.05rem;
+      font-size: 1rem;
       outline: none;
       transition: border-color 0.3s ease;
 
@@ -154,15 +158,16 @@ const sendMessage = async () => {
     }
 
     &-button {
-      padding: 0.9rem 1.8rem;
+      padding: 0.75rem 1.5rem;
       background-color: #007bff;
       color: white;
       border: none;
       border-radius: 30px;
       cursor: pointer;
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 600;
       transition: background-color 0.3s ease;
+      white-space: nowrap;
 
       &:hover {
         background-color: #0056b3;
@@ -170,4 +175,40 @@ const sendMessage = async () => {
     }
   }
 }
+
+/* A partir de pantallas más grandes */
+@media (min-width: 600px) {
+  .chat {
+    max-width: 600px;
+    margin: 3rem auto;
+    height: 600px;
+
+    &__messages {
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    &__message {
+      max-width: 80%;
+      padding: 1rem 1.4rem;
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    &__input {
+      gap: 1rem;
+
+      &-field {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.05rem;
+      }
+
+      &-button {
+        padding: 0.9rem 1.8rem;
+        font-size: 1.05rem;
+      }
+    }
+  }
+}
+
 </style>

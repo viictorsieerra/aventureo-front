@@ -85,9 +85,9 @@ onMounted(() => {
 
 .container {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Mobile first: columna apilada */
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .logo {
@@ -96,10 +96,25 @@ onMounted(() => {
   cursor: pointer;
 }
 
+.menu-toggle {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: color 0.3s ease;
+}
+
+.menu-toggle:hover {
+  color: #ffffbf;
+}
+
+/* Menú móvil: vertical, full width */
 .nav {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   gap: 12px;
   width: 100%;
 }
@@ -109,11 +124,12 @@ onMounted(() => {
   border: none;
   color: white;
   font-size: 1rem;
-  padding: 10px 16px;
+  padding: 12px 16px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
   width: 100%;
   text-align: center;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .nav-item:hover {
@@ -123,27 +139,10 @@ onMounted(() => {
 
 .actions {
   display: flex;
+  flex-direction: column;
   gap: 10px;
+  width: 100%;
 }
-
-.username {
-  font-weight: bold;
-  color: #fff;
-}
-
-.logout-button {
-  background-color: #ff5e57;
-  border: none;
-  padding: 8px 14px;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.logout-button:hover {
-  background-color: #e04b46;
-}
-
 
 .login-button,
 .signup-button {
@@ -155,6 +154,7 @@ onMounted(() => {
   cursor: pointer;
   width: 100%;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  border: none;
 }
 
 .signup-button {
@@ -172,39 +172,34 @@ onMounted(() => {
   background-color: #4DD0E1;
 }
 
-.header-title {
+.username {
+  font-weight: bold;
+  color: #fff;
   text-align: center;
-  padding: 40px 16px;
+  margin-bottom: 8px;
 }
 
-.first-title {
-  font-size: 1.5rem;
-  margin-top: 140px;
-}
-
-.menu-toggle {
-  background: none;
+.logout-button {
+  background-color: #ff5e57;
   border: none;
-  font-size: 2rem;
+  padding: 10px;
   color: white;
+  border-radius: 6px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  transition: color 0.3s ease;
+  width: 100%;
+  transition: background-color 0.3s ease;
 }
 
-.menu-toggle:hover {
-  color: #ffffbf;
+.logout-button:hover {
+  background-color: #e04b46;
 }
 
+/* Desktop */
 @media (min-width: 768px) {
   .menu-toggle {
     display: none;
   }
-}
 
-@media (min-width: 768px) {
   .container {
     flex-direction: row;
     justify-content: space-between;
@@ -218,23 +213,46 @@ onMounted(() => {
     flex-direction: row;
     gap: 24px;
     width: auto;
-  }
-
-  .actions {
-    flex-direction: row;
-    width: auto;
-    gap: 12px;
+    align-items: center;
   }
 
   .nav-item {
     width: auto;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+
+  .actions {
+    flex-direction: row;
+    gap: 12px;
+    width: auto;
+    align-items: center;
   }
 
   .login-button,
-  .signup-button {
+  .signup-button,
+  .logout-button {
     width: auto;
+    padding: 8px 16px;
   }
 
+  .username {
+    margin: 0 12px 0 0;
+    text-align: left;
+  }
+}
+
+.header-title {
+  text-align: center;
+  padding: 40px 16px;
+}
+
+.first-title {
+  font-size: 1.5rem;
+  margin-top: 140px;
+}
+
+@media (min-width: 768px) {
   .first-title {
     font-size: 2rem;
     margin-top: 5%;
@@ -245,63 +263,4 @@ onMounted(() => {
   }
 }
 
-
-.help-icon {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  font-size: 2rem;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.3s ease;
-}
-
-.help-icon:hover {
-  color: #ffffbf;
-}
-
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.overlay-content {
-  position: relative;
-  background-color: white;
-  color: #003580;
-  padding: 24px;
-  border-radius: 8px;
-  text-align: center;
-  width: 80%;
-  max-width: 400px;
-  font-size: 1.1rem;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.close-btn {
-  position: absolute;
-  top: -11px;
-  right: 3px;
-  font-size: 2rem;
-  cursor: pointer;
-  color: #48a259;
-  transition: color 0.3s ease;
-}
-
-.close-btn:hover {
-  color: #d78d00;
-}
 </style>
