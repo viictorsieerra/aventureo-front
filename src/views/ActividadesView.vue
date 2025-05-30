@@ -1,167 +1,257 @@
 <template>
-  <v-container fluid>
-    <v-row class="actividades-container" no-gutters>
-      
-      <!-- Columna izquierda -->
-      <v-col cols="12" md="6" class="left-column">
-        <div class="info-section">
-          <h2>Explora nuevas aventuras</h2>
-          <p>
-            En esta ventana, puedes buscar el lugar al que quieras viajar y descubrir las actividades o planes que otras
-            personas han compartido.
-          </p>
+  <v-container>
+    <SearchBar @search="onSearch" />
+
+    <v-row>
+      <!-- Columna izquierda: explicación + planes + botón -->
+      <v-col cols="12" md="4">
+        <v-card class="info-card mb-4">
+          <v-card-title>Planifica tu aventura</v-card-title>
+          <v-card-text>
+            Aquí puedes buscar una ciudad para ver los planes que han creado otros viajeros.
+            <br /><br />
+            Si no encuentras ningún plan, puedes añadir el tuyo propio haciendo clic en el botón
+            <v-icon color="primary" class="mx-1">mdi-plus</v-icon>.
+            <br /><br />
+            Los planes incluyen nombre, duración, precio estimado y valoración, además de un comentario.
+          </v-card-text>
+        </v-card>
+
+        <div v-if="locationPlans.length > 0" class="location-plans">
+          <h3>Planes en {{ selectedLocation?.name }}</h3>
+          <v-list>
+            <v-list-item
+              v-for="plan in locationPlans"
+              :key="plan.idPlan"
+              @click="() => irADetalle(plan.idPlan)"
+              style="cursor: pointer;"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ plan.nombre }}</v-list-item-title>
+                <v-list-item-subtitle>
+                  Duración: {{ plan.duracion }} días | Precio: {{ plan.precioEstimado }}€ | Valoración:
+                  {{ plan.valoracion }}
+                </v-list-item-subtitle>
+                <p>{{ plan.comentario }}</p>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </div>
 
-        <div class="popular-destinations">
-          <h3>Destinos más populares</h3>
-          <div class="destination-list">
-            <v-card v-for="destino in destinos" :key="destino.name" class="destination-card">
-              <v-img :src="destino.image" height="120px" cover></v-img>
-              <v-card-title>{{ destino.name }}</v-card-title>
-            </v-card>
-          </div>
+        <v-row justify="center" class="mt-4">
+          <v-col cols="auto">
+            <v-btn
+              color="primary"
+              density="compact"
+              class="add-plan-btn"
+              @click="showAddPlanDialog = true"
+              title="Añadir nuevo plan"
+            >
+              <v-icon left>mdi-plus</v-icon>
+              Añade un plan
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <!-- Si no hay planes pero ya hay una ubicación seleccionada -->
+        <div v-if="selectedLocation && locationPlans.length === 0" class="no-plans-message mt-3">
+          No hay planes para {{ selectedLocation?.name }}. Pulsa el botón para crear uno.
         </div>
       </v-col>
 
-      <!-- Columna derecha -->
-      <v-col cols="12" md="6" class="right-column">
-        <div class="map-section">
-          <SearchBar 
-            class="custom-searchbar"
-            @search="handleSearch"
-            @error="showError"
-          />
-
-          <Mapa 
-            :locations="mapLocations" 
-            @location-selected="showLocationDetails"
-          />
-
-          <div v-if="selectedLocation" class="location-plans">
-            <h3>Planes en {{ selectedLocation.name }}</h3>
-            <v-list>
-              <v-list-item 
-                v-for="(plan, index) in locationPlans" 
-                :key="index"
-                @click="selectPlan(plan)"
-              >
-                <v-list-item-title>{{ plan.name }}</v-list-item-title>
-                <v-list-item-subtitle>{{ plan.description }}</v-list-item-subtitle>
-              </v-list-item>
-            </v-list>
-          </div>
-        </div>
+      <!-- Columna derecha: Mapa -->
+      <v-col cols="12" md="8">
+        <Mapa
+          :locations="mapLocations"
+          :initialPosition="{ lat: 40.4168, lng: -3.7038 }"
+          :initialZoom="5"
+          @location-selected="onLocationSelected"
+        />
       </v-col>
-
     </v-row>
 
+    <!-- Snackbar -->
     <v-snackbar v-model="showSnackbar" :color="snackbarColor">
       {{ snackbarMessage }}
     </v-snackbar>
+
+    <!-- Diálogo para añadir plan -->
+    <v-dialog v-model="showAddPlanDialog" max-width="500">
+      <v-card>
+        <v-card-title>Añadir Plan para {{ selectedLocation?.name }}</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="newPlan.nombre" label="Nombre" />
+          <v-text-field v-model="newPlan.duracion" label="Duración (días)" type="number" />
+          <v-text-field v-model="newPlan.precioEstimado" label="Precio estimado (€)" type="number" />
+          <div class="valoracion-container">
+            <v-label>Valoración</v-label>
+            <v-rating
+              v-model="newPlan.valoracion"
+              length="5"
+              color="amber"
+              background-color="grey lighten-2"
+              half-increments
+              size="30"
+            />
+          </div>
+          <v-textarea v-model="newPlan.comentario" label="Comentario" />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="guardarPlan">Guardar</v-btn>
+          <v-btn text @click="showAddPlanDialog = false">Cancelar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import SearchBar from '@/components/SearchBar.vue'
-import Mapa from '@/components/Mapa.vue'
+import { usePlans, CreatePlanDTO } from "@/composables/usePlans"
+import Mapa from "@/components/Mapa.vue"
+import SearchBar from "@/components/SearchBar.vue"
+import { useRouter } from 'vue-router'
 
-const mapLocations = ref([])
+const router = useRouter()
+
+const irADetalle = (id) => {
+  console.log("Navegando al plan con id:", id)
+  router.push(`/planes/${id}`)
+}
+
+const { getPlans, createPlan } = usePlans()
+
 const selectedLocation = ref(null)
 const locationPlans = ref([])
-
+const showAddPlanDialog = ref(false)
 const showSnackbar = ref(false)
 const snackbarMessage = ref('')
-const snackbarColor = ref('error')
+const snackbarColor = ref('success')
 
-const handleSearch = (location) => {
-    console.log("LOCATION : ", location)
-  mapLocations.value = [location]
-  selectedLocation.value = null
-  locationPlans.value = []
+const newPlan = ref({
+  nombre: '',
+  duracion: 1,
+  precioEstimado: 0,
+  valoracion: 1,
+  comentario: ''
+})
 
-  if (mapLocations.value.length > 0) {
-    snackbarMessage.value = `Mostrando resultados para ${location.name}`
-    snackbarColor.value = 'success'
-    showSnackbar.value = true
-    
-  }
+const mapLocations = ref([])
 
-}
-
-const showError = (message) => {
-  snackbarMessage.value = message
-  snackbarColor.value = 'error'
-  showSnackbar.value = true
-}
-
-const showLocationDetails = (location) => {
+const onSearch = async (location) => {
   selectedLocation.value = location
-  locationPlans.value = getSamplePlans(location.name)
+  const plans = await getPlans(location.name)
+  locationPlans.value = plans
+  mapLocations.value = [location]
 }
 
-const selectPlan = (plan) => {
-  console.log('Plan seleccionado:', plan)
+const onLocationSelected = (location) => {
+  selectedLocation.value = location
 }
 
-const getSamplePlans = (locationName) => {
-  const samplePlans = {
-    "Madrid": [
-      { name: "Tour histórico", description: "Recorrido por los lugares emblemáticos", price: "25€" },
-      { name: "Clase de cocina", description: "Aprende a hacer paella", price: "45€" }
-    ],
-    "Barcelona": [
-      { name: "Visita Sagrada Familia", description: "Tour guiado por la obra de Gaudí", price: "35€" }
-    ],
-    "Valencia": [
-      { name: "Tour de las Fallas", description: "Conoce la tradición fallera", price: "30€" },
-      { name: "Visita Ciudad de las Artes", description: "Recorrido por el complejo arquitectónico", price: "28€" }
-    ]
+const guardarPlan = async () => {
+  if (!selectedLocation.value) return
+
+  const dto: CreatePlanDTO = {
+    idUsuario: 1,
+    lugar: selectedLocation.value.name,
+    nombre: newPlan.value.nombre,
+    duracion: newPlan.value.duracion,
+    precioEstimado: newPlan.value.precioEstimado,
+    valoracion: newPlan.value.valoracion,
+    comentario: newPlan.value.comentario
   }
 
-  return samplePlans[locationName] || []
-}
+  await createPlan(dto)
+  showSnackbar.value = true
+  snackbarMessage.value = 'Plan guardado correctamente'
+  snackbarColor.value = 'success'
+  showAddPlanDialog.value = false
 
-const destinos = [
-  { name: 'Madrid', image: 'https://res.cloudinary.com/worldpackers/image/upload/c_fill,f_auto,q_auto,w_1024/v1/guides/article_cover/leqb8dgct7k0p6vyi6va?_a=BACADKGT' },
-  { name: 'París', image: 'https://www.101viajes.com/sites/default/files/puesta-sol-paris.jpg' }
-]
+  // Limpiar datos
+  newPlan.value = {
+    nombre: '',
+    duracion: 1,
+    precioEstimado: 0,
+    valoracion: 1,
+    comentario: ''
+  }
+
+  // Recargar planes de esa ciudad
+  const plans = await getPlans(selectedLocation.value.name)
+  locationPlans.value = plans
+}
 </script>
 
 <style scoped lang="scss">
-.actividades-container {
-  margin-top: 16px;
-}
-
-.left-column {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.popular-destinations .destination-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.destination-card {
-  width: 100%;
-  max-width: 250px;
-}
-
-.map-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.location-plans {
-  background-color: white;
+.info-card {
+  background-color: #f9f9f9;
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 9%;
+  color: #183263; /* azul oscuro */
 }
-</style>
 
+.location-plans {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 24px;
+  color: #183263; /* azul oscuro */
+}
+
+.valoracion-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #fd6f01; /* naranja */
+}
+
+.v-btn {
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  padding: 12px 16px !important;
+  font-size: 1.2rem !important;
+  max-width: none !important;
+  transition: background-color 0.3s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  min-width: 140px !important;
+  user-select: none !important;
+}
+
+.v-btn.btn-primary {
+  background-color: #0288d1 !important; /* azul claro */
+  color: white !important;
+}
+
+.v-btn.btn-primary:hover {
+  background-color: #0277bd !important; /* azul más oscuro */
+}
+
+/* Icono dentro del botón */
+.v-btn .v-icon {
+  color: white !important;
+}
+
+/* Snackbar */
+.v-snackbar {
+  border-radius: 8px !important;
+  &.success {
+    background-color: #018ef6 !important; /* azul claro */
+    color: white !important;
+  }
+  &.error {
+    background-color: #d9534f !important; /* rojo para error */
+    color: white !important;
+  }
+}
+
+</style>

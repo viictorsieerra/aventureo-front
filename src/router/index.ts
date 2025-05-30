@@ -6,9 +6,7 @@ import Login from '@/views/LoginView.vue'
 import Register from '@/views/RegistroView.vue'
 import ChatAI from '@/views/AIView.vue'
 import Booking from '@/views/BookingView.vue'
-import PlanificadorGastosView from '@/views/PlanificadorGastosView.vue'
-import { useJWTStore } from '@/stores/JwtStore'
-import { useUserStore } from '@/stores/UserStore'
+import DetallesPlanView from '@/views/DetallesPlanView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,27 +48,20 @@ const router = createRouter({
       component: Booking
     },
     {
+      path: '/planes/:id',
+      name: 'DetallesPlan',
+      component: () => import('@/views/DetallesPlanView.vue')
+    },
+    {
       path: '/planificador',
       name: 'Planificador',
       component: PlanificadorGastosView
     }
+    
+    
 
-
+    
   ],
-})
-
-router.beforeEach((to, from, next) => {
-  const jwtStore = useJWTStore()
-  const userStore = useUserStore()
-  const requiresAuth = to.meta.requiresAuth
-
-  if (requiresAuth && (!jwtStore.jwt || !userStore.user )) {
-    next('/login')
-    alert("NO ESTÁ AUTORIZADO PARA ESTA VISTA")
-  }
-  else {
-    next()
-  }
 })
 
 export default router

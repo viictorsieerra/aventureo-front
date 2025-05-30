@@ -102,15 +102,25 @@ const submitForm = () => {
   background-color: #fff;
   padding: 24px;
   border-radius: 8px;
-  max-width: 450px; 
-  margin: 100px auto; 
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1); 
-  margin-bottom: 40px; 
+  max-width: 450px;
+  margin: 80px auto 40px auto;
+  box-shadow: 0 2px 20px rgba(24, 50, 99, 0.25); /* sombra azul oscuro */
+
+  margin-left: 12px;
+  margin-right: 12px;
+  max-width: calc(100% - 24px);
+  
+  @media(min-width: 1024px) {
+    max-width: 450px; /* ancho fijo en desktop */
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 24px; 
+  margin-bottom: 24px;
+  color: #183263; /* azul oscuro */
 }
 
 .form-group {
@@ -119,47 +129,59 @@ h2 {
 
 label {
   display: block;
-  margin-bottom: 8px; 
+  margin-bottom: 8px;
   font-size: 1rem;
   font-weight: bold;
+  color: #183263; /* azul oscuro */
 }
 
 input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #018ef6; /* azul claro */
   border-radius: 4px;
   font-size: 1rem;
+  color: #183263;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #fd6f01; /* naranja */
+    outline: none;
+  }
 }
 
 input.input-error {
-  border-color: red;
+  border-color: #fd6f01; /* naranja para error */
 }
 
 .error-message {
-  color: red;
+  color: #fd6f01; /* naranja */
   font-size: 0.9rem;
   margin-top: 5px;
 }
 
 button {
-  background-color: #4DD0E1;
-  color: black;
+  background-color: #183263; /* azul oscuro */
+  color: #fff;
   padding: 12px;
   width: 100%;
   border: none;
   border-radius: 8px;
-  font-size: 1.2rem; 
+  font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(24, 50, 99, 0.4);
 
-button:hover {
-  background-color: #29b6b9;
-}
+  &:hover:not(:disabled) {
+    background-color: #018ef6; /* azul claro */
+    box-shadow: 0 4px 12px rgba(1, 142, 246, 0.6);
+  }
 
-button:disabled {
-  background-color: #aaa;
-  cursor: not-allowed;
+  &:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
 }
 </style>
