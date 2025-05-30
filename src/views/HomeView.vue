@@ -12,13 +12,8 @@ import HomeCarrusell from '@/components/HomeCarrusell.vue';
 
 <template>
   <div class="home-container">
-    <!-- Fondo de video -->
-    <video autoplay muted loop playsinline class="background-video">
-  <source src="/public/videos/rio.mp4" type="video/mp4" />
-  Tu navegador no soporta vídeos en HTML5.
-</video>
 
-    <!-- Contenido Home -->
+
     <div class="home-content">
       <HomeCarrusell />
       <PlanificadorSection />

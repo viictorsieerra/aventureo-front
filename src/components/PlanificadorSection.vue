@@ -3,8 +3,8 @@
     <div class="planner-card">
       <h2>Organiza tu viaje a medida!</h2>
       <p>
-        ¿Quieres tener todo tu viaje controlado? Crea planes personalizados para cada escapada: 
-        asigna presupuesto, transporte, alojamiento y actividades. Gestiona tus gastos y lleva 
+        ¿Quieres tener todo tu viaje controlado? Crea planes personalizados para cada escapada:
+        asigna presupuesto, transporte, alojamiento y actividades. Gestiona tus gastos y lleva
         el control desde cualquier dispositivo.
       </p>
       <button>Empieza tu plan</button>
@@ -27,9 +27,9 @@ import PlannerCanvas from '@/components/PlannerCanvas.vue'
   z-index: 100000;
   display: flex;
   flex-wrap: wrap;
-  gap: 2.5rem;            
-  padding: 3rem 3rem 4rem; 
-  margin: 2rem auto;      
+  gap: 2.5rem;
+  padding: 3rem 3rem 4rem;
+  margin: 2rem auto;
   border-radius: 16px;
   background-image: url('/playa-grande.jpg');
   background-size: cover;
@@ -39,30 +39,34 @@ import PlannerCanvas from '@/components/PlannerCanvas.vue'
 }
 
 .planner-card {
-  flex: 1 1 350px;
+  flex: 1;
   background-color: #ffffff;
   border-radius: 16px;
-  padding: 2.5rem;          
+  padding: 2.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
-
-
 
 .planner-card h2 {
   font-size: 2rem;
-  color: #1f2937;
+  color: #183263;
   margin-bottom: 1rem;
 }
 
 .planner-card p {
   font-size: 1.125rem;
-  color: #4b5563;
+  color: #333333;
   margin-bottom: 1.5rem;
   line-height: 1.6;
 }
 
 .planner-card button {
-  background-color: #4DD0E1;
+  background-color: #fd6f01;
   color: #ffffff;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -70,14 +74,15 @@ import PlannerCanvas from '@/components/PlannerCanvas.vue'
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin: 0 auto;
 }
 
 .planner-card button:hover {
-  background-color: #3493a0;
+  background-color: #d95c00;
 }
 
 .planner-canvas-container {
-  flex: 1 1 500px;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;

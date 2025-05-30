@@ -117,4 +117,6 @@ const showLocationDetails = (location) => {
     </v-col>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+
+</style>

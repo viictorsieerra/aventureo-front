@@ -35,7 +35,6 @@ const submitForm = async () => {
 </script>
 
 <style scoped lang="scss">
-/* Mobile-first: estilos básicos para móviles */
 .login-container {
   background-color: #fff;
   padding: 20px;
@@ -43,12 +42,14 @@ const submitForm = async () => {
   max-width: 90vw;
   margin: 50px auto;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  color: #183263; /* azul oscuro */
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
   font-size: 1.5rem;
+  color: #183263; /* azul oscuro */
 }
 
 .form-group {
@@ -60,6 +61,7 @@ label {
   margin-bottom: 6px;
   font-size: 1rem;
   font-weight: 600;
+  color: #183263; /* azul oscuro */
 }
 
 input {
@@ -69,23 +71,30 @@ input {
   border-radius: 6px;
   font-size: 1rem;
   box-sizing: border-box;
+  color: #183263; /* azul oscuro */
 }
 
-button {
-  background-color: #0288d1;
+input::placeholder {
+  color: #018ef6; /* azul claro para placeholder */
+}
+
+button.login-button {
+  background-color: #183263; /* azul oscuro */
   color: white;
   padding: 12px;
   width: 100%;
   border: none;
   border-radius: 8px;
   font-size: 1.2rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 10px;
+  user-select: none;
 }
 
-button:hover {
-  background-color: #0277bd;
+button.login-button:hover {
+  background-color: #121f42; /* azul más oscuro */
 }
 
 /* Tablets y pantallas más anchas */
@@ -105,8 +114,9 @@ button:hover {
     padding: 14px 12px;
   }
 
-  button {
+  button.login-button {
     font-size: 1.3rem;
   }
 }
+
 </style>

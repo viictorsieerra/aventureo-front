@@ -59,7 +59,7 @@ const sendMessage = async () => {
         placeholder="Escribe tu mensaje..."
         class="chat__input-field"
       />
-      <button @click="sendMessage" class="chat__send-button">Enviar</button>
+<button @click="sendMessage" class="btn-principal">Enviar</button>
     </div>
   </div>
 </template>
@@ -67,8 +67,8 @@ const sendMessage = async () => {
 <style scoped lang="scss">
 .chat {
   max-width: 100%;
-  margin: 2rem 1rem; 
-  padding: 1.5rem;    
+  margin: 2rem 1rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;
@@ -78,8 +78,6 @@ const sendMessage = async () => {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
   height: 80vh;
   max-height: 600px;
-
-
 
   &__messages {
     flex-grow: 1;
@@ -115,15 +113,15 @@ const sendMessage = async () => {
 
     &--tú {
       align-self: flex-end;
-      background-color: #007bff;
+      background-color: #018ef6;
       color: white;
       border-bottom-right-radius: 4px;
     }
 
     &--ia {
       align-self: flex-start;
-      background-color: #f2f2f2;
-      color: #222;
+      background-color: #e0e7ff;
+      color: #183263;
       border-bottom-left-radius: 4px;
     }
 
@@ -153,30 +151,51 @@ const sendMessage = async () => {
       transition: border-color 0.3s ease;
 
       &:focus {
-        border-color: #007bff;
-      }
-    }
-
-    &-button {
-      padding: 0.75rem 1.5rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-      white-space: nowrap;
-
-      &:hover {
-        background-color: #0056b3;
+        border-color: #018ef6;
       }
     }
   }
 }
 
-/* A partir de pantallas más grandes */
+/* BOTÓN PRINCIPAL — estilo Aventureo */
+.btn-principal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background-color: #fd6f01;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(253, 111, 1, 0.35);
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #e85e00;
+    box-shadow: 0 6px 16px rgba(253, 111, 1, 0.5);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    background-color: #c74e00;
+    box-shadow: 0 3px 10px rgba(253, 111, 1, 0.4);
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* RESPONSIVE */
 @media (min-width: 600px) {
   .chat {
     max-width: 600px;
@@ -200,11 +219,6 @@ const sendMessage = async () => {
 
       &-field {
         padding: 0.9rem 1.2rem;
-        font-size: 1.05rem;
-      }
-
-      &-button {
-        padding: 0.9rem 1.8rem;
         font-size: 1.05rem;
       }
     }

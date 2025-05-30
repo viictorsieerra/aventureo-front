@@ -9,33 +9,35 @@
         <span v-else>×</span>
       </button>
 
-      <!-- Navegación -->
-      <nav v-if="menuOpen || isDesktop" class="nav">
-        <router-link to="booking"><button class="nav-item">Booking</button></router-link>
-        <router-link to="actividades"><button class="nav-item">Actividades</button></router-link>
-        <router-link to="chat"><button class="nav-item">Chateta con la IA</button></router-link>
-        <button class="nav-item">Trenes</button>
-      </nav>
+      <!-- Navegación con transición -->
+      <transition name="slide-fade">
+        <nav v-if="menuOpen || isDesktop" class="nav">
+          <button class="btn nav-item" @click="handleNavigation('/booking')">Booking</button>
+          <button class="btn nav-item" @click="handleNavigation('/actividades')">Actividades</button>
+          <button class="btn nav-item" @click="handleNavigation('/chat')">Chatea con la IA</button>
+          <button class="btn nav-item" @click="handleNavigation('/trenes')">Trenes</button>
+        </nav>
+      </transition>
 
-      <div v-if="menuOpen || isDesktop" class="actions">
-        <template v-if="!jwtStore.jwt">
-          <router-link to="/login">
-            <button class="login-button">Iniciar sesión</button>
-          </router-link>
-          <router-link to="/registro">
-            <button class="signup-button">Registrarse</button>
-          </router-link>
-        </template>
-        <template v-else>
-          <span class="username">Bienvenido, {{ user.nombre }}</span>
-          <button class="logout-button" @click="jwtStore.logOut">Cerrar sesión</button>
-        </template>
-      </div>
-
-    </div>
-
-    <div class="header-title">
-      <h1 class="first-title">Piensa un lugar y disfruta del viaje!</h1>
+      <!-- Botones de acción -->
+      <transition name="slide-fade">
+        <div v-if="menuOpen || isDesktop" class="actions">
+          <template v-if="!jwtStore.jwt">
+            <router-link to="/login">
+              <button class="btn login-button" @click="menuOpen = false">Iniciar sesión</button>
+            </router-link>
+            <router-link to="/registro">
+              <button class="btn signup-button" @click="menuOpen = false">Registrarse</button>
+            </router-link>
+          </template>
+          <template v-else>
+            <span class="username">Bienvenido, {{ user.nombre }}</span>
+            <button class="btn logout-button" @click="() => { jwtStore.logOut(); menuOpen = false }">
+              Cerrar sesión
+            </button>
+          </template>
+        </div>
+      </transition>
     </div>
   </header>
 </template>
@@ -44,7 +46,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useJWTStore } from '@/stores/JwtStore'
+import { useJWTStore } from '@/stores/JwtStore';
 import { useUserStore } from '@/stores/UserStore';
 import { Usuario } from '@/models/Usuario';
 
@@ -54,9 +56,7 @@ const isDesktop = ref(false);
 const jwtStore = useJWTStore();
 const userStore = useUserStore();
 
-const user = ref(new Usuario())
-
-user.value = computed(() => userStore.user)
+const user = computed(() => userStore.user);
 const router = useRouter();
 
 const checkViewport = () => {
@@ -68,14 +68,20 @@ onMounted(() => {
   checkViewport();
   window.addEventListener('resize', checkViewport);
 });
+
+// Cerrar menú y navegar
+const handleNavigation = (path: string) => {
+  router.push(path);
+  menuOpen.value = false;
+};
 </script>
 
 <style scoped lang="scss">
 .navbar {
-  background-color: #0288D1;
+  background-color: #183263;
   color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+  padding: 35px;
   width: 100%;
   position: static;
   top: 0;
@@ -85,15 +91,16 @@ onMounted(() => {
 
 .container {
   display: flex;
-  flex-direction: column; /* Mobile first: columna apilada */
+  flex-direction: column;
   align-items: center;
   gap: 12px;
 }
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: bold;
   cursor: pointer;
+  color: white;
 }
 
 .menu-toggle {
@@ -103,38 +110,50 @@ onMounted(() => {
   color: white;
   cursor: pointer;
   align-self: flex-end;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 4px;
+
+  &:hover {
+    color: #018ef6;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
-.menu-toggle:hover {
-  color: #ffffbf;
+/* Estilos base para todos los botones */
+.btn {
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: inline-block;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 }
 
-/* Menú móvil: vertical, full width */
 .nav {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center; // centrado en mobile
   gap: 12px;
   width: 100%;
 }
 
 .nav-item {
-  background: none;
-  border: none;
+  background-color: transparent;
   color: white;
-  font-size: 1rem;
-  padding: 12px 16px;
-  cursor: pointer;
-  width: 100%;
-  text-align: center;
-  border-radius: 8px;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
 
-.nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  &:hover {
+    background-color: rgba(1, 142, 246, 0.2);
+    color: white;
+  }
 }
 
 .actions {
@@ -142,59 +161,55 @@ onMounted(() => {
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  align-items: center;
 }
 
-.login-button,
-.signup-button {
+.login-button {
   background-color: white;
-  color: #003580;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  border: none;
+  color: #183263;
+
+  &:hover {
+    background-color: #f2f2f2;
+  }
 }
 
 .signup-button {
-  background-color: #4DD0E1;
-  color: black;
+  background-color: #018ef6;
+  color: white;
+
+  &:hover {
+    background-color: #0175cc;
+  }
 }
 
-.login-button:hover,
-.signup-button:hover {
-  background-color: #f7f7f7;
-  transform: translateY(-2px);
-}
+.logout-button {
+  background-color: #fd6f01;
+  color: white;
 
-.signup-button:hover {
-  background-color: #4DD0E1;
+  &:hover {
+    background-color: #e66000;
+  }
 }
 
 .username {
   font-weight: bold;
-  color: #fff;
+  color: white;
   text-align: center;
   margin-bottom: 8px;
 }
 
-.logout-button {
-  background-color: #ff5e57;
-  border: none;
-  padding: 10px;
+.header-title {
+  text-align: center;
+  padding: 40px 16px;
+}
+
+.first-title {
+  font-size: 1.5rem;
+  margin-top: 140px;
   color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.logout-button:hover {
-  background-color: #e04b46;
-}
-
-/* Desktop */
 @media (min-width: 768px) {
   .menu-toggle {
     display: none;
@@ -211,15 +226,14 @@ onMounted(() => {
 
   .nav {
     flex-direction: row;
-    gap: 24px;
+    gap: 12px;
     width: auto;
     align-items: center;
   }
 
   .nav-item {
     width: auto;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 8px 16px;
   }
 
   .actions {
@@ -229,30 +243,11 @@ onMounted(() => {
     align-items: center;
   }
 
-  .login-button,
-  .signup-button,
-  .logout-button {
-    width: auto;
-    padding: 8px 16px;
-  }
-
   .username {
     margin: 0 12px 0 0;
     text-align: left;
   }
-}
 
-.header-title {
-  text-align: center;
-  padding: 40px 16px;
-}
-
-.first-title {
-  font-size: 1.5rem;
-  margin-top: 140px;
-}
-
-@media (min-width: 768px) {
   .first-title {
     font-size: 2rem;
     margin-top: 5%;
@@ -263,4 +258,13 @@ onMounted(() => {
   }
 }
 
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
 </style>

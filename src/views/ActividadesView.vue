@@ -3,9 +3,9 @@
     <SearchBar @search="onSearch" />
 
     <v-row>
-      <!-- Columna izquierda: Card explicativa -->
+      <!-- Columna izquierda: explicación + planes + botón -->
       <v-col cols="12" md="4">
-        <v-card class="info-card">
+        <v-card class="info-card mb-4">
           <v-card-title>Planifica tu aventura</v-card-title>
           <v-card-text>
             Aquí puedes buscar una ciudad para ver los planes que han creado otros viajeros.
@@ -16,53 +16,59 @@
             Los planes incluyen nombre, duración, precio estimado y valoración, además de un comentario.
           </v-card-text>
         </v-card>
+
+        <div v-if="locationPlans.length > 0" class="location-plans">
+          <h3>Planes en {{ selectedLocation?.name }}</h3>
+          <v-list>
+            <v-list-item
+              v-for="plan in locationPlans"
+              :key="plan.idPlan"
+              @click="() => irADetalle(plan.idPlan)"
+              style="cursor: pointer;"
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ plan.nombre }}</v-list-item-title>
+                <v-list-item-subtitle>
+                  Duración: {{ plan.duracion }} días | Precio: {{ plan.precioEstimado }}€ | Valoración:
+                  {{ plan.valoracion }}
+                </v-list-item-subtitle>
+                <p>{{ plan.comentario }}</p>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </div>
+
+        <v-row justify="center" class="mt-4">
+          <v-col cols="auto">
+            <v-btn
+              color="primary"
+              density="compact"
+              class="add-plan-btn"
+              @click="showAddPlanDialog = true"
+              title="Añadir nuevo plan"
+            >
+              <v-icon left>mdi-plus</v-icon>
+              Añade un plan
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <!-- Si no hay planes pero ya hay una ubicación seleccionada -->
+        <div v-if="selectedLocation && locationPlans.length === 0" class="no-plans-message mt-3">
+          No hay planes para {{ selectedLocation?.name }}. Pulsa el botón para crear uno.
+        </div>
       </v-col>
 
       <!-- Columna derecha: Mapa -->
       <v-col cols="12" md="8">
-        <Mapa :locations="mapLocations" :initialPosition="{ lat: 40.4168, lng: -3.7038 }" :initialZoom="5"
-          @location-selected="onLocationSelected" />
+        <Mapa
+          :locations="mapLocations"
+          :initialPosition="{ lat: 40.4168, lng: -3.7038 }"
+          :initialZoom="5"
+          @location-selected="onLocationSelected"
+        />
       </v-col>
     </v-row>
-
-    <!-- Mostrar lista de planes -->
-    <div v-if="locationPlans.length > 0" class="location-plans">
-      <h3>Planes en {{ selectedLocation?.name }}</h3>
-      <v-list>
-        <v-list-item v-for="plan in locationPlans" :key="plan.idPlan" @click="() => irADetalle(plan.idPlan)"
-          style="cursor: pointer;">
-
-          <v-list-item-content>
-            <v-list-item-title>{{ plan.nombre }}</v-list-item-title>
-            <v-list-item-subtitle>
-              Duración: {{ plan.duracion }} días | Precio: {{ plan.precioEstimado }}€ | Valoración: {{ plan.valoracion
-              }}
-            </v-list-item-subtitle>
-            <p>{{ plan.comentario }}</p>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-
-
-
-      <v-row justify="center" class="mt-4">
-        <v-col cols="auto">
-          <v-btn color="primary" density="compact" icon="mdi-plus" @click="showAddPlanDialog = true"
-            title="Añadir nuevo plan"></v-btn>
-        </v-col>
-      </v-row>
-    </div>
-
-    <!-- Si no hay planes -->
-    <div v-else-if="selectedLocation" style="margin-top: 16px; text-align: center;">
-      <v-row justify="center">
-        <v-col cols="auto">
-          <v-btn color="primary" density="compact" icon="mdi-plus" @click="showAddPlanDialog = true"
-            title="Añadir nuevo plan"></v-btn>
-        </v-col>
-      </v-row>
-      <div>No hay planes para {{ selectedLocation?.name }}. Pulsa + para crear uno.</div>
-    </div>
 
     <!-- Snackbar -->
     <v-snackbar v-model="showSnackbar" :color="snackbarColor">
@@ -79,12 +85,15 @@
           <v-text-field v-model="newPlan.precioEstimado" label="Precio estimado (€)" type="number" />
           <div class="valoracion-container">
             <v-label>Valoración</v-label>
-            <v-rating v-model="newPlan.valoracion" length="5" color="amber" background-color="grey lighten-2"
-              half-increments size="30" />
+            <v-rating
+              v-model="newPlan.valoracion"
+              length="5"
+              color="amber"
+              background-color="grey lighten-2"
+              half-increments
+              size="30"
+            />
           </div>
-
-
-
           <v-textarea v-model="newPlan.comentario" label="Comentario" />
         </v-card-text>
         <v-card-actions>
@@ -93,9 +102,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
   </v-container>
 </template>
+
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -176,45 +185,73 @@ const guardarPlan = async () => {
 </script>
 
 <style scoped lang="scss">
-.actividades-container {
-  margin-top: 16px;
-}
-
 .info-card {
   background-color: #f9f9f9;
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
   margin-top: 9%;
-}
-
-.left-column {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.map-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  color: #183263; /* azul oscuro */
 }
 
 .location-plans {
-  background-color: white;
+  background-color: #fff;
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
   margin-top: 24px;
+  color: #183263; /* azul oscuro */
 }
+
 .valoracion-container {
   display: flex;
   align-items: center;
-  gap: 8px; 
-  margin-bottom: 12px; 
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #fd6f01; /* naranja */
 }
 
 .v-btn {
-  max-width: 200px;
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  padding: 12px 16px !important;
+  font-size: 1.2rem !important;
+  max-width: none !important;
+  transition: background-color 0.3s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  min-width: 140px !important;
+  user-select: none !important;
 }
+
+.v-btn.btn-primary {
+  background-color: #0288d1 !important; /* azul claro */
+  color: white !important;
+}
+
+.v-btn.btn-primary:hover {
+  background-color: #0277bd !important; /* azul más oscuro */
+}
+
+/* Icono dentro del botón */
+.v-btn .v-icon {
+  color: white !important;
+}
+
+/* Snackbar */
+.v-snackbar {
+  border-radius: 8px !important;
+  &.success {
+    background-color: #018ef6 !important; /* azul claro */
+    color: white !important;
+  }
+  &.error {
+    background-color: #d9534f !important; /* rojo para error */
+    color: white !important;
+  }
+}
+
 </style>
