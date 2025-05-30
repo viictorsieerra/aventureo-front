@@ -165,8 +165,8 @@ const handleNavigation = (path: string) => {
 }
 
 .login-button {
-  background-color: white;
-  color: #183263;
+  background-color: #fd6f01;
+  color: #ffffff;
 
   &:hover {
     background-color: #f2f2f2;

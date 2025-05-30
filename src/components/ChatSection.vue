@@ -4,21 +4,26 @@
     <div class="chat-card">
       <h2>Planifica el viaje de tus sueños</h2>
       <p>
-        Alguna vez has querido viajar pero no has sabido por donde empezar?
+        ¿Alguna vez has querido viajar pero no has sabido por dónde empezar?
         Con nuestra IA, puedes planificar tu viaje ideal en minutos.
         Desde elegir el destino perfecto hasta encontrar las mejores actividades,
         ¡todo al alcance de un clic!
         Describe tu viaje ideal y deja a nuestra IA hacer el resto.
         ¡Comienza ahora y descubre un mundo de posibilidades!
       </p>
-      <button>Empezar ahora</button>
+      <router-link to="/chat">
+  <router-link to="/booking">
+  <button>Empezar ahora</button>
+</router-link>
+
+</router-link>
+
     </div>
 
     <!-- Columna Derecha: Canvas -->
     <div class="chat-canvas-container">
       <div class="canvas-wrapper">
         <ChatCanvas />
-   
       </div>
     </div>
   </div>
@@ -26,7 +31,6 @@
 
 <script setup>
 import ChatCanvas from '@/components/ChatCanvas.vue'
-
 </script>
 
 <style scoped lang="scss">
@@ -44,10 +48,17 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
 }
 
 .chat-card {
+  flex: 1;
   background: #ffffff;
   border-radius: 16px;
   padding: 1.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 
   h2 {
     font-size: 1.75rem;
@@ -78,6 +89,7 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(253, 111, 1, 0.35);
     white-space: nowrap;
+    margin: 0 auto;
 
     &:hover {
       background-color: #e85e00;
@@ -101,6 +113,7 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
 }
 
 .chat-canvas-container {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,7 +139,6 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
   }
 
   .chat-card {
-    flex: 1 1 350px;
     padding: 2rem;
 
     h2 {
@@ -140,7 +152,6 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
   }
 
   .chat-canvas-container {
-    flex: 1 1 500px;
     min-height: 500px;
     margin-top: 0;
   }
@@ -151,6 +162,4 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
     height: 500px;
   }
 }
-
-
 </style>
