@@ -7,7 +7,7 @@
       <v-card-text>
         <p><strong>Duración:</strong> {{ plan.duracion }} días</p>
         <p><strong>Precio estimado:</strong> {{ plan.precioEstimado }}€</p>
-        <p><strong>Valoración:</strong> {{ plan.valoracion }}/5</p>
+        <p><v-rating :model-value="plan.valoracion" color="amber" density="compact" size="small" half-increments readonly /></p>
         <p><strong>Comentario:</strong> {{ plan.comentario }}</p>
       </v-card-text>
 

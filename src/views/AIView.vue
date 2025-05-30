@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useAI } from '@/composables/useAI'
 
 interface Message {
-  role: 'Tú' | 'IA' | 'Sistema'
+  role: 'Tú' | 'Ventu' | 'Sistema'
   content: string
 }
 
@@ -22,7 +22,7 @@ const sendMessage = async () => {
     const response = await chatWithAI(userInput.value)
     
     // Agregar la respuesta de la IA
-    messages.value.push({ role: 'IA', content: response })
+    messages.value.push({ role: 'Ventu', content: response })
   } catch (error) {
     console.error('Error en la petición:', error)
     messages.value.push({
@@ -34,6 +34,7 @@ const sendMessage = async () => {
   // Limpiar el campo de entrada
   userInput.value = ''
 }
+messages.value.push({role: 'Ventu', content:'Hola soy Ventu, ¿En qué puedo ayudarte?'})
 </script>
 
 <template>
@@ -118,7 +119,7 @@ const sendMessage = async () => {
       border-bottom-right-radius: 4px;
     }
 
-    &--ia {
+    &--ventu {
       align-self: flex-start;
       background-color: #e0e7ff;
       color: #183263;

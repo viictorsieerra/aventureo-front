@@ -4,80 +4,73 @@ import { usePlaces, type Place, type QueryPlaces } from '@/composables/usePlaces
 import Mapa from '@/components/Mapa.vue';
 import SearchBar from '@/components/SearchBar.vue';
 
-const { GetPlacesByQuery, GetInfoPlace } = usePlaces()
+const { GetPlacesByQuery, GetInfoPlace } = usePlaces();
 
+const alojamientos = ref<(Place | null)[]>([]);
+const alojamientoSelected = ref<Place | null>(null);
+const mapLocations = ref([]);
+const selectedLocation = ref(null);
+const radiusSearch = ref(1);
 
-
-const alojamientos = ref<(Place | null)[]>([])
-const alojamientoSelected = ref<Place | null>(null)
-const mapLocations = ref([])
-const selectedLocation = ref(null)
-const radiusSearch = ref(1)
-
-const expandedCardId = ref<string | null>(null)
+const expandedCardId = ref<string | null>(null);
 
 const showInfoPlace = async (placeId: string) => {
-  expandedCardId.value = expandedCardId.value === placeId ? null : placeId
+  expandedCardId.value = expandedCardId.value === placeId ? null : placeId;
 
-  const index = alojamientos.value.findIndex(p => p?.place_id === placeId)
+  const index = alojamientos.value.findIndex(p => p?.place_id === placeId);
 
   if (index !== -1) {
-    const alojamiento = alojamientos.value[index]
+    const alojamiento = alojamientos.value[index];
 
     const faltaInfo =
       !alojamiento?.international_phone_number ||
       !alojamiento.website ||
-      !alojamiento.url
+      !alojamiento.url;
 
     if (faltaInfo) {
-      const infoCompleta = await GetInfoPlace(placeId)
+      const infoCompleta = await GetInfoPlace(placeId);
 
       if (infoCompleta) {
-        alojamientos.value[index] = { ...alojamiento, ...infoCompleta }
-        alojamientoSelected.value = alojamientos.value[index]
+        alojamientos.value[index] = { ...alojamiento, ...infoCompleta };
+        alojamientoSelected.value = alojamientos.value[index];
       }
     } else {
-      alojamientoSelected.value = alojamiento
+      alojamientoSelected.value = alojamiento;
     }
   }
 
-  console.log('INFO DEL SITIO: ', alojamientoSelected.value)
-}
+  console.log('INFO DEL SITIO: ', alojamientoSelected.value);
+};
 
-const showSnackbar = ref(false)
-const snackbarMessage = ref('')
-const snackbarColor = ref('error')
+const showSnackbar = ref(false);
+const snackbarMessage = ref('');
+const snackbarColor = ref('error');
 
 const handleSearch = async (location) => {
-  mapLocations.value = [location]
-  selectedLocation.value = null
+  mapLocations.value = [location];
+  selectedLocation.value = null;
 
   if (mapLocations.value.length > 0) {
-    snackbarMessage.value = `Mostrando resultados para ${location.name}`
-    snackbarColor.value = 'success'
-    showSnackbar.value = true
+    snackbarMessage.value = `Mostrando resultados para ${location.name}`;
+    snackbarColor.value = 'success';
+    showSnackbar.value = true;
   }
   const query: QueryPlaces = {
     location: location.lat + ", " + location.lng,
     radius: radiusSearch.value * 1000
-  }
-  console.log('QUERY', query)
-  alojamientos.value = await GetPlacesByQuery(query)
-  console.log('ALOJAMIENTOS', alojamientos.value)
-
-}
+  };
+  alojamientos.value = await GetPlacesByQuery(query);
+};
 
 const showError = (message) => {
-  snackbarMessage.value = message
-  snackbarColor.value = 'error'
-  showSnackbar.value = true
-}
+  snackbarMessage.value = message;
+  snackbarColor.value = 'error';
+  showSnackbar.value = true;
+};
 
 const showLocationDetails = (location) => {
-  console.log("LOCATION ", location)
-  selectedLocation.value = location
-}
-
+  selectedLocation.value = location;
+};
 </script>
 
 <template>
@@ -92,20 +85,18 @@ const showLocationDetails = (location) => {
           <v-col cols="12" md="5">
             <div class="booking__slider">
               <div class="booking__slider-label">RADIUS {{ radiusSearch }} (KM)</div>
-              <v-slider v-model="radiusSearch" :max="10" :min="1" :step="1" color="#0288D1" thumb-label class="w-50" />
+              <v-slider v-model="radiusSearch" :max="10" :min="1" :step="1" color="#183263" thumb-label class="w-50" />
             </div>
           </v-col>
         </v-row>
-
 
         <Mapa :locations="mapLocations" @location-selected="showLocationDetails" />
       </div>
     </v-col>
 
     <v-row class="booking__cards">
-      <v-col v-for="alojamiento in alojamientos" :key="alojamiento?.place_id" cols="12" sm="6" md="4"
-        class="booking__card-col">
-        <v-card class="booking__card" >
+      <v-col v-for="alojamiento in alojamientos" :key="alojamiento?.place_id" cols="12" sm="6" md="4" class="booking__card-col">
+        <v-card class="booking__card">
           <template v-slot:loader="{ isActive }">
             <v-progress-linear :active="isActive" color="#183263" height="4" indeterminate />
           </template>
@@ -118,9 +109,8 @@ const showLocationDetails = (location) => {
           </v-card-item>
 
           <v-card-text>
-            <v-row align="center" class="mx-0">
-              <v-rating :model-value="alojamiento?.rating" color="amber" density="compact" size="small" half-increments
-                readonly />
+            <v-row align="center" style="margin-bottom: 10px;" class="mx-0">
+              <v-rating :model-value="alojamiento?.rating" color="amber" density="compact" size="small" half-increments readonly />
               <div class="booking__rating-text">
                 {{ alojamiento?.rating }} ({{ alojamiento?.user_ratings_total }})
               </div>
@@ -128,26 +118,29 @@ const showLocationDetails = (location) => {
           </v-card-text>
 
           <v-divider />
+
           <v-card-actions>
-            <v-btn color="#0288D1" text="Más detalle" block border
-              @click="showInfoPlace(alojamiento?.place_id)"></v-btn>
+            <v-btn color="#fd6f01" variant="tonal" :text="expandedCardId === alojamiento?.place_id ? 'Menos información' : 'Más información'" block rounded="lg"
+              @click="showInfoPlace(alojamiento?.place_id)" />
           </v-card-actions>
 
-          <div v-if="expandedCardId === alojamiento?.place_id">
-            <v-divider></v-divider>
+          <div v-if="expandedCardId === alojamiento?.place_id" class="booking__card-details">
+            <v-divider class="my-2" />
             <v-card-text>
+              <v-icon color="#fd6f01" icon="mdi-phone" size="small" class="mr-2" />
               {{ alojamiento?.international_phone_number }}
-              <v-icon color="#0288D1" icon="mdi-phone" size="small"></v-icon>
             </v-card-text>
             <v-card-text>
-              <a :href="alojamiento?.url" target="_blank" color="#0288D1" rel="noopener" class="text-decoration-none">
-                {{
-                  alojamiento?.url }} </a>
+              <v-icon color="#fd6f01" icon="mdi-map-marker" size="small" class="mr-2" />
+              <a :href="alojamiento?.url" target="_blank" rel="noopener" class="text-decoration-none">
+                {{ alojamiento?.url }}
+              </a>
             </v-card-text>
             <v-card-text>
-              <a :href="alojamiento?.website" target="_blank" color="#0288D1" rel="noopener"
-                class="text-decoration-none"> {{
-                  alojamiento?.website }} </a>
+              <v-icon color="#fd6f01" icon="mdi-web" size="small" class="mr-2" />
+              <a :href="alojamiento?.website" target="_blank" rel="noopener" class="text-decoration-none">
+                {{ alojamiento?.website }}
+              </a>
             </v-card-text>
           </div>
         </v-card>
@@ -173,9 +166,7 @@ const showLocationDetails = (location) => {
     display: grid;
     justify-items: center;
 
-
     &-label {
-      font-weight: 500;
       font-weight: bold;
     }
   }
@@ -206,9 +197,60 @@ const showLocationDetails = (location) => {
     max-width: 374px;
     width: 100%;
     margin: 0 auto;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
 
     a {
+      color: #0288D1;
+      text-decoration: underline;
+      word-break: break-word;
+    }
+
+    .v-card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
       color: #183263;
+    }
+
+    .v-card-subtitle {
+      font-size: 0.9rem;
+      color: #607D8B;
+    }
+
+    .v-card-text {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #444;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .v-card-actions {
+      padding: 1rem;
+    }
+  }
+
+  &__card-details {
+    animation: fade-in 0.3s ease-in-out;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: scaleY(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1);
     }
   }
 
@@ -219,15 +261,6 @@ const showLocationDetails = (location) => {
   &__rating-text {
     color: #757575;
     margin-left: 1rem;
-  }
-
-  &__category {
-    margin: 1rem 0;
-    font-weight: 500;
-  }
-
-  &__description {
-    color: #555;
   }
 
   @media (min-width: 600px) {
@@ -245,3 +278,4 @@ const showLocationDetails = (location) => {
   }
 }
 </style>
+

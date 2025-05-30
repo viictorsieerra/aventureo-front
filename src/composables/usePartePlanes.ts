@@ -4,7 +4,7 @@ export const usePartePlanes = () => {
   const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/PartePlan'
 
   const getPartePlansByPlanId = async (idPlan: number) => {
-    const res = await fetch(`${baseUrl}/ByPlan/${idPlan}`)
+    const res = await fetch(`${baseUrl}/Plan/${idPlan}`)
     if (!res.ok) throw new Error("No se pudieron obtener las actividades del plan")
     return await res.json()
   }
