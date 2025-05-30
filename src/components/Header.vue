@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header__container">
-      <h1 class="header__logo">Aventureo</h1>
+      <router-link to=""><h1 class="header__logo">Aventureo</h1></router-link>
 
       <button class="header__menu-toggle" @click="menuOpen = !menuOpen">
         <span v-if="!menuOpen">☰</span>

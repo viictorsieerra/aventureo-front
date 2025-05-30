@@ -42,37 +42,55 @@ export const usePlannerGastos = () => {
     }
 
     async function getGastos(idViaje?: number) {
-        return fetch(baseUrl + '/Gasto/Viaje/'+ idViaje)
-        .then(res => res.json())
-        .catch(error => console.error('ERROR ', error))
+        return fetch(baseUrl + '/Gasto/Viaje/' + idViaje)
+            .then(res => {
+                if (!res.ok) {
+                    return res.json()
+                    .then(errorData => {
+                        throw new Error(errorData.message || 'Hubo un error con la solicitud');
+                    });
+                }
+                return res.json();
+            })
+            .catch(error => {
+                console.error('ERROR:', error.message);
+            });
     }
 
     async function updateGasto(uptGasto?: UpdateGasto) {
         fetch(baseUrl + '/Gasto', {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(uptGasto)
         }).then(res => res.json())
-        .catch(error => console.log('ERROR ', error))
+            .catch(error => console.log('ERROR ', error))
     }
-        async function updateViaje(uptViaje?: UpdateViaje) {
+    async function updateViaje(uptViaje?: UpdateViaje) {
         fetch(baseUrl + '/Viaje', {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(uptViaje)
         }).then(res => res.json())
-        .catch(error => console.log('ERROR ', error))
+            .catch(error => console.log('ERROR ', error))
     }
 
-    async function deleteViaje (idViaje: number) {
-        fetch(baseUrl + '/Viaje/'+ idViaje, {
+    async function deleteViaje(idViaje: number) {
+        fetch(baseUrl + '/Viaje/' + idViaje, {
             method: 'DELETE'
         }).then(res => res.ok)
-        .catch(error => console.log('ERROR ', error))
-        
+            .catch(error => console.log('ERROR ', error))
+
     }
 
-    return { getCategorys, createViaje, getViajes, createGasto, getGastos, updateGasto, updateViaje, deleteViaje }
+    async function deleteGasto(idGasto:number) {
+        fetch(baseUrl + '/Gasto/' + idGasto, {
+            method: 'DELETE'
+        })
+        .then(res => res.ok)
+        .catch(error => console.log('ERROR ', error))
+    }
+
+    return { getCategorys, createViaje, getViajes, createGasto, getGastos, updateGasto, updateViaje, deleteViaje, deleteGasto }
 }
 
 

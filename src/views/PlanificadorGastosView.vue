@@ -9,7 +9,7 @@ import type { CreateViaje, UpdateViaje } from '@/models/Viaje';
 import type { CreateGasto } from '@/models/Gasto';
 
 
-const { getViajes, createViaje, getCategorys, createGasto, getGastos, updateGasto, updateViaje, deleteViaje } = usePlannerGastos();
+const { getViajes, createViaje, getCategorys, createGasto, getGastos, updateGasto, updateViaje, deleteViaje, deleteGasto } = usePlannerGastos();
 const userStore = useUserStore();
 
 // VARIABLES Y CONSTANTES
@@ -17,6 +17,7 @@ const viajesList = ref([]);
 const formValid = ref(false);
 const categorias = ref<{ idCategoria: number, nombre: string }[]>([]);
 const gastosPorViaje = ref<{ [key: number]: any[] }>({});
+const gastoEditando = ref<any | null>(null);
 const newViaje = ref<CreateViaje>({
   idUsuario: userStore.user.idUsuario,
   nombre: '',
@@ -73,6 +74,7 @@ async function toggleGastos(idViaje: number) {
     delete gastosPorViaje.value[idViaje];
   } else {
     gastosPorViaje.value[idViaje] = await getGastos(idViaje);
+    console.log('GASTOS POR VIAJE', gastosPorViaje.value[idViaje])
   }
 }
 
@@ -88,6 +90,7 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
     cantidad: 0
   };
 }
+
 </script>
 
 <template>
@@ -107,7 +110,7 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
                     <v-icon>{{ gastosPorViaje[viaje.idViaje!] ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
                   </v-btn>
                   <v-btn v-bind="props" icon="mdi-pencil" size="small"></v-btn>
-                  <v-btn icon="mdi-delete" size="small" @click="deleteViaje(viaje.idViaje)"></v-btn>
+                  <v-btn icon="mdi-delete" size="small" @click="deleteViaje(viaje.idViaje);cargarViajes"></v-btn>
                 </v-card-title>
                 <v-card-subtitle>
                   Personas: {{ viaje.personas }}<br />
@@ -122,13 +125,16 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
                   <v-card-text>
                     <v-form v-model="formValid">
                       <v-text-field v-model="viaje.nombre" label="Nombre" :rules="[rulesNewViaje.nombre]" />
-                      <v-text-field v-model="viaje.personas" type="number" label="Personas" :rules="[rulesNewViaje.personas]" />
-                      <v-text-field v-model="viaje.cantidadTotal" type="number" label="Gasto estimado (€)" :rules="[rulesNewViaje.cantidadTotal]" />
+                      <v-text-field v-model="viaje.personas" type="number" label="Personas"
+                        :rules="[rulesNewViaje.personas]" />
+                      <v-text-field v-model="viaje.cantidadTotal" type="number" label="Gasto estimado (€)"
+                        :rules="[rulesNewViaje.cantidadTotal]" />
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer />
-                    <v-btn color="#0288D1" :disabled="!formValid" @click="updateViaje(viaje); isActive.value = false">Guardar</v-btn>
+                    <v-btn color="#0288D1" :disabled="!formValid"
+                      @click="updateViaje(viaje); isActive.value = false">Guardar</v-btn>
                     <v-btn @click="isActive.value = false">Cancelar</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -147,7 +153,15 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
                           <strong>{{ gasto.nombre }}</strong><br />
                           <small class="text-grey">{{ gasto.categoria }}</small>
                         </div>
-                        <div class="font-weight-bold">{{ gasto.cantidad }} €</div>
+                        <div class="font-weight-bold">
+                          {{ gasto.cantidad }} €
+                          <v-btn icon size="x-small" @click="gastoEditando = { ...gasto }">
+                            <v-icon size="16">mdi-pencil</v-icon>
+                          </v-btn>
+                          <v-btn icon size="x-small" @click="deleteGasto(gasto.idGasto); cargarViajes">
+                            <v-icon size="16">mdi-delete</v-icon>
+                          </v-btn>
+                        </div>
                       </div>
                     </v-card-text>
                   </v-card>
@@ -165,9 +179,12 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
                   <v-card-title>Nuevo gasto</v-card-title>
                   <v-card-text>
                     <v-form>
-                      <v-text-field v-model="newGasto.nombre" label="Nombre del gasto" :rules="[rulesNewGasto.nombre]" />
-                      <v-text-field v-model="newGasto.cantidad" type="number" label="Cantidad (€)" :rules="[rulesNewGasto.cantidad]" />
-                      <v-select v-model="newGasto.idCategoria" :items="categorias" item-value="idCategoria" item-title="nombre" label="Categoría" />
+                      <v-text-field v-model="newGasto.nombre" label="Nombre del gasto"
+                        :rules="[rulesNewGasto.nombre]" />
+                      <v-text-field v-model="newGasto.cantidad" type="number" label="Cantidad (€)"
+                        :rules="[rulesNewGasto.cantidad]" />
+                      <v-select v-model="newGasto.idCategoria" :items="categorias" item-value="idCategoria"
+                        item-title="nombre" label="Categoría" />
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
@@ -178,6 +195,30 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
                 </v-card>
               </template>
             </v-dialog>
+
+            <!-- EDITAR GASTO -->
+            <v-dialog v-model="gastoEditando" max-width="500" persistent>
+              <v-card v-if="gastoEditando">
+                <v-card-title>Editar gasto</v-card-title>
+                <v-card-text>
+                  <v-form>
+                    <v-text-field v-model="gastoEditando.nombre" label="Nombre del gasto"
+                      :rules="[rulesNewGasto.nombre]" />
+                    <v-text-field v-model="gastoEditando.cantidad" type="number" label="Cantidad (€)"
+                      :rules="[rulesNewGasto.cantidad]" />
+                    <v-select v-model="gastoEditando.idCategoria" :items="categorias" item-value="idCategoria"
+                      item-title="nombre" label="Categoría" />
+                  </v-form>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn color="#0288D1"
+                    @click="updateGasto(gastoEditando); gastoEditando = null">Guardar</v-btn>
+                  <v-btn @click="gastoEditando = null">Cancelar</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
           </v-card>
         </v-col>
       </v-row>
@@ -194,8 +235,10 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
           <v-card-text>
             <v-form v-model="formValid">
               <v-text-field v-model="newViaje.nombre" label="Nombre" :rules="[rulesNewViaje.nombre]" />
-              <v-text-field v-model="newViaje.personas" type="number" label="Personas" :rules="[rulesNewViaje.personas]" />
-              <v-text-field v-model="newViaje.cantidadTotal" type="number" label="Gasto estimado (€)" :rules="[rulesNewViaje.cantidadTotal]" />
+              <v-text-field v-model="newViaje.personas" type="number" label="Personas"
+                :rules="[rulesNewViaje.personas]" />
+              <v-text-field v-model="newViaje.cantidadTotal" type="number" label="Gasto estimado (€)"
+                :rules="[rulesNewViaje.cantidadTotal]" />
             </v-form>
           </v-card-text>
           <v-card-actions>
