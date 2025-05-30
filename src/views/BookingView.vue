@@ -107,7 +107,7 @@ const showLocationDetails = (location) => {
         class="booking__card-col">
         <v-card class="booking__card" >
           <template v-slot:loader="{ isActive }">
-            <v-progress-linear :active="isActive" color="#0288D1" height="4" indeterminate />
+            <v-progress-linear :active="isActive" color="#183263" height="4" indeterminate />
           </template>
 
           <v-card-item>
@@ -208,7 +208,7 @@ const showLocationDetails = (location) => {
     margin: 0 auto;
 
     a {
-      color: #0288D1;
+      color: #183263;
     }
   }
 

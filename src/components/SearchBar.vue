@@ -40,7 +40,9 @@ const search = async () => {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
         searchQuery.value
-      )}&format=json&addressdetails=1&limit=1`
+      )}&format=json&addressdetails=1&limit=1`, {
+        headers: {'Access-Control-Allow-Origin': '*'}
+      }
     )
 
     const data = await response.json()

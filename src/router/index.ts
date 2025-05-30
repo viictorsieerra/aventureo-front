@@ -6,6 +6,7 @@ import Login from '@/views/LoginView.vue'
 import Register from '@/views/RegistroView.vue'
 import ChatAI from '@/views/AIView.vue'
 import Booking from '@/views/BookingView.vue'
+import PlanificadorGastosView from '@/views/PlanificadorGastosView.vue'
 import DetallesPlanView from '@/views/DetallesPlanView.vue'
 
 const router = createRouter({
