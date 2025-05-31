@@ -7,9 +7,10 @@ import { useUserStore } from '@/stores/UserStore';
 //IMPORT TYPE DE MODELS
 import type { CreateViaje, UpdateViaje } from '@/models/Viaje';
 import type { CreateGasto } from '@/models/Gasto';
+import Grafica from '@/components/Grafica.vue';
 
 
-const { getViajes, createViaje, getCategorys, createGasto, getGastos, updateGasto, updateViaje, deleteViaje, deleteGasto } = usePlannerGastos();
+const { getViajes, createViaje, getCategorys, createGasto, getGastos, updateGasto, updateViaje, deleteViaje, deleteGasto, getGastoByCategoria } = usePlannerGastos();
 const userStore = useUserStore();
 
 // VARIABLES Y CONSTANTES
@@ -30,6 +31,10 @@ const newGasto = ref<CreateGasto>({
   nombre: '',
   cantidad: 0
 });
+
+const gastoCategoriasPorViaje = ref<{ [key: number]: any[] }>({});
+const viajeSeleccionadoParaGrafica = ref<number | null>(null);
+
 
 // REGLAS
 const rulesNewViaje = {
@@ -91,6 +96,15 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
   };
 }
 
+async function verGraficaDeGastos(idViaje: number) {
+  if (gastoCategoriasPorViaje.value[idViaje]) {
+    delete gastoCategoriasPorViaje.value[idViaje];
+  } else {
+    gastoCategoriasPorViaje.value[idViaje] = await getGastoByCategoria(idViaje);
+    console.log('GASTOS POR CATEGORIA', gastoCategoriasPorViaje.value[idViaje])
+  }
+}
+
 </script>
 
 <template>
@@ -106,11 +120,11 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
               <template #activator="{ props }">
                 <v-card-title class="d-flex justify-space-between align-center">
                   <span class="font-weight-medium">{{ viaje.nombre }}</span>
-                  <v-btn icon size="small" @click="toggleGastos(viaje.idViaje!)">
+                  <v-btn icon size="small" @click="toggleGastos(viaje.idViaje!); verGraficaDeGastos(viaje.idViaje)">
                     <v-icon>{{ gastosPorViaje[viaje.idViaje!] ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
                   </v-btn>
                   <v-btn v-bind="props" icon="mdi-pencil" size="small"></v-btn>
-                  <v-btn icon="mdi-delete" size="small" @click="deleteViaje(viaje.idViaje);cargarViajes"></v-btn>
+                  <v-btn icon="mdi-delete" size="small" @click="deleteViaje(viaje.idViaje).then(() =>cargarViajes())"></v-btn>
                 </v-card-title>
                 <v-card-subtitle>
                   Personas: {{ viaje.personas }}<br />
@@ -158,7 +172,7 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
                           <v-btn icon size="x-small" @click="gastoEditando = { ...gasto }">
                             <v-icon size="16">mdi-pencil</v-icon>
                           </v-btn>
-                          <v-btn icon size="x-small" @click="deleteGasto(gasto.idGasto); cargarViajes">
+                          <v-btn icon size="x-small" @click="deleteGasto(gasto.idGasto).then(() => toggleGastos(viaje.idViaje!))">
                             <v-icon size="16">mdi-delete</v-icon>
                           </v-btn>
                         </div>
@@ -212,12 +226,16 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn color="#0288D1"
-                    @click="updateGasto(gastoEditando); gastoEditando = null">Guardar</v-btn>
+                  <v-btn color="#0288D1" @click="updateGasto(gastoEditando).then(() => toggleGastos(viaje.idViaje!)); gastoEditando = null">Guardar</v-btn>
                   <v-btn @click="gastoEditando = null">Cancelar</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
+            <v-expand-transition>
+              <div v-if="gastosPorViaje[viaje.idViaje!]">
+                <Grafica :datos="gastoCategoriasPorViaje[viaje.idViaje] || []"   :key="viaje.idViaje" />
+              </div>
+            </v-expand-transition>
 
           </v-card>
         </v-col>
@@ -255,16 +273,90 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
 <style scoped lang="scss">
 .gastos {
   padding: 1.5rem;
+  background-color: #f9fbfc;
+  min-height: 100vh;
 
   &__btn-add {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
     z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
+
+  h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
+  }
+}
+
+.v-card {
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.v-card-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #444;
+}
+
+.v-card-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.v-btn {
+  border-radius: 12px !important;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.v-dialog .v-card {
+  padding: 1rem 1.5rem;
+}
+
+.v-text-field,
+.v-select {
+  margin-bottom: 1rem;
+}
+
+.v-card-actions {
+  padding-top: 0;
 }
 
 .gasto-item {
   font-size: 0.9rem;
+
+  .v-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+  }
+
+  .v-card-text {
+    padding: 0.75rem 1rem;
+  }
+
+  strong {
+    font-size: 1rem;
+    color: #222;
+  }
+
+  small.text-grey {
+    font-size: 0.8rem;
+    color: #888;
+  }
+
+  .font-weight-bold {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .v-btn {
+    margin-left: 4px;
+    color: #0288D1;
+  }
 }
 </style>

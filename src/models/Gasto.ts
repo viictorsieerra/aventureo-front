@@ -11,3 +11,10 @@ export interface UpdateGasto {
   nombre: string,
   cantidad: number
 }
+
+export interface GastoPorCategoria {
+  total: number;
+  idCategoria: number;
+  categoria: string;
+  idViaje: number;
+}

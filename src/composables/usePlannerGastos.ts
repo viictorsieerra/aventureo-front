@@ -46,9 +46,25 @@ export const usePlannerGastos = () => {
             .then(res => {
                 if (!res.ok) {
                     return res.json()
-                    .then(errorData => {
-                        throw new Error(errorData.message || 'Hubo un error con la solicitud');
-                    });
+                        .then(errorData => {
+                            throw new Error(errorData.message || 'Hubo un error con la solicitud');
+                        });
+                }
+                return res.json();
+            })
+            .catch(error => {
+                console.error('ERROR:', error.message);
+            });
+    }
+
+    async function getGastoByCategoria(idViaje?: number) {
+        return fetch(baseUrl + '/Gasto/Resumen/' + idViaje)
+            .then(res => {
+                if (!res.ok) {
+                    return res.json()
+                        .then(errorData => {
+                            throw new Error(errorData.message || 'Hubo un error con la solicitud');
+                        });
                 }
                 return res.json();
             })
@@ -82,15 +98,15 @@ export const usePlannerGastos = () => {
 
     }
 
-    async function deleteGasto(idGasto:number) {
+    async function deleteGasto(idGasto: number) {
         fetch(baseUrl + '/Gasto/' + idGasto, {
             method: 'DELETE'
         })
-        .then(res => res.ok)
-        .catch(error => console.log('ERROR ', error))
+            .then(res => res.ok)
+            .catch(error => console.log('ERROR ', error))
     }
 
-    return { getCategorys, createViaje, getViajes, createGasto, getGastos, updateGasto, updateViaje, deleteViaje, deleteGasto }
+    return { getCategorys, createViaje, getViajes, createGasto, getGastos, getGastoByCategoria, updateGasto, updateViaje, deleteViaje, deleteGasto }
 }
 
 
