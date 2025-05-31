@@ -12,12 +12,8 @@
         ¡Comienza ahora y descubre un mundo de posibilidades!
       </p>
       <router-link to="/chat">
-  <router-link to="/booking">
-  <button>Empezar ahora</button>
-</router-link>
-
-</router-link>
-
+        <button>Empezar ahora</button>
+      </router-link>
     </div>
 
     <!-- Columna Derecha: Canvas -->
@@ -49,7 +45,7 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
 
 .chat-card {
   flex: 1;
-  background: #ffffff;
+  background: #f7f7f7;
   border-radius: 16px;
   padding: 1.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);

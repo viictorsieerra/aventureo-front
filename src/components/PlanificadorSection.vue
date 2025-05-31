@@ -6,8 +6,12 @@
         ¿Quieres tener todo tu viaje controlado? Crea planes personalizados para cada escapada:
         asigna presupuesto, transporte, alojamiento y actividades. Gestiona tus gastos y lleva
         el control desde cualquier dispositivo.
+        <br />
+        Inicia sesión para empezar a planificar tu viaje ideal.
       </p>
-      <button>Empieza tu plan</button>
+      <router-link to="/Login">
+        <button>Planificar ahora</button>
+      </router-link>
     </div>
 
     <div class="planner-canvas-container">
@@ -40,7 +44,7 @@ import PlannerCanvas from '@/components/PlannerCanvas.vue'
 
 .planner-card {
   flex: 1;
-  background-color: #ffffff;
+  background-color: #f7f7f7;
   border-radius: 16px;
   padding: 2.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);

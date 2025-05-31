@@ -43,8 +43,8 @@ onMounted(() => {
   }
 
   function drawButton(x, y, width, height, text) {
-    ctx.fillStyle = '#4DD0E1'
-    ctx.strokeStyle = '#3BB5C9'
+    ctx.fillStyle = '#fd6f01'
+    ctx.strokeStyle = '#fd6f01'
     ctx.lineWidth = 2
     roundRect(ctx, x, y, width, height, 10)
     ctx.fill()
@@ -64,7 +64,7 @@ onMounted(() => {
     ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
 
     // Card blanca
-    ctx.fillStyle = '#ffffff'
+    ctx.fillStyle = '#f7f7f7'
     ctx.strokeStyle = '#ddd'
     ctx.lineWidth = 2
     roundRect(ctx, 20, 20, 560, 460, 20)
@@ -102,7 +102,7 @@ onMounted(() => {
     ctx.fillText(gastos[counter]?.precio || precios[counter % precios.length] + '€', 410, 115)
 
     // Botón añadir gasto (con bordes redondos y color nuevo)
-    drawButton(40, 140, 460, 40, '+ Añadir Gasto')
+    drawButton(60, 140, 460, 40, '+ Añadir Gasto')
 
     // Línea separadora
     ctx.strokeStyle = '#ccc'

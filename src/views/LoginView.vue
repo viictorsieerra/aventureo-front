@@ -18,6 +18,8 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useJWTStore } from '@/stores/JwtStore';
+import Swal from 'sweetalert2';
+
 
 const store = useJWTStore();
 const loginUser = reactive({
@@ -28,10 +30,30 @@ const loginUser = reactive({
 const submitForm = async () => {
   try {
     await store.loginUser(loginUser);
-  } catch (error) {
+
+    Swal.fire({
+      title: "Has iniciado sesión correctamente",
+      text: "Bienvenido de nuevo",
+      icon: "success",
+      draggable: true,
+      confirmButtonColor: '#fd6f01',
+      color: '#183263',
+    });
+
+  } catch (error: any) {
     console.error(error);
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: error.message || 'No se pudo iniciar sesión. Verifica tus credenciales.',
+      confirmButtonColor: '#fd6f01',
+      color: '#183263',
+    });
   }
 };
+
+
 </script>
 
 <style scoped lang="scss">
@@ -42,14 +64,16 @@ const submitForm = async () => {
   max-width: 90vw;
   margin: 50px auto;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-  color: #183263; /* azul oscuro */
+  color: #183263;
+  /* azul oscuro */
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
   font-size: 1.5rem;
-  color: #183263; /* azul oscuro */
+  color: #183263;
+  /* azul oscuro */
 }
 
 .form-group {
@@ -61,7 +85,8 @@ label {
   margin-bottom: 6px;
   font-size: 1rem;
   font-weight: 600;
-  color: #183263; /* azul oscuro */
+  color: #183263;
+  /* azul oscuro */
 }
 
 input {
@@ -71,15 +96,18 @@ input {
   border-radius: 6px;
   font-size: 1rem;
   box-sizing: border-box;
-  color: #183263; /* azul oscuro */
+  color: #183263;
+  /* azul oscuro */
 }
 
 input::placeholder {
-  color: #018ef6; /* azul claro para placeholder */
+  color: #018ef6;
+  /* azul claro para placeholder */
 }
 
 button.login-button {
-  background-color: #183263; /* azul oscuro */
+  background-color: #183263;
+  /* azul oscuro */
   color: white;
   padding: 12px;
   width: 100%;
@@ -94,7 +122,8 @@ button.login-button {
 }
 
 button.login-button:hover {
-  background-color: #121f42; /* azul más oscuro */
+  background-color: #121f42;
+  /* azul más oscuro */
 }
 
 /* Tablets y pantallas más anchas */
@@ -118,5 +147,4 @@ button.login-button:hover {
     font-size: 1.3rem;
   }
 }
-
 </style>

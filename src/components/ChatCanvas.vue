@@ -15,7 +15,7 @@ onMounted(() => {
   ctx.font = '20px sans-serif'
 
   const messages = [
-    { text: 'Hola, ¿en qué puedo ayudarte?', color: '#0288D1', align: 'left' },
+    { text: 'Ventu: Hola soy Ventu, ¿En qué puedo ayudarte?', color: '#0288D1', align: 'left' },
     { text: 'Quiero organizar un viaje a Italia.', color: '#1f2937', align: 'right' },
     { text: 'Perfecto, ¿qué ciudades te gustaría visitar?', color: '#0288D1', align: 'left' },
     { text: 'Roma, Florencia y Venecia.', color: '#1f2937', align: 'right' }
@@ -70,7 +70,7 @@ onMounted(() => {
 canvas {
   width: 100%;
   height: 100%;
-  background-color: #ffffff;
+  background-color: #f7f7f7;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }

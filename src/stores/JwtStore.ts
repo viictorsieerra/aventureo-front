@@ -14,23 +14,27 @@ export const useJWTStore = defineStore('jwt', () => {
   const router = useRouter()
   const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/JwtAuth'
 
-  function loginUser(loginUser: LoginDTO) {
-    fetch(baseUrl + '/Login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(loginUser)
+function loginUser(loginUser: LoginDTO) {
+  return fetch(baseUrl + '/Login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(loginUser)
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Credenciales incorrectas");
+      return res.json();
     })
-      .then(res => {
-        if (!res.ok) throw new Error("Error en login");
-        return res.json();
-      })
-      .then(data => {
-        console.log("Token recibido:", data);
-        jwt.value = data.value;
-        userStore.getUser()
-        router.push("/")
-      })
-    }
+    .then(data => {
+      console.log("Token recibido:", data);
+
+      if (!data.value) throw new Error("Token no recibido");
+
+      jwt.value = data.value;
+      userStore.getUser();
+      router.push("/");
+    });
+}
+
       
 
 
