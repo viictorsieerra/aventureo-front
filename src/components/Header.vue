@@ -1,7 +1,7 @@
 <template>
   <header class="navbar">
     <div class="navbar__container">
-      <h1 class="navbar__logo">Aventureo</h1>
+      <LogoAventureo class="navbar__logo" @click="handleNavigation('/')"/>
 
       <!-- Botón hamburguesa móvil -->
       <button class="navbar__menu-toggle" @click="menuOpen = !menuOpen">
@@ -61,6 +61,7 @@ import { useRouter } from 'vue-router';
 import { useJWTStore } from '@/stores/JwtStore';
 import { useUserStore } from '@/stores/UserStore';
 import { Usuario } from '@/models/Usuario';
+import LogoAventureo from './LogoAventureo.vue';
 
 const menuOpen = ref(false);
 const isDesktop = ref(false);

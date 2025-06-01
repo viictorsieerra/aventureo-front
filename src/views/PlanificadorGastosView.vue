@@ -81,12 +81,14 @@ async function toggleGastos(idViaje: number) {
     gastosPorViaje.value[idViaje] = await getGastos(idViaje);
     console.log('GASTOS POR VIAJE', gastosPorViaje.value[idViaje])
   }
+  verGraficaDeGastos(idViaje)
 }
 
 async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
   newGasto.value.idViaje = idViaje;
   await createGasto(newGasto.value);
   gastosPorViaje.value[idViaje] = await getGastos(idViaje);
+  verGraficaDeGastos(idViaje)
   isActive.value = false;
   newGasto.value = {
     idViaje,
@@ -120,11 +122,12 @@ async function verGraficaDeGastos(idViaje: number) {
               <template #activator="{ props }">
                 <v-card-title class="d-flex justify-space-between align-center">
                   <span class="font-weight-medium">{{ viaje.nombre }}</span>
-                  <v-btn icon size="small" @click="toggleGastos(viaje.idViaje!); verGraficaDeGastos(viaje.idViaje)">
+                  <v-btn icon size="small" @click="toggleGastos(viaje.idViaje!)">
                     <v-icon>{{ gastosPorViaje[viaje.idViaje!] ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
                   </v-btn>
                   <v-btn v-bind="props" icon="mdi-pencil" size="small"></v-btn>
-                  <v-btn icon="mdi-delete" size="small" @click="deleteViaje(viaje.idViaje).then(() =>cargarViajes())"></v-btn>
+                  <v-btn icon="mdi-delete" size="small"
+                    @click="deleteViaje(viaje.idViaje).then(() => cargarViajes())"></v-btn>
                 </v-card-title>
                 <v-card-subtitle>
                   Personas: {{ viaje.personas }}<br />
@@ -172,7 +175,8 @@ async function verGraficaDeGastos(idViaje: number) {
                           <v-btn icon size="x-small" @click="gastoEditando = { ...gasto }">
                             <v-icon size="16">mdi-pencil</v-icon>
                           </v-btn>
-                          <v-btn icon size="x-small" @click="deleteGasto(gasto.idGasto).then(() => toggleGastos(viaje.idViaje!))">
+                          <v-btn icon size="x-small"
+                            @click="deleteGasto(gasto.idGasto).then(() => toggleGastos(viaje.idViaje!))">
                             <v-icon size="16">mdi-delete</v-icon>
                           </v-btn>
                         </div>
@@ -226,14 +230,15 @@ async function verGraficaDeGastos(idViaje: number) {
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn color="#0288D1" @click="updateGasto(gastoEditando).then(() => toggleGastos(viaje.idViaje!)); gastoEditando = null">Guardar</v-btn>
+                  <v-btn color="#0288D1"
+                    @click="updateGasto(gastoEditando).then(() => toggleGastos(viaje.idViaje!)); gastoEditando = null">Guardar</v-btn>
                   <v-btn @click="gastoEditando = null">Cancelar</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
             <v-expand-transition>
               <div v-if="gastosPorViaje[viaje.idViaje!]">
-                <Grafica :datos="gastoCategoriasPorViaje[viaje.idViaje] || []"   :key="viaje.idViaje" />
+                <Grafica :datos="gastoCategoriasPorViaje[viaje.idViaje] || []" :key="viaje.idViaje" />
               </div>
             </v-expand-transition>
 
@@ -245,7 +250,11 @@ async function verGraficaDeGastos(idViaje: number) {
     <!-- Botón de nuevo viaje -->
     <v-dialog max-width="500">
       <template #activator="{ props }">
-        <v-btn icon="mdi-plus" class="gastos__btn-add" color="#0288D1" v-bind="props" />
+        <v-btn class="gastos__btn-add" color="#0288D1" v-bind="props">
+          Agregar Viaje
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+
       </template>
       <template #default="{ isActive }">
         <v-card>
