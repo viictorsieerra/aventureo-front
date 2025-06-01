@@ -140,10 +140,11 @@ messages.value.push({role: 'Ventu', content:'Hola soy Ventu, ¿En qué puedo ayu
 
   &__input {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
 
     &-field {
-      flex-grow: 1;
+      flex: 1 1 auto;
       padding: 0.75rem 1rem;
       border: 1px solid #ccc;
       border-radius: 30px;
@@ -154,6 +155,12 @@ messages.value.push({role: 'Ventu', content:'Hola soy Ventu, ¿En qué puedo ayu
       &:focus {
         border-color: #018ef6;
       }
+    }
+
+    .btn-principal {
+      flex: 1 1 auto;
+      width: 100%;
+      margin-top: 0.5rem;
     }
   }
 }
@@ -216,11 +223,18 @@ messages.value.push({role: 'Ventu', content:'Hola soy Ventu, ¿En qué puedo ayu
     }
 
     &__input {
-      gap: 1rem;
+      flex-wrap: nowrap;
 
       &-field {
+        flex: 1 1 auto;
         padding: 0.9rem 1.2rem;
         font-size: 1.05rem;
+      }
+
+      .btn-principal {
+        flex: 0 0 auto;
+        width: auto;
+        margin-top: 0;
       }
     }
   }
