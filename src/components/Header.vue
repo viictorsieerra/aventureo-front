@@ -1,7 +1,7 @@
 <template>
   <header class="navbar">
     <div class="navbar__container">
-      <LogoAventureo class="navbar__logo" @click="handleNavigation('/')"/>
+      <LogoAventureo class="navbar__logo" @click="handleNavigation('/')" />
 
       <!-- Botón hamburguesa móvil -->
       <button class="navbar__menu-toggle" @click="menuOpen = !menuOpen">
@@ -15,7 +15,8 @@
           <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/booking')">Booking</button>
           <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/actividades')">Actividades</button>
           <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/chat')">Ventu</button>
-          <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/trenes')">Trenes</button>
+          <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/planificador')">Planificador de gastos</button>
+          
         </nav>
       </transition>
 
@@ -39,8 +40,8 @@
               </template>
               <v-list>
                 <v-list-item>
-                  <v-list-item-title class="navbar__actions-avatar__item">
-                    <router-link to="/planificador">Planificador de gastos</router-link>
+                  <v-list-item-title v-if="user.rolAdmin" class="navbar__actions-avatar__item">
+                    <router-link to="/admin">Zona de administración</router-link>
                   </v-list-item-title>
                   <v-list-item-title class="navbar__actions-avatar__item" @click="jwtStore.logOut">
                     Cerrar Sesión

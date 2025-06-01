@@ -17,6 +17,7 @@ export const useUserStore = defineStore('user', () => {
             .then(res => res.json())
             .then(data => {
                 user.value = data
+                console.log('ESTE ES EL USUARIO', user.value)
             })
             .catch(ex => console.error(`ERROR : ${ex}`))
     }

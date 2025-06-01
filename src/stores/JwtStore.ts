@@ -6,6 +6,7 @@ import LoginDTO from '@/models/LoginUser'
 import { EnvironmentVariablesEnum, getEnvironmentVariable } from '@/helpers/EnvironmentVariablesHelpers';
 import type RegisterUser from '@/models/RegisterUser';
 import { useUserStore } from './UserStore';
+import { Usuario } from '@/models/Usuario';
 
 
 export const useJWTStore = defineStore('jwt', () => {
@@ -57,7 +58,7 @@ function loginUser(loginUser: LoginDTO) {
   
 
   function logOut() {
-    // usuario.value = new UsuarioDTO()
+    userStore.user = null
     jwt.value = ""
     router.push('/')
   }
