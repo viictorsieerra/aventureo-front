@@ -9,3 +9,13 @@ export class Usuario {
             public rolAdmin?: boolean
         ) { }
 }
+
+export interface IUsuario {
+            idUsuario?: number,
+            nombre?: string,
+            apellidos?: string,
+            email?: string,
+            contrasena?: string,
+            fecNacimiento?: Date,
+            rolAdmin?: boolean
+}
