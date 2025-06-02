@@ -22,7 +22,7 @@ const itemsPerPage = ref(5);
 const password = ref('')
 
 onMounted(async () => {
-  itemsList.value = await getUsers();
+  await loadUser();
 });
 
 const dialog = ref(false);
@@ -39,9 +39,10 @@ const editedItem = ref<IUsuario>({
 
 const openEditDialog = (item: any) => {
   isEditMode.value = true;
-  editedItem.value = { ...item,
+  editedItem.value = {
+    ...item,
     fecNacimiento: item.fecNacimiento.split('T')[0]
-   };
+  };
   dialog.value = true;
 };
 
@@ -63,7 +64,7 @@ const closeDialog = () => {
 };
 
 const saveItem = async () => {
-    editedItem.value.contrasena = password.value
+  editedItem.value.contrasena = password.value
   if (isEditMode.value) {
     console.log('Actualizar usuario:', editedItem.value);
     await updateUser(editedItem.value);
@@ -72,23 +73,29 @@ const saveItem = async () => {
     await addUser(editedItem.value);
   }
   dialog.value = false;
-  itemsList.value = await getUsers();
+  password.value = '';
+  await loadUser()
 };
 
 const deleteItem = async (item: any) => {
   if (confirm(`¿Seguro que quieres eliminar a ${item.nombre}?`)) {
-    console.log('Eliminar usuario:', item);
-    await deleteUser(item.idUsuario);
-    itemsList.value = await getUsers();
+    console.log('Eliminar usuario:', item)
+    await deleteUser(item.idUsuario)
+    await loadUser()
   }
-};
+}
 
+
+async function loadUser() {
+   itemsList.value = await getUsers()
+  console.log('USER CARGADOS', itemsList.value)
+}
 const passwordRules = computed(() => {
   return isEditMode.value
     ? []
     : [(v: string) => !!v || 'La contraseña es obligatoria',
-       (v: string) => v.length > 3 || 'Debe tener más de 3 caracteres']
-});
+    (v: string) => v.length > 3 || 'Debe tener más de 3 caracteres']
+})
 
 </script>
 
@@ -100,14 +107,8 @@ const passwordRules = computed(() => {
       <v-icon start>mdi-plus</v-icon> Añadir Usuario
     </v-btn>
 
-    <ServerTable
-      class="user-admin__table"
-      :headers="headers"
-      :serverItems="itemsList"
-      :items-per-page="itemsPerPage"
-      :totalItems="itemsList.length"
-      @update:items-per-page="itemsPerPage = $event"
-    >
+    <ServerTable class="user-admin__table" :headers="headers" :serverItems="itemsList" :items-per-page="itemsPerPage"
+      :totalItems="itemsList.length" @update:items-per-page="itemsPerPage = $event">
       <template #item.actions="{ item }">
         <v-btn class="user-admin__btn-icon" size="small" icon @click="openEditDialog(item)">
           <v-icon>mdi-pencil</v-icon>
@@ -119,6 +120,10 @@ const passwordRules = computed(() => {
 
       <template #item.idUsuario="{ item }">
         <span class="user-admin__link">{{ item.idUsuario }}</span>
+      </template>
+
+      <template #item.fecNacimiento="{ item }">
+        {{ item.fecNacimiento.split('T')[0] }}
       </template>
 
       <template #item.rolAdmin="{ item }">
@@ -137,8 +142,8 @@ const passwordRules = computed(() => {
           <v-text-field v-model="editedItem.nombre" label="Nombre" />
           <v-text-field v-model="editedItem.apellidos" label="Apellidos" />
           <v-text-field v-model="editedItem.fecNacimiento" label="Fecha de Nacimiento" type="date" />
-          <v-text-field v-model="editedItem.email" label="Correo Electrónico" />
-          <v-text-field  v-model="password" :rules="passwordRules" label="Contraseña" />
+          <v-text-field v-model="editedItem.email" label="Correo Electrónico" type="email" />
+          <v-text-field v-model="password" :rules="passwordRules" label="Contraseña" />
           <v-checkbox v-model="editedItem.rolAdmin" label="¿Es administrador?" />
         </v-card-text>
         <v-card-actions>
@@ -178,6 +183,7 @@ const passwordRules = computed(() => {
   }
 
   &__btn-icon {
+    margin: 5px;
     &--delete {
       color: #fd6f01;
     }

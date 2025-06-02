@@ -5,13 +5,13 @@ export const useAdminUser = () => {
     const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/User'
 
     async function getUsers() {
-        return fetch(baseUrl)
+        return await fetch(baseUrl)
             .then(res => res.json())
             .catch(error => console.error('ERROR', error))
     }
 
     async function addUser(newUser :IUsuario) {
-        fetch(baseUrl, {
+        await fetch(baseUrl, {
             method: 'POST',
             headers: {'Content-Type' : 'application/json'},
             body: JSON.stringify(newUser)
@@ -20,7 +20,7 @@ export const useAdminUser = () => {
     }
 
     async function updateUser(uptUser :IUsuario) {
-        fetch(baseUrl, {
+        await fetch(baseUrl, {
             method: 'PUT',
             headers: {'Content-Type' : 'application/json'},
             body: JSON.stringify(uptUser)
@@ -29,7 +29,7 @@ export const useAdminUser = () => {
     }
 
     async function deleteUser(id :number) {
-        fetch(baseUrl + '/' + id, {
+        await fetch(baseUrl + '/' + id, {
             method: 'DELETE'
         }).then(res => res.ok)
         .catch(error => console.error('ERROR', error))

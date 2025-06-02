@@ -5,13 +5,13 @@ export const useAdminCategory = () => {
     const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/Category'
 
     async function getCategorys() {
-        return fetch(baseUrl)
+        return await fetch(baseUrl)
             .then(res => res.json())
             .catch(error => console.error('ERROR', error))
     }
 
     async function addCategory(addCategory: Category) {
-        fetch(baseUrl, {
+        await fetch(baseUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(addCategory)
@@ -20,7 +20,7 @@ export const useAdminCategory = () => {
     }
 
     async function updateCategory(uptCategory: Category) {
-        fetch(baseUrl, {
+        await fetch(baseUrl, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(uptCategory)
@@ -29,7 +29,7 @@ export const useAdminCategory = () => {
     }
 
     async function deleteCategory(id: number) {
-        fetch(baseUrl + '/' + id, {
+        await fetch(baseUrl + '/' + id, {
             method: 'DELETE'
         }).then(res => res.ok)
             .catch(error => console.error('ERROR ', error))

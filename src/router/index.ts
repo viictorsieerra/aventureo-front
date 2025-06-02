@@ -65,16 +65,18 @@ const router = createRouter({
     {
       path: '/planificador',
       name: 'Planificador',
-      component: PlanificadorGastosView
+      component: PlanificadorGastosView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/admin',
       name: 'Administracion',
+      redirect: '/admin/user',
       component: AdminView,
       meta: { isAdmin: true },
       children: [
-        {path: 'users', component: AdminUserView},
-        {path: 'categorys', component: AdminCategoryView}
+        { path: 'user', component: AdminUserView },
+        { path: 'category', component: AdminCategoryView }
       ]
     },
     {
@@ -109,16 +111,15 @@ router.beforeEach((to, from, next) => {
   const isLogin = to.meta.isLogin
   const isAdmin = to.meta.isAdmin
 
-  if (requiresAuth && (!jwtStore.jwt || !userStore.user )) {
+  if (requiresAuth && (!jwtStore.jwt || !userStore.user)) {
     next('/login')
     alert("HAY QUE ESTAR REGISTRADO PARA ACCEDER")
-  }/*
-  else if (isLogin && userStore.user != null)
+  }
+  else if (isLogin && jwtStore.jwt)
   {
     next('/')
-  }*/
-  else if(isAdmin && !userStore.user.rolAdmin)
-  {
+  }
+  else if (isAdmin && !userStore.user.rolAdmin) {
     next('/')
     alert('NO TIENE PERMISOS PARA ACCEDER AQUI')
   }

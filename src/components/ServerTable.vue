@@ -15,49 +15,37 @@ const emit = defineEmits<{
 }>();
 
 const onItemsPerPageChange = (value: number) => {
-    emit('update:items-per-page', value); // Emite el evento con el nuevo valor
+    emit('update:items-per-page', value)
 };
 </script>
 
 
 <template>
-  <div class="admin-table-wrapper">
-    <div class="admin-table-scroll">
-      <v-data-table-server
-        v-bind:items-per-page="itemsPerPage"
-        :headers="headers"
-        :items="serverItems"
-        :items-length="totalItems"
-        :loading="loading"
-        item-value="name"
-        @update:items-per-page="onItemsPerPageChange"
-        class="admin-table"
-      >
-        <!-- Permite pasar slots personalizados desde fuera -->
-        <template v-for="(_, name) in $slots" #[name]="slotProps">
-          <slot :name="name" v-bind="slotProps" />
-        </template>
-      </v-data-table-server>
-    </div>
-  </div>
+    <v-data-table-server
+      v-bind:items-per-page="itemsPerPage"
+      :headers="headers"
+      :items="serverItems"
+      :items-length="totalItems"
+      :loading="loading"
+      item-value="name"
+      @update:items-per-page="onItemsPerPageChange"
+      class="admin-table"
+    >
+      <template v-for="(_, name) in $slots" #[name]="slotProps">
+        <slot :name="name" v-bind="slotProps" />
+      </template>
+    </v-data-table-server>
 </template>
 
 
 
 
+
+
 <style lang="scss" scoped>
-.admin-table-wrapper {
-  width: 100%;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
+  .admin-table {
+    min-width: 800px;
+  }
 
-.admin-table-scroll {
-  overflow-x: auto;
-}
-
-.admin-table {
-  min-width: 800px; // Ajusta según el número de columnas
-}
 </style>
 

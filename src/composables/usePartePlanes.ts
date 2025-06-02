@@ -9,8 +9,8 @@ export const usePartePlanes = () => {
     return await res.json()
   }
 
-  const createPartePlan = (partePlan: CreatePartePlanDTO) => {
-    return fetch(baseUrl, {
+  const createPartePlan = async (partePlan: CreatePartePlanDTO) => {
+    return await fetch(baseUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(partePlan)
