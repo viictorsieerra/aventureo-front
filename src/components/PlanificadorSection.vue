@@ -13,17 +13,10 @@
         <button>Planificar ahora</button>
       </router-link>
     </div>
-
-    <div class="planner-canvas-container">
-      <div class="canvas-wrapper">
-        <PlannerCanvas />
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import PlannerCanvas from '@/components/PlannerCanvas.vue'
 </script>
 
 <style scoped>
