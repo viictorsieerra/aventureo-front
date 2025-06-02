@@ -16,29 +16,30 @@
     <div class="text-caption font-weight-regular opacity-60">
       <div class="footer-columns">
         <div class="footer-column">
-          <h3>Sobre Nosotros</h3>
-          <ul>
-            <li><a href="#">Quiénes somos</a></li>
-            <li><a href="#">Nuestro equipo</a></li>
-            <li><a href="#">Carreras</a></li>
-          </ul>
-        </div>
+  <h3>Sobre Nosotros</h3>
+  <ul>
+    <li><router-link to="/sobre-nosotros">Quiénes somos</router-link></li>
+    <li><a href="mailto:contacto@aventureo.com">📧 contacto@aventureo.com</a></li>
+    <li><a href="tel:+34600111222">📞 +34 600 111 222</a></li>
+  </ul>
+</div>
+
         <div class="footer-column">
           <h3>Ayuda</h3>
           <ul>
-            <li><a href="#">Preguntas frecuentes</a></li>
+            <li><router-link to="/preguntas-frecuentes">Preguntas frecuentes</router-link></li>
             <li><a href="#">Soporte</a></li>
-            <li><a href="#">Contacto</a></li>
           </ul>
         </div>
         <div class="footer-column">
-          <h3>Síguenos</h3>
-          <ul>
-            <li><a href="#">Facebook</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">Instagram</a></li>
-          </ul>
-        </div>
+  <h3>Síguenos</h3>
+  <ul>
+    <li><a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a></li>
+    <li><a href="https://twitter.com" target="_blank" rel="noopener">Twitter</a></li>
+    <li><a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a></li>
+  </ul>
+</div>
+
       </div>
     </div>
 

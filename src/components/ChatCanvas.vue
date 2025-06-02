@@ -1,65 +1,50 @@
 <template>
-  <canvas ref="canvas"></canvas>
+  <div class="chat-container">
+    <div class="device-frame">
+      <div class="device-notch"></div>
+      <div class="chat-screen" ref="chatScreen"></div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
 
-const canvas = ref(null)
+const chatScreen = ref(null)
 
 onMounted(() => {
-  const ctx = canvas.value.getContext('2d')
-  canvas.value.width = canvas.value.offsetWidth
-  canvas.value.height = canvas.value.offsetHeight
-
-  ctx.font = '20px sans-serif'
-
   const messages = [
     { text: 'Ventu: Hola soy Ventu, ¿En qué puedo ayudarte?', color: '#0288D1', align: 'left' },
     { text: 'Quiero organizar un viaje a Italia.', color: '#1f2937', align: 'right' },
     { text: 'Perfecto, ¿qué ciudades te gustaría visitar?', color: '#0288D1', align: 'left' },
-    { text: 'Roma, Florencia y Venecia.', color: '#1f2937', align: 'right' }
+    { text: 'Roma, Florencia y Venecia.', color: '#1f2937', align: 'right' },
+    { text: 'Genial, te puedo recomendar algunas rutas.', color: '#0288D1', align: 'left' },
+    { text: 'Perfecto, gracias Ventu.', color: '#1f2937', align: 'right' }
   ]
 
-  let yStart = 50
   let i = 0
 
   function drawMessage() {
     if (i < messages.length) {
       const msg = messages[i]
-      const padding = 20
-      const bubbleHeight = 40
-      const textWidth = ctx.measureText(msg.text).width + padding * 2
-      const maxWidth = canvas.value.width - 40
 
-      // Calcula posición X según alineación
-      const x = msg.align === 'left' ? 20 : maxWidth - textWidth
+      const messageBubble = document.createElement('div')
+      messageBubble.classList.add('message', msg.align)
+      messageBubble.textContent = msg.text
+      messageBubble.style.color = msg.color
 
-      // Dibuja burbuja
-      ctx.fillStyle = msg.align === 'left' ? '#e0e7ff' : '#f3f4f6'
-      ctx.fillRect(x, yStart - 25, textWidth, bubbleHeight)
+      chatScreen.value.appendChild(messageBubble)
+      chatScreen.value.scrollTop = chatScreen.value.scrollHeight
 
-      // Dibuja texto
-      ctx.fillStyle = msg.color
-      ctx.fillText(msg.text, x + padding, yStart)
-
-      yStart += 70
       i++
-
       setTimeout(drawMessage, 1200)
     } else {
-      // Reinicia después de unos segundos
       setTimeout(() => {
-        clearChat()
+        chatScreen.value.innerHTML = ''
         i = 0
-        yStart = 50
         drawMessage()
       }, 3000)
     }
-  }
-
-  function clearChat() {
-    ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
   }
 
   drawMessage()
@@ -67,11 +52,85 @@ onMounted(() => {
 </script>
 
 <style scoped>
-canvas {
-  width: 100%;
-  height: 100%;
+.chat-container {
+  padding: 2rem 1rem;
+  text-align: center;
+  margin-top: 82%; /* mobile first */
+}
+
+.chat-title {
+  font-size: 1.6rem;
+  color: #183263;
+  margin-bottom: 1.5rem;
+}
+
+.device-frame {
+  width: 360px;
+  height: 640px;
   background-color: #f7f7f7;
+  border: 12px solid #333;
+  border-radius: 36px;
+  padding: 12px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.device-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 20px;
+  background-color: #333;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  z-index: 2;
+}
+
+.chat-screen {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 30px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #f7f7f7;
+  border-radius: 24px;
+}
+
+.message {
+  padding: 12px 16px;
+  max-width: 80%;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.message.left {
+  background-color: #e0e7ff;
+  align-self: flex-start;
+}
+
+.message.right {
+  background-color: #f3f4f6;
+  align-self: flex-end;
+}
+
+/* Desktop overrides */
+@media (min-width: 900px) {
+  .chat-container {
+    margin-top: 0;
+  }
+  .device-frame {
+    width: 360px;
+    height: 640px;
+  }
 }
 </style>

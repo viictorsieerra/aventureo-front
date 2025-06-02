@@ -8,6 +8,8 @@ import ChatAI from '@/views/AIView.vue'
 import Booking from '@/views/BookingView.vue'
 import PlanificadorGastosView from '@/views/PlanificadorGastosView.vue'
 import DetallesPlanView from '@/views/DetallesPlanView.vue'
+import SobreNosotrosView from '@/views/SobreNosotrosView.vue'
+import PreguntasFrecuentesView from '@/views/PreguntasFrecuentesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,11 +59,23 @@ const router = createRouter({
       path: '/planificador',
       name: 'Planificador',
       component: PlanificadorGastosView
-    }
-    
-    
+    },
+    {
+      path: '/sobre-nosotros',
+      name: 'sobreNosotros',
+      component: SobreNosotrosView
+    },
 
-    
+    {
+      path: '/preguntas-frecuentes',
+      name: 'preguntasFrecuentes',
+      component: PreguntasFrecuentesView
+    }
+
+
+
+
+
   ],
 })
 
