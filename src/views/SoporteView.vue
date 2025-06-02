@@ -1,25 +1,25 @@
 <template>
-  <div class="soporte">
-    <h1 class="soporte__title">📩 Contacta con nuestro soporte</h1>
-    <p class="soporte__subtitle">Rellena el siguiente formulario y te responderemos lo antes posible.</p>
+  <div class="soporte-page">
+    <h1>📩 Contacta con nuestro soporte</h1>
+    <p>Rellena el siguiente formulario y te responderemos lo antes posible.</p>
 
-    <form class="soporte__form" @submit.prevent="enviarFormulario">
-      <div class="soporte__form-group">
-        <label for="nombre" class="soporte__label">Nombre</label>
-        <input type="text" id="nombre" v-model="nombre" required class="soporte__input" />
+    <form @submit.prevent="enviarFormulario">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" v-model="nombre" required />
       </div>
 
-      <div class="soporte__form-group">
-        <label for="email" class="soporte__label">Correo electrónico</label>
-        <input type="email" id="email" v-model="email" required class="soporte__input" />
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" v-model="email" required />
       </div>
 
-      <div class="soporte__form-group">
-        <label for="mensaje" class="soporte__label">Mensaje</label>
-        <textarea id="mensaje" v-model="mensaje" required class="soporte__textarea"></textarea>
+      <div class="form-group">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" v-model="mensaje" required></textarea>
       </div>
 
-      <button type="submit" class="soporte__button">Enviar</button>
+      <button type="submit">Enviar</button>
     </form>
   </div>
 </template>
@@ -35,8 +35,8 @@ const mensaje = ref('')
 
 function enviarFormulario() {
   const serviceID = 'service_sslr93d'      // pon aquí tu Service ID de EmailJS
-  const templateID = 'template_mzdrcgf'    // pon aquí tu Template ID de EmailJS
-  const publicKey = 'FCJzqoAYWJEYNdcWb'    // pon aquí tu Public Key de EmailJS
+  const templateID = 'template_bysfopq'    // pon aquí tu Template ID de EmailJS
+  const publicKey = 'FCJzqoAYWJEYNdcWb'      // pon aquí tu Public Key de EmailJS
 
   const templateParams = {
     from_name: nombre.value,
@@ -52,11 +52,11 @@ function enviarFormulario() {
         text: 'Gracias por contactar con nosotros. Te responderemos pronto.',
         confirmButtonColor: '#018ef6'
       })
+      // Limpias los campos
       nombre.value = ''
       email.value = ''
       mensaje.value = ''
-    })
-    .catch((error) => {
+    }, (error) => {
       Swal.fire({
         icon: 'error',
         title: 'Error al enviar',
@@ -66,112 +66,70 @@ function enviarFormulario() {
       console.error('EmailJS error:', error)
     })
 }
+
 </script>
 
 <style scoped lang="scss">
-.soporte {
-  max-width: 100%;
-  padding: 1rem;
+.soporte-page {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
   background-color: #f7f7f7;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  margin: 1rem auto;
 
-  &__title {
+  h1 {
     color: #183263;
-    font-size: 1.8rem;
     margin-bottom: 1rem;
-    text-align: center;
   }
 
-  &__subtitle {
+  p {
+    margin-bottom: 2rem;
     color: #333;
+  }
+
+  .form-group {
     margin-bottom: 1.5rem;
-    text-align: center;
-    font-size: 1rem;
-  }
 
-  &__form {
-    display: flex;
-    flex-direction: column;
-  }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #183263;
+      font-weight: 600;
+    }
 
-  &__form-group {
-    margin-bottom: 1.5rem;
-  }
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
 
-  &__label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #183263;
-    font-weight: 600;
-    font-size: 1rem;
-  }
+      &:focus {
+        outline: none;
+        border-color: #018ef6;
+      }
+    }
 
-  &__input,
-  &__textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    resize: none;
-
-    &:focus {
-      outline: none;
-      border-color: #018ef6;
-      box-shadow: 0 0 5px #018ef6;
+    textarea {
+      min-height: 120px;
+      resize: vertical;
     }
   }
 
-  &__textarea {
-    min-height: 120px;
-    resize: vertical;
-  }
-
-  &__button {
-    background-color: #fd6f01;
+  button {
+    background-color: #018ef6;
     color: #fff;
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 8px;
-    font-weight: 600;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    align-self: center;
-    width: 100%;
+    font-weight: 600;
+    transition: background-color 0.3s;
 
     &:hover {
       background-color: #026bb5;
-    }
-  }
-
-  // Desktop styles
-  @media (min-width: 768px) {
-    max-width: 600px;
-    padding: 2rem;
-
-    &__title {
-      font-size: 2.4rem;
-      text-align: left;
-    }
-
-    &__subtitle {
-      font-size: 1.125rem;
-      text-align: left;
-      margin-bottom: 2rem;
-    }
-
-    &__form {
-      flex-direction: column;
-    }
-
-    &__button {
-      width: auto;
-      align-self: flex-start;
-      padding: 0.75rem 2rem;
-      font-size: 1.125rem;
     }
   }
 }
