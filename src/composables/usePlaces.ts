@@ -37,8 +37,8 @@ export interface Place {
     vicinity?: string,
     rating?: number,
     user_ratings_total?: number,
-    place_id?: string,
-    international_phone_number: string,
-    url: string,
-    website: string
+    place_id: string,
+    international_phone_number?: string,
+    url?: string,
+    website?: string
 }

@@ -73,21 +73,26 @@
 </template>
 
 <script setup lang="ts">
-import RegisterUser from '@/models/RegisterUser';
+import type {RegisterUser} from '@/models/RegisterUser';
 import { useJWTStore } from '@/stores/JwtStore';
 import { ref, computed } from 'vue';
 
-const registerUser = ref(new RegisterUser())
+const registerUser = ref<RegisterUser>({
+  nombre: '',
+  apellidos: '',
+  fecNacimiento: new Date,
+  email: '',
+  contrasena: ''
+})
 const confirmPassword = ref('')
 const JwtStore = useJWTStore()
-const password = computed(() => registerUser.value.contrasena)
-const passwordError = computed(() => password.length> 0 && password.length < 6);
-const confirmPasswordError = computed(() => registerUser.value.contrasena !== confirmPassword.value && confirmPassword.value.length > 0);
+const passwordError = computed(() => registerUser.value.contrasena.length > 0 && registerUser.value.contrasena.length < 6);
+const confirmPasswordError = computed(() => registerUser.value?.contrasena !== confirmPassword.value && confirmPassword.value.length > 0);
 
 const isSubmitDisabled = computed(() => passwordError.value || confirmPasswordError.value);
 
 const submitForm = () => {
-  if (registerUser.value.contrasena !== confirmPassword.value) {
+  if (registerUser.value?.contrasena !== confirmPassword.value) {
     alert("Las contraseñas no coinciden");
     return;
   }

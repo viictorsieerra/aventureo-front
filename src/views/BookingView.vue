@@ -3,12 +3,14 @@ import { ref } from 'vue';
 import { usePlaces, type Place, type QueryPlaces } from '@/composables/usePlaces';
 import Mapa from '@/components/Mapa.vue';
 import SearchBar from '@/components/SearchBar.vue';
+import type { MapLocation } from '@/models/MapLocation';
 
 const { GetPlacesByQuery, GetInfoPlace } = usePlaces();
 
-const alojamientos = ref<(Place | null)[]>([]);
+const alojamientos = ref<Place[]>([]);
+
 const alojamientoSelected = ref<Place | null>(null);
-const mapLocations = ref([]);
+const mapLocations = ref<MapLocation[]>([]);
 const selectedLocation = ref(null);
 const radiusSearch = ref(1);
 
@@ -46,7 +48,7 @@ const showSnackbar = ref(false);
 const snackbarMessage = ref('');
 const snackbarColor = ref('error');
 
-const handleSearch = async (location) => {
+const handleSearch = async (location: any) => {
   mapLocations.value = [location];
   selectedLocation.value = null;
 
@@ -62,13 +64,13 @@ const handleSearch = async (location) => {
   alojamientos.value = await GetPlacesByQuery(query);
 };
 
-const showError = (message) => {
+const showError = (message: string) => {
   snackbarMessage.value = message;
   snackbarColor.value = 'error';
   showSnackbar.value = true;
 };
 
-const showLocationDetails = (location) => {
+const showLocationDetails = (location: any) => {
   selectedLocation.value = location;
 };
 </script>
@@ -121,7 +123,7 @@ const showLocationDetails = (location) => {
 
           <v-card-actions>
             <v-btn color="#fd6f01" variant="tonal" :text="expandedCardId === alojamiento?.place_id ? 'Menos información' : 'Más información'" block rounded="lg"
-              @click="showInfoPlace(alojamiento?.place_id)" />
+              @click="showInfoPlace(alojamiento.place_id)" />
           </v-card-actions>
 
           <div v-if="expandedCardId === alojamiento?.place_id" class="booking__card-details">

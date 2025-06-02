@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router';
 import LoginDTO from '@/models/LoginUser'
 import { EnvironmentVariablesEnum, getEnvironmentVariable } from '@/helpers/EnvironmentVariablesHelpers';
-import type RegisterUser from '@/models/RegisterUser';
+import type {RegisterUser} from '@/models/RegisterUser';
 import { useUserStore } from './UserStore';
 import { Usuario } from '@/models/Usuario';
 

@@ -14,7 +14,7 @@ const { getViajes, createViaje, getCategorys, createGasto, getGastos, updateGast
 const userStore = useUserStore();
 
 // VARIABLES Y CONSTANTES
-const viajesList = ref([]);
+const viajesList = ref<UpdateViaje[] | null>([]);
 const formValid = ref(false);
 const categorias = ref<{ idCategoria: number, nombre: string }[]>([]);
 const gastosPorViaje = ref<{ [key: number]: any[] }>({});
@@ -127,7 +127,7 @@ async function verGraficaDeGastos(idViaje: number) {
                   </v-btn>
                   <v-btn v-bind="props" icon="mdi-pencil" size="small"></v-btn>
                   <v-btn icon="mdi-delete" size="small"
-                    @click="deleteViaje(viaje.idViaje).then(() => cargarViajes())"></v-btn>
+                    @click="deleteViaje(viaje.idViaje!).then(() => cargarViajes())"></v-btn>
                 </v-card-title>
                 <v-card-subtitle>
                   Personas: {{ viaje.personas }}<br />
@@ -238,7 +238,7 @@ async function verGraficaDeGastos(idViaje: number) {
             </v-dialog>
             <v-expand-transition>
               <div v-if="gastosPorViaje[viaje.idViaje!]">
-                <Grafica :datos="gastoCategoriasPorViaje[viaje.idViaje] || []" :key="viaje.idViaje" />
+                <Grafica :datos="gastoCategoriasPorViaje[viaje.idViaje!] || []" :key="viaje.idViaje" />
               </div>
             </v-expand-transition>
 

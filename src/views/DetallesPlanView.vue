@@ -7,7 +7,8 @@
       <v-card-text>
         <p><strong>Duración:</strong> {{ plan.duracion }} días</p>
         <p><strong>Precio estimado:</strong> {{ plan.precioEstimado }}€</p>
-        <p><v-rating :model-value="plan.valoracion" color="amber" density="compact" size="small" half-increments readonly /></p>
+        <p><v-rating :model-value="plan.valoracion" color="amber" density="compact" size="small" half-increments
+            readonly /></p>
         <p><strong>Comentario:</strong> {{ plan.comentario }}</p>
       </v-card-text>
 
@@ -16,7 +17,7 @@
       </v-card-actions>
     </v-card>
 
-    <v-alert v-else type="info" text> Cargando plan... </v-alert>
+    <v-alert v-else type="info"> Cargando plan... </v-alert>
 
     <!-- Actividades -->
     <v-card class="mt-4" v-if="partePlans.length > 0">
@@ -31,7 +32,7 @@
       </v-list>
     </v-card>
 
-    <v-alert v-else type="info" text class="mt-4"> Este plan aún no tiene actividades. </v-alert>
+    <v-alert v-else type="info" class="mt-4"> Este plan aún no tiene actividades. </v-alert>
 
     <!-- Botón añadir actividad -->
     <v-btn color="primary" class="mt-4 btn-primary" @click="showAddDialog = true">Añadir Actividad</v-btn>
@@ -59,15 +60,26 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePlans } from '@/composables/usePlans'
-import { usePartePlanes, CreatePartePlanDTO } from '@/composables/usePartePlanes'
+import { usePartePlanes, type CreatePartePlanDTO } from '@/composables/usePartePlanes'
+import type { PartePlan } from '@/models/PartePlan'
+import type { Plan } from '@/models/Plan'
+
 
 const route = useRoute()
 const router = useRouter()
 const { getPlanById } = usePlans()
 const { getPartePlansByPlanId, createPartePlan } = usePartePlanes()
 
-const plan = ref(null)
-const partePlans = ref([])
+const plan = ref<Plan>({
+  idPlan: 0,
+  nombre: '',
+  duracion: 0,
+  lugar: '',
+  valoracion: '',
+  comentario: '',
+  precioEstimado: 0
+})
+const partePlans = ref<PartePlan[]>([])
 
 const showAddDialog = ref(false)
 const newParte = ref({

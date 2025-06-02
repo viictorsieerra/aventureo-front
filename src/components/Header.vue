@@ -67,7 +67,6 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useJWTStore } from '@/stores/JwtStore';
 import { useUserStore } from '@/stores/UserStore';
-import { Usuario } from '@/models/Usuario';
 import LogoAventureo from './LogoAventureo.vue';
 
 const menuOpen = ref(false);

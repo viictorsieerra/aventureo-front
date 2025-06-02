@@ -108,22 +108,34 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { usePlans, CreatePlanDTO } from "@/composables/usePlans"
+import { usePlans} from "@/composables/usePlans"
+import type { CreatePlanDTO } from '@/composables/usePlans'
 import Mapa from "@/components/Mapa.vue"
 import SearchBar from "@/components/SearchBar.vue"
 import { useRouter } from 'vue-router'
 
+interface Location {
+  name: string;
+  lat: number;
+  lng: number;
+}
+
+interface Plan {
+  idPlan: number
+}
+
+
 const router = useRouter()
 
-const irADetalle = (id) => {
+const irADetalle = (id: any) => {
   console.log("Navegando al plan con id:", id)
   router.push(`/planes/${id}`)
 }
 
 const { getPlans, createPlan } = usePlans()
 
-const selectedLocation = ref(null)
-const locationPlans = ref([])
+const selectedLocation = ref<Location | null>(null)
+const locationPlans = ref()
 const showAddPlanDialog = ref(false)
 const showSnackbar = ref(false)
 const snackbarMessage = ref('')
@@ -137,16 +149,17 @@ const newPlan = ref({
   comentario: ''
 })
 
-const mapLocations = ref([])
+const mapLocations = ref<Location[]>([])
 
-const onSearch = async (location) => {
+
+const onSearch = async (location : any) => {
   selectedLocation.value = location
   const plans = await getPlans(location.name)
   locationPlans.value = plans
   mapLocations.value = [location]
 }
 
-const onLocationSelected = (location) => {
+const onLocationSelected = (location: any) => {
   selectedLocation.value = location
 }
 
