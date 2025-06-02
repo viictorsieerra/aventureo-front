@@ -278,26 +278,29 @@ async function verGraficaDeGastos(idViaje: number) {
     </v-dialog>
   </div>
 </template>
-
 <style scoped lang="scss">
 .gastos {
   padding: 1.5rem;
   background-color: #f9fbfc;
   min-height: 100vh;
-
-  &__btn-add {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 100;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
+  position: relative;
 
   h1 {
     font-size: 2rem;
     color: #333;
     margin-bottom: 2rem;
   }
+}
+
+.gastos__btn-add {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px !important;
+  text-transform: none;
+  font-weight: 500;
 }
 
 .v-card {
@@ -368,4 +371,5 @@ async function verGraficaDeGastos(idViaje: number) {
     color: #0288D1;
   }
 }
+
 </style>
