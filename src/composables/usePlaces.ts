@@ -4,8 +4,8 @@ export const usePlaces = () => {
     const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/Places'
 
 
-    function GetPlacesByQuery(params: QueryPlaces) {
-        return fetch(baseUrl, {
+    async function GetPlacesByQuery(params: QueryPlaces) {
+        return await fetch(baseUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(params),
@@ -16,8 +16,8 @@ export const usePlaces = () => {
             })
     }
 
-    function GetInfoPlace(placeId?: string) {
-        return fetch(baseUrl + `?placeId=${placeId}`)
+    async function GetInfoPlace(placeId?: string) {
+        return await fetch(baseUrl + `?placeId=${placeId}`)
             .then(res => res.json())
             .catch(error => {
                 console.error('Error al recibir información del sitio:', error)

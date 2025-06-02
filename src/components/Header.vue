@@ -12,11 +12,17 @@
       <!-- Navegación con transición -->
       <transition name="slide-fade">
         <nav v-if="menuOpen || isDesktop" class="navbar__nav">
-          <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/booking')">Booking</button>
-          <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/actividades')">Actividades</button>
-          <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/chat')">Ventu</button>
-          <button class="navbar__btn navbar__nav-item" @click="handleNavigation('/planificador')">Planificador de gastos</button>
-          
+          <button class="navbar__btn navbar__nav-item" :class="{ 'navbar__nav-item--active': isActivePath('/booking') }"
+            @click="handleNavigation('/booking')">Booking</button>
+          <button class="navbar__btn navbar__nav-item"
+            :class="{ 'navbar__nav-item--active': isActivePath('/actividades') }"
+            @click="handleNavigation('/actividades')">Actividades</button>
+          <button class="navbar__btn navbar__nav-item" :class="{ 'navbar__nav-item--active': isActivePath('/chat') }"
+            @click="handleNavigation('/chat')">Ventu</button>
+          <button class="navbar__btn navbar__nav-item"
+            :class="{ 'navbar__nav-item--active': isActivePath('/planificador') }"
+            @click="handleNavigation('/planificador')">Planificador de
+            gastos</button>
         </nav>
       </transition>
 
@@ -35,13 +41,13 @@
             <v-menu open-on-click>
               <template v-slot:activator="{ props }">
                 <v-btn color="#fd6f01" v-bind="props" class="navbar__actions-avatar">
-                  <span style="color: white;">{{ user.nombre.charAt(0) }}</span>
+                  <span style="color: white;">{{ user.nombre?.charAt(0) }}</span>
                 </v-btn>
               </template>
               <v-list>
                 <v-list-item>
-                  <v-list-item-title v-if="user.rolAdmin" class="navbar__actions-avatar__item">
-                    <router-link to="/admin">Zona de administración</router-link>
+                  <v-list-item-title class="navbar__actions-avatar__item" v-if="user.rolAdmin">
+                    <router-link to="/admin">Zona de administrador</router-link>
                   </v-list-item-title>
                   <v-list-item-title class="navbar__actions-avatar__item" @click="jwtStore.logOut">
                     Cerrar Sesión
@@ -58,7 +64,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useJWTStore } from '@/stores/JwtStore';
 import { useUserStore } from '@/stores/UserStore';
 import { Usuario } from '@/models/Usuario';
@@ -72,11 +78,14 @@ const userStore = useUserStore();
 
 const user = computed(() => userStore.user);
 const router = useRouter();
+const route = useRoute()
 
 const checkViewport = () => {
   isDesktop.value = window.innerWidth >= 768;
   if (isDesktop.value) menuOpen.value = false;
 };
+
+const isActivePath = (path: string) => route.path === path;
 
 onMounted(() => {
   checkViewport();
@@ -168,6 +177,9 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
     &:hover {
       background-color: $hover-bg-color;
       color: white;
+    }
+    &--active {
+      color: #fd6f01;
     }
   }
 

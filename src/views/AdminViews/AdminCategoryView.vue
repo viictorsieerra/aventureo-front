@@ -22,10 +22,11 @@ onMounted(async () => {
 });
 
 
-const deleteItem = (item: any) => {
+const deleteItem = async (item: any) => {
     if (confirm(`¿Seguro que quieres eliminar a ${item.nombre}?`)) {
         console.log('Eliminar categoria:', item);
-       deleteCategory(item.idCategoria)
+       await deleteCategory(item.idCategoria)
+       itemsList.value = await getCategorys();
     }
 };
 
@@ -157,6 +158,7 @@ const saveItem = async () => {
   }
 
   &__btn-icon {
+    margin: 5px;
     &--delete {
       color: #fd6f01;
     }

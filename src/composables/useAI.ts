@@ -18,7 +18,7 @@ export const useAI = () => {
             return data.reply
         } catch (error) {
             console.error('Error al contactar con la IA', error)
-            throw error // Lanzamos el error para manejarlo en el componente
+            throw error
         }
     }
 

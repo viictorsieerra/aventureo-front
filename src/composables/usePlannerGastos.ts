@@ -9,20 +9,31 @@ export const usePlannerGastos = () => {
     const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL)
 
     async function getCategorys() {
-        return fetch(baseUrl + '/Category')
+        return await fetch(baseUrl + '/Category')
             .then(res => res.json())
     }
 
     async function getViajes() {
-        return fetch(baseUrl + '/Viaje/Auth', {
+        return await fetch(baseUrl + '/Viaje/Auth', {
             headers: { 'Authorization': `Bearer ${jwtStore.jwt}` }
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    return res.json()
+                        .then(errorData => {
+                            throw new Error(errorData.message || 'Hubo un error con la solicitud');
+                        });
+                }
+                return res.json();
+            })
+            .catch(error => {
+                console.error('ERROR:', error.message);
+            });
 
     }
 
     async function createViaje(newTravel?: CreateViaje) {
-        return fetch(baseUrl + '/Viaje', {
+        return await fetch(baseUrl + '/Viaje', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newTravel)
@@ -32,7 +43,7 @@ export const usePlannerGastos = () => {
     }
 
     async function createGasto(newGasto?: CreateGasto) {
-        return fetch(baseUrl + '/Gasto', {
+        return await fetch(baseUrl + '/Gasto', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newGasto)
@@ -42,7 +53,7 @@ export const usePlannerGastos = () => {
     }
 
     async function getGastos(idViaje?: number) {
-        return fetch(baseUrl + '/Gasto/Viaje/' + idViaje)
+        return await fetch(baseUrl + '/Gasto/Viaje/' + idViaje)
             .then(res => {
                 if (!res.ok) {
                     return res.json()
@@ -58,7 +69,7 @@ export const usePlannerGastos = () => {
     }
 
     async function getGastoByCategoria(idViaje?: number) {
-        return fetch(baseUrl + '/Gasto/Resumen/' + idViaje)
+        return await fetch(baseUrl + '/Gasto/Resumen/' + idViaje)
             .then(res => {
                 if (!res.ok) {
                     return res.json()
@@ -74,7 +85,7 @@ export const usePlannerGastos = () => {
     }
 
     async function updateGasto(uptGasto?: UpdateGasto) {
-        fetch(baseUrl + '/Gasto', {
+        await fetch(baseUrl + '/Gasto', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(uptGasto)
@@ -82,7 +93,7 @@ export const usePlannerGastos = () => {
             .catch(error => console.log('ERROR ', error))
     }
     async function updateViaje(uptViaje?: UpdateViaje) {
-        fetch(baseUrl + '/Viaje', {
+        await fetch(baseUrl + '/Viaje', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(uptViaje)
@@ -91,7 +102,7 @@ export const usePlannerGastos = () => {
     }
 
     async function deleteViaje(idViaje: number) {
-        fetch(baseUrl + '/Viaje/' + idViaje, {
+        await fetch(baseUrl + '/Viaje/' + idViaje, {
             method: 'DELETE'
         }).then(res => res.ok)
             .catch(error => console.log('ERROR ', error))
@@ -99,7 +110,7 @@ export const usePlannerGastos = () => {
     }
 
     async function deleteGasto(idGasto: number) {
-        fetch(baseUrl + '/Gasto/' + idGasto, {
+        await fetch(baseUrl + '/Gasto/' + idGasto, {
             method: 'DELETE'
         })
             .then(res => res.ok)
