@@ -43,9 +43,14 @@ const onItemsPerPageChange = (value: number) => {
 
 
 <style lang="scss" scoped>
-  .admin-table {
+.admin-table {
+  min-width: 100%;
+
+  @media (min-width: 768px) {
     min-width: 800px;
   }
+}
+
 
 </style>
 

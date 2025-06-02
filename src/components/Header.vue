@@ -281,6 +281,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
     &__nav-item {
       width: auto;
       padding: 8px 16px;
+      font-size: larger;
     }
 
     &__actions {
