@@ -10,7 +10,7 @@ import PlanificadorGastosView from '@/views/PlanificadorGastosView.vue'
 import DetallesPlanView from '@/views/DetallesPlanView.vue'
 import SobreNosotrosView from '@/views/SobreNosotrosView.vue'
 import PreguntasFrecuentesView from '@/views/PreguntasFrecuentesView.vue'
-
+import SoporteView from '@/views/SoporteView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -70,7 +70,13 @@ const router = createRouter({
       path: '/preguntas-frecuentes',
       name: 'preguntasFrecuentes',
       component: PreguntasFrecuentesView
+    },
+    {
+      path: '/soporte',
+      name: 'soporte',
+      component: SoporteView,
     }
+
 
 
 
