@@ -76,7 +76,6 @@ const router = createRouter({
         {path: 'users', component: AdminUserView},
         {path: 'categorys', component: AdminCategoryView}
       ]
-    }
     },
     {
       path: '/sobre-nosotros',
