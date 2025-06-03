@@ -17,7 +17,7 @@
           </v-card-text>
         </v-card>
 
-        <div v-if="locationPlans.length > 0" class="location-plans">
+        <div v-if="locationPlans.length > 1" class="location-plans">
           <h3>Planes en {{ selectedLocation?.name }}</h3>
           <v-list>
             <v-list-item

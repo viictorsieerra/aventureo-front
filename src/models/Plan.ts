@@ -1,5 +1,6 @@
 export interface Plan {
     idPlan?: number,
+    idUsuario?: number
     nombre?: string,
     duracion?: number,
     lugar?: string,
