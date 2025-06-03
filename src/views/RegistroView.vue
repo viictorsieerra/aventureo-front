@@ -69,8 +69,15 @@
         <button type="submit" class="submit-btn" :disabled="isSubmitDisabled">Registrarse</button>
       </div>
     </form>
+
+    <div class="login-link">
+      <p>¿Ya tienes cuenta?
+        <router-link to="/login">Inicia sesión</router-link>
+      </p>
+    </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import type {RegisterUser} from '@/models/RegisterUser';
@@ -189,4 +196,26 @@ button {
     box-shadow: none;
   }
 }
+.login-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1rem;
+
+  p {
+    color: #183263;
+
+    a {
+      color: #018ef6;
+      font-weight: 600;
+      text-decoration: none;
+      margin-left: 5px;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #fd6f01;
+      }
+    }
+  }
+}
+
 </style>

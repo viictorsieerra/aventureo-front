@@ -48,9 +48,10 @@
                 <v-list-item>
                   <v-list-item-title class="navbar__actions-avatar__item" v-if="user.rolAdmin" @click="handleNavigation('/admin')">Zona de administrador
                   </v-list-item-title>
-                  <v-list-item-title class="navbar__actions-avatar__item" @click="jwtStore.logOut">
+                  <v-list-item-title class="navbar__actions-avatar__item" @click="cerrarSesion">
                     Cerrar Sesión
                   </v-list-item-title>
+
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -67,6 +68,19 @@ import { useRoute, useRouter } from 'vue-router';
 import { useJWTStore } from '@/stores/JwtStore';
 import { useUserStore } from '@/stores/UserStore';
 import LogoAventureo from './LogoAventureo.vue';
+import Swal from 'sweetalert2';
+
+const cerrarSesion = () => {
+  jwtStore.logOut();
+  Swal.fire({
+    icon: 'success',
+    title: 'Has cerrado sesión correctamente',
+    showConfirmButton: false,
+    timer: 1500,
+    background: '#f2f2f2',
+    color: '#183263'
+  });
+};
 
 const menuOpen = ref(false);
 const isDesktop = ref(false);
@@ -176,6 +190,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
       background-color: $hover-bg-color;
       color: white;
     }
+
     &--active {
       color: #fd6f01;
     }
