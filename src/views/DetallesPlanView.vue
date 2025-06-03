@@ -35,7 +35,7 @@
     <v-alert v-else type="info" class="mt-4"> Este plan aún no tiene actividades. </v-alert>
 
     <!-- Botón añadir actividad -->
-    <v-btn color="primary" class="mt-4 btn-primary" @click="showAddDialog = true">Añadir Actividad</v-btn>
+    <v-btn color="primary" v-if="userStore.user.idUsuario == plan.idUsuario || userStore.user.rolAdmin" class="mt-4 btn-primary" @click="showAddDialog = true">Añadir Actividad</v-btn>
 
     <!-- Dialogo añadir actividad -->
     <v-dialog v-model="showAddDialog" max-width="500">
@@ -63,10 +63,12 @@ import { usePlans } from '@/composables/usePlans'
 import { usePartePlanes, type CreatePartePlanDTO } from '@/composables/usePartePlanes'
 import type { PartePlan } from '@/models/PartePlan'
 import type { Plan } from '@/models/Plan'
+import { useUserStore } from '@/stores/UserStore'
 
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 const { getPlanById } = usePlans()
 const { getPartePlansByPlanId, createPartePlan } = usePartePlanes()
 

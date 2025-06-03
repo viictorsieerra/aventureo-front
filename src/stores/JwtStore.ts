@@ -58,7 +58,7 @@ function loginUser(loginUser: LoginDTO) {
   
 
   function logOut() {
-    // userStore.user = new Usuario()
+    userStore.user = new Usuario()
     jwt.value = ""
     router.push('/')
   }

@@ -81,14 +81,14 @@ async function toggleGastos(idViaje: number) {
     gastosPorViaje.value[idViaje] = await getGastos(idViaje);
     console.log('GASTOS POR VIAJE', gastosPorViaje.value[idViaje])
   }
-  verGraficaDeGastos(idViaje)
+  await verGraficaDeGastos(idViaje)
 }
 
 async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
   newGasto.value.idViaje = idViaje;
   await createGasto(newGasto.value);
   gastosPorViaje.value[idViaje] = await getGastos(idViaje);
-  verGraficaDeGastos(idViaje)
+  await verGraficaDeGastos(idViaje)
   isActive.value = false;
   newGasto.value = {
     idViaje,
@@ -121,7 +121,7 @@ async function verGraficaDeGastos(idViaje: number) {
             <v-dialog max-width="500">
               <template #activator="{ props }">
                 <v-card-title class="d-flex justify-space-between align-center">
-                  <span class="font-weight-medium">{{ viaje.nombre }}</span>
+                  <span class="font-weight-medium gastos__nombre-viaje">{{ viaje.nombre }}</span>
                   <v-btn icon size="small" @click="toggleGastos(viaje.idViaje!)">
                     <v-icon>{{ gastosPorViaje[viaje.idViaje!] ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
                   </v-btn>
@@ -151,7 +151,7 @@ async function verGraficaDeGastos(idViaje: number) {
                   <v-card-actions>
                     <v-spacer />
                     <v-btn color="#0288D1" :disabled="!formValid"
-                      @click="updateViaje(viaje); isActive.value = false">Guardar</v-btn>
+                      @click="updateViaje(viaje).then(() => getViajes()); isActive.value = false">Guardar</v-btn>
                     <v-btn @click="isActive.value = false">Cancelar</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -231,7 +231,7 @@ async function verGraficaDeGastos(idViaje: number) {
                 <v-card-actions>
                   <v-spacer />
                   <v-btn color="#0288D1"
-                    @click="updateGasto(gastoEditando).then(() => toggleGastos(viaje.idViaje!)); gastoEditando = null">Guardar</v-btn>
+                    @click="updateGasto(gastoEditando).then(() => toggleGastos(gastoEditando.idViaje)); gastoEditando = null">Guardar</v-btn>
                   <v-btn @click="gastoEditando = null">Cancelar</v-btn>
                 </v-card-actions>
               </v-card>
@@ -289,6 +289,13 @@ async function verGraficaDeGastos(idViaje: number) {
     font-size: 2rem;
     color: #333;
     margin-bottom: 2rem;
+  }
+
+  &__nombre-viaje {
+    max-width: 60%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
@@ -371,5 +378,4 @@ async function verGraficaDeGastos(idViaje: number) {
     color: #0288D1;
   }
 }
-
 </style>
