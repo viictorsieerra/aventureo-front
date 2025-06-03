@@ -1,8 +1,8 @@
 services:
   api:
     build:
-      context: ../aventureo-Back
-      dockerfile: ../aventureo-Back/Dockerfile
+      context: ../aventureo-back
+      dockerfile: ../aventureo-back/Dockerfile
     ports:
       - "8080:8080"
   front:
