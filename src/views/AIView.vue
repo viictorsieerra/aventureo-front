@@ -1,32 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useAI } from '@/composables/useAI'
+import { useAI, type Mensaje } from '@/composables/useAI'
 
-interface Message {
-  role: 'Tú' | 'Ventu' | 'Sistema'
-  content: string
-}
 
 const userInput = ref<string>('')
-const messages = ref<Message[]>([])
+const messages = ref<Mensaje[]>([])
 const { chatWithAI } = useAI()
 
 const sendMessage = async () => {
   if (!userInput.value.trim()) return
 
   // Agregar el mensaje del usuario
-  messages.value.push({ role: 'Tú', content: userInput.value })
+  messages.value.push({ role: 'user', content: userInput.value })
 
   try {
     // Esperar la respuesta de la IA
-    const response = await chatWithAI(userInput.value)
-    
+    const response = await chatWithAI(messages.value)
+
     // Agregar la respuesta de la IA
-    messages.value.push({ role: 'Ventu', content: response })
+    messages.value.push({ role: 'assistant', content: response })
   } catch (error) {
     console.error('Error en la petición:', error)
     messages.value.push({
-      role: 'Sistema',
+      role: 'system',
       content: 'Hubo un error al contactar con la IA.'
     })
   }
@@ -34,33 +30,32 @@ const sendMessage = async () => {
   // Limpiar el campo de entrada
   userInput.value = ''
 }
-messages.value.push({role: 'Ventu', content:'Hola soy Ventu, ¿En qué puedo ayudarte?'})
+messages.value.push({ role: 'assistant', content: 'Hola soy Ventu, ¿En qué puedo ayudarte?' })
+
+function checkRole(role: 'user' | 'assistant' | 'system') {
+  switch (role) {
+    case 'user': return 'Tu';
+    case 'assistant': return 'Ventu';
+    case 'system': return 'Sistema'
+  }
+}
 </script>
 
 <template>
   <div class="chat">
     <div class="chat__messages">
-      <div
-        v-for="(msg, index) in messages"
-        :key="index"
-        :class="[
-          'chat__message',
-          `chat__message--${msg.role.toLowerCase()}`
-        ]"
-      >
-        <strong>{{ msg.role }}:</strong> {{ msg.content }}
+      <div v-for="(msg, index) in messages" :key="index" :class="[
+        'chat__message',
+        `chat__message--${msg.role.toLowerCase()}`
+      ]">
+        <strong>{{ checkRole(msg.role) }}:</strong> {{ msg.content }}
       </div>
     </div>
 
     <div class="chat__input">
-      <input
-        v-model="userInput"
-        @keyup.enter="sendMessage"
-        type="text"
-        placeholder="Escribe tu mensaje..."
-        class="chat__input-field"
-      />
-<button @click="sendMessage" class="btn-principal">Enviar</button>
+      <input v-model="userInput" @keyup.enter="sendMessage" type="text" placeholder="Escribe tu mensaje..."
+        class="chat__input-field" />
+      <button @click="sendMessage" class="btn-principal">Enviar</button>
     </div>
   </div>
 </template>
@@ -112,21 +107,21 @@ messages.value.push({role: 'Ventu', content:'Hola soy Ventu, ¿En qué puedo ayu
     line-height: 1.4;
     word-wrap: break-word;
 
-    &--tú {
+    &--user {
       align-self: flex-end;
       background-color: #018ef6;
       color: white;
       border-bottom-right-radius: 4px;
     }
 
-    &--ventu {
+    &--assistant {
       align-self: flex-start;
       background-color: #e0e7ff;
       color: #183263;
       border-bottom-left-radius: 4px;
     }
 
-    &--sistema {
+    &--system {
       align-self: center;
       background-color: #eee;
       color: #555;
@@ -239,5 +234,4 @@ messages.value.push({role: 'Ventu', content:'Hola soy Ventu, ¿En qué puedo ayu
     }
   }
 }
-
 </style>
