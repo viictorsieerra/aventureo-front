@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
 import type { HeaderTable } from '@/models/HeaderTable';
+import type { Slots } from 'vue'
 
+const slots = defineSlots()
 const props = defineProps<{
     itemsPerPage?: number,
     headers: HeaderTable[],
