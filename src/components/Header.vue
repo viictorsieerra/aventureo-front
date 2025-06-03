@@ -46,8 +46,7 @@
               </template>
               <v-list>
                 <v-list-item>
-                  <v-list-item-title class="navbar__actions-avatar__item" v-if="user.rolAdmin">
-                    <router-link to="/admin">Zona de administrador</router-link>
+                  <v-list-item-title class="navbar__actions-avatar__item" v-if="user.rolAdmin" @click="handleNavigation('/admin')">Zona de administrador
                   </v-list-item-title>
                   <v-list-item-title class="navbar__actions-avatar__item" @click="jwtStore.logOut">
                     Cerrar Sesión
@@ -280,6 +279,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
     &__nav-item {
       width: auto;
       padding: 8px 16px;
+      font-size: larger;
     }
 
     &__actions {

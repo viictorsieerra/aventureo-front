@@ -113,6 +113,7 @@ import type { CreatePlanDTO } from '@/composables/usePlans'
 import Mapa from "@/components/Mapa.vue"
 import SearchBar from "@/components/SearchBar.vue"
 import { useRouter } from 'vue-router'
+import type { Plan } from '@/models/Plan'
 
 interface Location {
   name: string;
@@ -120,9 +121,7 @@ interface Location {
   lng: number;
 }
 
-interface Plan {
-  idPlan: number
-}
+
 
 
 const router = useRouter()
@@ -135,7 +134,10 @@ const irADetalle = (id: any) => {
 const { getPlans, createPlan } = usePlans()
 
 const selectedLocation = ref<Location | null>(null)
-const locationPlans = ref()
+const locationPlans = ref<Plan[]>([
+  {nombre: ''
+  }
+])
 const showAddPlanDialog = ref(false)
 const showSnackbar = ref(false)
 const snackbarMessage = ref('')

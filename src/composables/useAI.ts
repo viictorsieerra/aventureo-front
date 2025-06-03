@@ -5,12 +5,12 @@ import { ref } from "vue"
 export const useAI = () => {
     const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/AI'
 
-    const chatWithAI = async (mensaje?: string) => {
+    const chatWithAI = async (mensajes?: Mensaje[]) => {
         try {
             const response = await fetch(baseUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: mensaje })
+                body: JSON.stringify(mensajes)
             })
 
             const data = await response.json()
@@ -23,4 +23,9 @@ export const useAI = () => {
     }
 
     return {chatWithAI}
+}
+
+export interface Mensaje {
+    role: 'user' | 'assistant' | 'system',
+    content: string
 }
