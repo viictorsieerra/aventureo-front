@@ -9,7 +9,7 @@
         <br />
         Inicia sesión para empezar a planificar tu viaje ideal.
       </p>
-      <router-link to="/Login">
+      <router-link to="/Planificador">
         <button>Planificar ahora</button>
       </router-link>
     </div>
@@ -28,7 +28,6 @@
   padding: 3rem 3rem 4rem;
   margin: 2rem auto;
   border-radius: 16px;
-  background-image: url('/playa-grande.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

@@ -161,15 +161,19 @@ const passwordRules = computed(() => {
   padding: 1rem;
 
   &__title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin-bottom: 1rem;
     text-align: center;
   }
 
   &__btn {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    width: 100%;
     margin-bottom: 1rem;
+    padding: 0.75rem;
+    font-size: 0.95rem;
 
     &--add {
       background-color: #fd6f01;
@@ -183,7 +187,8 @@ const passwordRules = computed(() => {
   }
 
   &__btn-icon {
-    margin: 5px;
+    margin: 0 0.25rem;
+
     &--delete {
       color: #fd6f01;
     }
@@ -196,30 +201,79 @@ const passwordRules = computed(() => {
   }
 
   &__table {
+    overflow-x: auto;
     margin-bottom: 2rem;
+
+    .v-data-table {
+      min-width: 600px;
+    }
   }
 
   &__dialog {
-    padding: 1rem;
+    padding: 0.5rem;
 
     &-title {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 600;
+    }
+
+    .v-card-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .v-card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-top: 1rem;
+    }
+
+    .v-btn {
+      width: 100%;
     }
   }
 
   @media (min-width: 768px) {
+    padding: 2rem;
+
     &__title {
       font-size: 2rem;
     }
 
-    &__btn--add {
-      font-size: 1rem;
+    &__btn {
+      width: auto;
+      display: inline-flex;
       padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+
+    &__btn-icon {
+      margin: 0 5px;
     }
 
     &__dialog-title {
       font-size: 1.5rem;
+    }
+
+    &__dialog {
+      .v-card-actions {
+        flex-direction: row;
+        justify-content: flex-end;
+
+        .v-btn {
+          width: auto;
+        }
+      }
+    }
+
+    &__table {
+      overflow-x: unset;
+
+      .v-data-table {
+        min-width: 800px;
+      }
     }
   }
 }
