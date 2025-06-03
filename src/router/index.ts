@@ -16,6 +16,7 @@ import AdminCategoryView from '@/views/AdminViews/AdminCategoryView.vue'
 import SobreNosotrosView from '@/views/SobreNosotrosView.vue'
 import PreguntasFrecuentesView from '@/views/PreguntasFrecuentesView.vue'
 import SoporteView from '@/views/SoporteView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -84,7 +85,6 @@ const router = createRouter({
       name: 'sobreNosotros',
       component: SobreNosotrosView
     },
-
     {
       path: '/preguntas-frecuentes',
       name: 'preguntasFrecuentes',
@@ -95,13 +95,10 @@ const router = createRouter({
       name: 'soporte',
       component: SoporteView,
     }
-
-
-
-
-
-
   ],
+  scrollBehavior() {
+    return { top: 0 }
+  }
 })
 
 router.beforeEach((to, from, next) => {
@@ -127,6 +124,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-
 
 export default router
