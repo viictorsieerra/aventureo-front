@@ -16,6 +16,9 @@ const userStore = useUserStore();
 // VARIABLES Y CONSTANTES
 const viajesList = ref<UpdateViaje[] | null>([]);
 const formValid = ref(false);
+const formValidEditTravel = ref(false)
+const formValidAdd = ref(false)
+const formValidEditGasto = ref(false)
 const categorias = ref<{ idCategoria: number, nombre: string }[]>([]);
 const gastosPorViaje = ref<{ [key: number]: any[] }>({});
 const gastoEditando = ref<any | null>(null);
@@ -33,11 +36,11 @@ const newGasto = ref<CreateGasto>({
 });
 
 const gastoCategoriasPorViaje = ref<{ [key: number]: any[] }>({});
-const viajeSeleccionadoParaGrafica = ref<number | null>(null);
+
 
 
 // REGLAS
-const rulesNewViaje = {
+const rulesViaje = {
   nombre: (value: string) => value.length > 3 || 'Debe haber más de 3 caracteres',
   personas: (value: number) => value >= 1 || 'Debe haber mínimo una persona',
   cantidadTotal: (value: number) => value >= 0 || 'No puede ser negativo'
@@ -45,7 +48,7 @@ const rulesNewViaje = {
 
 const rulesNewGasto = {
   nombre: (value: string) => value.length > 2 || 'Nombre demasiado corto',
-  cantidad: (value: number) => value >= 0 || 'Cantidad inválida'
+  cantidad: (value: number) => value > 0 || 'Cantidad inválida'
 };
 
 onMounted(() => {
@@ -88,14 +91,7 @@ async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
   newGasto.value.idViaje = idViaje;
   await createGasto(newGasto.value);
   gastosPorViaje.value[idViaje] = await getGastos(idViaje);
-  await verGraficaDeGastos(idViaje)
-  isActive.value = false;
-  newGasto.value = {
-    idViaje,
-    idCategoria: 0,
-    nombre: '',
-    cantidad: 0
-  };
+await toggleGastos(idViaje)
 }
 
 async function verGraficaDeGastos(idViaje: number) {
@@ -105,6 +101,12 @@ async function verGraficaDeGastos(idViaje: number) {
     gastoCategoriasPorViaje.value[idViaje] = await getGastoByCategoria(idViaje);
     console.log('GASTOS POR CATEGORIA', gastoCategoriasPorViaje.value[idViaje])
   }
+}
+
+const editGasto = async () => {
+  updateGasto(gastoEditando.value)
+  await toggleGastos(gastoEditando.value.idViaje)
+  gastoEditando.value = null
 }
 
 </script>
@@ -127,11 +129,10 @@ async function verGraficaDeGastos(idViaje: number) {
           <v-card-title>Nuevo Viaje</v-card-title>
           <v-card-text>
             <v-form v-model="formValid">
-              <v-text-field v-model="newViaje.nombre" label="Nombre" :rules="[rulesNewViaje.nombre]" />
-              <v-text-field v-model="newViaje.personas" type="number" label="Personas"
-                :rules="[rulesNewViaje.personas]" />
+              <v-text-field v-model="newViaje.nombre" label="Nombre" :rules="[rulesViaje.nombre]" />
+              <v-text-field v-model="newViaje.personas" type="number" label="Personas" :rules="[rulesViaje.personas]" />
               <v-text-field v-model="newViaje.cantidadTotal" type="number" label="Gasto estimado (€)"
-                :rules="[rulesNewViaje.cantidadTotal]" />
+                :rules="[rulesViaje.cantidadTotal]" />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -170,17 +171,17 @@ async function verGraficaDeGastos(idViaje: number) {
                 <v-card>
                   <v-card-title>Editar Viaje</v-card-title>
                   <v-card-text>
-                    <v-form v-model="formValid">
-                      <v-text-field v-model="viaje.nombre" label="Nombre" :rules="[rulesNewViaje.nombre]" />
+                    <v-form v-model="formValidEditTravel">
+                      <v-text-field v-model="viaje.nombre" label="Nombre" :rules="[rulesViaje.nombre]" />
                       <v-text-field v-model="viaje.personas" type="number" label="Personas"
-                        :rules="[rulesNewViaje.personas]" />
+                        :rules="[rulesViaje.personas]" />
                       <v-text-field v-model="viaje.cantidadTotal" type="number" label="Gasto estimado (€)"
-                        :rules="[rulesNewViaje.cantidadTotal]" />
+                        :rules="[rulesViaje.cantidadTotal]" />
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer />
-                    <v-btn color="#0288D1" :disabled="!formValid"
+                    <v-btn color="#0288D1" :disabled="!formValidEditTravel"
                       @click="updateViaje(viaje).then(() => getViajes()); isActive.value = false">Guardar</v-btn>
                     <v-btn @click="isActive.value = false">Cancelar</v-btn>
                   </v-card-actions>
@@ -226,7 +227,7 @@ async function verGraficaDeGastos(idViaje: number) {
                 <v-card>
                   <v-card-title>Nuevo gasto</v-card-title>
                   <v-card-text>
-                    <v-form>
+                    <v-form v-model="formValidAdd">
                       <v-text-field v-model="newGasto.nombre" label="Nombre del gasto"
                         :rules="[rulesNewGasto.nombre]" />
                       <v-text-field v-model="newGasto.cantidad" type="number" label="Cantidad (€)"
@@ -237,7 +238,8 @@ async function verGraficaDeGastos(idViaje: number) {
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer />
-                    <v-btn color="#0288D1" @click="sendNewGasto(viaje.idViaje!, isActive)">Guardar</v-btn>
+                    <v-btn color="#0288D1" :disabled="!formValidAdd"
+                      @click="sendNewGasto(viaje.idViaje!, isActive)">Guardar</v-btn>
                     <v-btn @click="isActive.value = false">Cancelar</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -249,7 +251,7 @@ async function verGraficaDeGastos(idViaje: number) {
               <v-card v-if="gastoEditando">
                 <v-card-title>Editar gasto</v-card-title>
                 <v-card-text>
-                  <v-form>
+                  <v-form v-model="formValidEditGasto">
                     <v-text-field v-model="gastoEditando.nombre" label="Nombre del gasto"
                       :rules="[rulesNewGasto.nombre]" />
                     <v-text-field v-model="gastoEditando.cantidad" type="number" label="Cantidad (€)"
@@ -260,8 +262,8 @@ async function verGraficaDeGastos(idViaje: number) {
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn color="#0288D1"
-                    @click="updateGasto(gastoEditando).then(() => toggleGastos(gastoEditando.idViaje)); gastoEditando = null">Guardar</v-btn>
+                  <v-btn color="#0288D1" :disabled="!formValidEditGasto"
+                    @click="editGasto">Guardar</v-btn>
                   <v-btn @click="gastoEditando = null">Cancelar</v-btn>
                 </v-card-actions>
               </v-card>
@@ -300,13 +302,13 @@ async function verGraficaDeGastos(idViaje: number) {
 }
 
 .gastos__btn-add {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 200px;
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  font-size: 0.95rem;
 }
 
 .v-card {

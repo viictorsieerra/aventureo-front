@@ -18,10 +18,11 @@ import HomeCarrusell from '@/components/HomeCarrusell.vue';
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .home-container {
   position: relative;
   overflow: hidden;
+  margin-top: -15px;
 }
 
 .background-video {

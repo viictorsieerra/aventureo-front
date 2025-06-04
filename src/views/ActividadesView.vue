@@ -37,7 +37,7 @@
         <v-row justify="center" class="mt-4">
           <v-col cols="auto">
             <v-btn color="primary" density="compact" class="add-plan-btn" @click="showAddPlanDialog = true"
-              title="Añadir nuevo plan" v-if="selectedLocation?.name">
+              title="Añadir nuevo plan" v-if="selectedLocation?.name && userStore.user.idUsuario">
               <v-icon left>mdi-plus</v-icon>
               Añade un plan
             </v-btn>
@@ -66,7 +66,7 @@
     <v-dialog v-model="showAddPlanDialog" max-width="500">
       <v-card>
         <v-card-title>Añadir Plan para {{ selectedLocation?.name }}</v-card-title>
-        <v-form ref="formRef">
+        <v-form v-model="formValid">
           <v-card-text>
             <v-text-field v-model="newPlan.nombre" label="Nombre" :rules="rulesRequired" />
             <v-text-field :rules="rulesNumber" v-model="newPlan.duracion" label="Duración (horas)" type="number" />
@@ -79,11 +79,11 @@
                 half-increments size="30" />
             </div>
 
-            <v-textarea v-model="newPlan.comentario" label="Comentario" :rules="rulesRequired" />
+            <v-textarea v-model="newPlan.comentario" label="Comentario" />
           </v-card-text>
 
           <v-card-actions>
-            <v-btn color="primary" @click="guardarPlan">Guardar</v-btn>
+            <v-btn color="primary" :disabled="!formValid" @click="guardarPlan">Guardar</v-btn>
             <v-btn text @click="showAddPlanDialog = false">Cancelar</v-btn>
           </v-card-actions>
         </v-form>
@@ -129,6 +129,7 @@ const showSnackbar = ref(false)
 const snackbarMessage = ref('')
 const snackbarColor = ref('success')
 const userStore = useUserStore()
+const formValid = ref(false)
 
 const newPlan = ref({
   idUsuario: userStore.user.idUsuario,
@@ -140,11 +141,22 @@ const newPlan = ref({
 })
 
 const rulesNumber = [
-  value => {
+  (value: number) => {
     if (value > 0)
       return true
     return 'No puede ser negativo'
   }
+]
+
+const rulesRequired = [
+  (value: string) => {
+          if (value) return true
+                    return 'Este campo es obligatorio'
+        },
+        (value: string) => {
+          if (value?.length >= 3) return true
+          return 'Tiene que haber minimo 3 caracteres'
+        }
 ]
 
 const mapLocations = ref<Location[]>([])
@@ -193,6 +205,7 @@ const guardarPlan = async () => {
 
   // Limpiar datos
   newPlan.value = {
+    idUsuario: userStore.user.idUsuario,
     nombre: '',
     duracion: 1,
     precioEstimado: 1,
