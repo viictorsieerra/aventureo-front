@@ -17,15 +17,11 @@
           </v-card-text>
         </v-card>
 
-        <div v-if="locationPlans.length > 1" class="location-plans">
+        <div v-if="locationPlans.length > 0" class="location-plans">
           <h3>Planes en {{ selectedLocation?.name }}</h3>
           <v-list>
-            <v-list-item
-              v-for="plan in locationPlans"
-              :key="plan.idPlan"
-              @click="() => irADetalle(plan.idPlan)"
-              style="cursor: pointer;"
-            >
+            <v-list-item v-for="plan in locationPlans" :key="plan.idPlan" @click="() => irADetalle(plan.idPlan)"
+              style="cursor: pointer;">
               <v-list-item-content>
                 <v-list-item-title>{{ plan.nombre }}</v-list-item-title>
                 <v-list-item-subtitle>
@@ -40,13 +36,8 @@
 
         <v-row justify="center" class="mt-4">
           <v-col cols="auto">
-            <v-btn
-              color="primary"
-              density="compact"
-              class="add-plan-btn"
-              @click="showAddPlanDialog = true"
-              title="Añadir nuevo plan"
-            >
+            <v-btn color="primary" density="compact" class="add-plan-btn" @click="showAddPlanDialog = true"
+              title="Añadir nuevo plan" v-if="selectedLocation?.name">
               <v-icon left>mdi-plus</v-icon>
               Añade un plan
             </v-btn>
@@ -61,12 +52,8 @@
 
       <!-- Columna derecha: Mapa -->
       <v-col cols="12" md="8">
-        <Mapa
-          :locations="mapLocations"
-          :initialPosition="{ lat: 40.4168, lng: -3.7038 }"
-          :initialZoom="5"
-          @location-selected="onLocationSelected"
-        />
+        <Mapa :locations="mapLocations" :initialPosition="{ lat: 40.4168, lng: -3.7038 }" :initialZoom="5"
+          @location-selected="onLocationSelected" />
       </v-col>
     </v-row>
 
@@ -79,28 +66,29 @@
     <v-dialog v-model="showAddPlanDialog" max-width="500">
       <v-card>
         <v-card-title>Añadir Plan para {{ selectedLocation?.name }}</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="newPlan.nombre" label="Nombre" />
-          <v-text-field v-model="newPlan.duracion" label="Duración (días)" type="number" />
-          <v-text-field v-model="newPlan.precioEstimado" label="Precio estimado (€)" type="number" />
-          <div class="valoracion-container">
-            <v-label>Valoración</v-label>
-            <v-rating
-              v-model="newPlan.valoracion"
-              length="5"
-              color="amber"
-              background-color="grey lighten-2"
-              half-increments
-              size="30"
-            />
-          </div>
-          <v-textarea v-model="newPlan.comentario" label="Comentario" />
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" @click="guardarPlan">Guardar</v-btn>
-          <v-btn text @click="showAddPlanDialog = false">Cancelar</v-btn>
-        </v-card-actions>
+        <v-form ref="formRef">
+          <v-card-text>
+            <v-text-field v-model="newPlan.nombre" label="Nombre" :rules="rulesRequired" />
+            <v-text-field :rules="rulesNumber" v-model="newPlan.duracion" label="Duración (horas)" type="number" />
+            <v-text-field :rules="rulesNumber" v-model="newPlan.precioEstimado" label="Precio estimado (€)"
+              type="number" />
+
+            <div class="valoracion-container">
+              <v-label>Valoración</v-label>
+              <v-rating v-model="newPlan.valoracion" length="5" color="amber" background-color="grey lighten-2"
+                half-increments size="30" />
+            </div>
+
+            <v-textarea v-model="newPlan.comentario" label="Comentario" :rules="rulesRequired" />
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn color="primary" @click="guardarPlan">Guardar</v-btn>
+            <v-btn text @click="showAddPlanDialog = false">Cancelar</v-btn>
+          </v-card-actions>
+        </v-form>
       </v-card>
+
     </v-dialog>
   </v-container>
 </template>
@@ -108,10 +96,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { usePlans} from "@/composables/usePlans"
+import { usePlans } from "@/composables/usePlans"
 import type { CreatePlanDTO } from '@/composables/usePlans'
 import Mapa from "@/components/Mapa.vue"
 import SearchBar from "@/components/SearchBar.vue"
+import { useUserStore } from '@/stores/UserStore'
 import { useRouter } from 'vue-router'
 import type { Plan } from '@/models/Plan'
 
@@ -134,32 +123,50 @@ const irADetalle = (id: any) => {
 const { getPlans, createPlan } = usePlans()
 
 const selectedLocation = ref<Location | null>(null)
-const locationPlans = ref<Plan[]>([
-  {nombre: ''
-  }
-])
+const locationPlans = ref<Plan[]>([])
 const showAddPlanDialog = ref(false)
 const showSnackbar = ref(false)
 const snackbarMessage = ref('')
 const snackbarColor = ref('success')
+const userStore = useUserStore()
 
 const newPlan = ref({
+  idUsuario: userStore.user.idUsuario,
   nombre: '',
   duracion: 1,
-  precioEstimado: 0,
+  precioEstimado: 1,
   valoracion: 1,
   comentario: ''
 })
 
+const rulesNumber = [
+  value => {
+    if (value > 0)
+      return true
+    return 'No puede ser negativo'
+  }
+]
+
 const mapLocations = ref<Location[]>([])
 
 
-const onSearch = async (location : any) => {
+const onSearch = async (location: any) => {
   selectedLocation.value = location
-  const plans = await getPlans(location.name)
-  locationPlans.value = plans
-  mapLocations.value = [location]
-}
+  locationPlans.value = []
+
+  try {
+    const plans = await getPlans(location.name);
+    locationPlans.value = plans ?? []
+  } catch (error) {
+    console.error('Error al buscar planes:', error);
+    locationPlans.value = []
+    snackbarMessage.value = 'Error al cargar los planes'
+    snackbarColor.value = 'error'
+    showSnackbar.value = true;
+  }
+
+  mapLocations.value = [location];
+};
 
 const onLocationSelected = (location: any) => {
   selectedLocation.value = location
@@ -169,7 +176,7 @@ const guardarPlan = async () => {
   if (!selectedLocation.value) return
 
   const dto: CreatePlanDTO = {
-    idUsuario: 1,
+    idUsuario: userStore.user.idUsuario,
     lugar: selectedLocation.value.name,
     nombre: newPlan.value.nombre,
     duracion: newPlan.value.duracion,
@@ -188,7 +195,7 @@ const guardarPlan = async () => {
   newPlan.value = {
     nombre: '',
     duracion: 1,
-    precioEstimado: 0,
+    precioEstimado: 1,
     valoracion: 1,
     comentario: ''
   }
@@ -206,7 +213,8 @@ const guardarPlan = async () => {
   border-radius: 8px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
   margin-top: 9%;
-  color: #183263; /* azul oscuro */
+  color: #183263;
+  /* azul oscuro */
 }
 
 .location-plans {
@@ -215,7 +223,8 @@ const guardarPlan = async () => {
   border-radius: 8px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
   margin-top: 24px;
-  color: #183263; /* azul oscuro */
+  color: #183263;
+  /* azul oscuro */
 }
 
 .valoracion-container {
@@ -223,7 +232,8 @@ const guardarPlan = async () => {
   align-items: center;
   gap: 8px;
   margin-bottom: 12px;
-  color: #fd6f01; /* naranja */
+  color: #fd6f01;
+  /* naranja */
 }
 
 .v-btn {
@@ -243,12 +253,14 @@ const guardarPlan = async () => {
 }
 
 .v-btn.btn-primary {
-  background-color: #0288d1 !important; /* azul claro */
+  background-color: #0288d1 !important;
+  /* azul claro */
   color: white !important;
 }
 
 .v-btn.btn-primary:hover {
-  background-color: #0277bd !important; /* azul más oscuro */
+  background-color: #0277bd !important;
+  /* azul más oscuro */
 }
 
 /* Icono dentro del botón */
@@ -259,14 +271,17 @@ const guardarPlan = async () => {
 /* Snackbar */
 .v-snackbar {
   border-radius: 8px !important;
+
   &.success {
-    background-color: #018ef6 !important; /* azul claro */
+    background-color: #018ef6 !important;
+    /* azul claro */
     color: white !important;
   }
+
   &.error {
-    background-color: #d9534f !important; /* rojo para error */
+    background-color: #d9534f !important;
+    /* rojo para error */
     color: white !important;
   }
 }
-
 </style>

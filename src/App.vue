@@ -8,24 +8,32 @@ import Footer from './components/Footer.vue';
 <template>
   <div class="app">
     <Header />
-    <RouterView />
+    <div class="app-body">
+      <RouterView />
+    </div>
     <Footer />
   </div>
 </template>
 
 <style>
-.app {
-  position: relative;
-  /* font-family: "Oswald, sans-serif"; */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
-body {
-  margin: 0;
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-  /* font-family: Arial, sans-serif; */
+.app-body {
+  flex: 1;
 }
 
 .header {
   z-index: 1;
 }
+
 </style>

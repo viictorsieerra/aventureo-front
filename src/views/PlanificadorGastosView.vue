@@ -111,7 +111,37 @@ async function verGraficaDeGastos(idViaje: number) {
 
 <template>
   <div class="gastos">
-    <h1 class="text-2xl font-bold mb-6">Mis Viajes</h1>
+    <h1 class="gastos__title">Mis Viajes</h1>
+
+    <!-- Botón de nuevo viaje -->
+    <v-dialog max-width="500">
+      <template #activator="{ props }">
+        <v-btn class="gastos__btn-add" color="#0288D1" v-bind="props">
+          Agregar Viaje
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+
+      </template>
+      <template #default="{ isActive }">
+        <v-card>
+          <v-card-title>Nuevo Viaje</v-card-title>
+          <v-card-text>
+            <v-form v-model="formValid">
+              <v-text-field v-model="newViaje.nombre" label="Nombre" :rules="[rulesNewViaje.nombre]" />
+              <v-text-field v-model="newViaje.personas" type="number" label="Personas"
+                :rules="[rulesNewViaje.personas]" />
+              <v-text-field v-model="newViaje.cantidadTotal" type="number" label="Gasto estimado (€)"
+                :rules="[rulesNewViaje.cantidadTotal]" />
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="#0288D1" :disabled="!formValid" @click="sendNewViaje(isActive)">Guardar</v-btn>
+            <v-btn @click="isActive.value = false">Cancelar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
 
     <v-container fluid>
       <v-row dense>
@@ -246,49 +276,19 @@ async function verGraficaDeGastos(idViaje: number) {
         </v-col>
       </v-row>
     </v-container>
-
-    <!-- Botón de nuevo viaje -->
-    <v-dialog max-width="500">
-      <template #activator="{ props }">
-        <v-btn class="gastos__btn-add" color="#0288D1" v-bind="props">
-          Agregar Viaje
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-
-      </template>
-      <template #default="{ isActive }">
-        <v-card>
-          <v-card-title>Nuevo Viaje</v-card-title>
-          <v-card-text>
-            <v-form v-model="formValid">
-              <v-text-field v-model="newViaje.nombre" label="Nombre" :rules="[rulesNewViaje.nombre]" />
-              <v-text-field v-model="newViaje.personas" type="number" label="Personas"
-                :rules="[rulesNewViaje.personas]" />
-              <v-text-field v-model="newViaje.cantidadTotal" type="number" label="Gasto estimado (€)"
-                :rules="[rulesNewViaje.cantidadTotal]" />
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="#0288D1" :disabled="!formValid" @click="sendNewViaje(isActive)">Guardar</v-btn>
-            <v-btn @click="isActive.value = false">Cancelar</v-btn>
-          </v-card-actions>
-        </v-card>
-      </template>
-    </v-dialog>
   </div>
 </template>
 <style scoped lang="scss">
 .gastos {
   padding: 1.5rem;
   background-color: #f9fbfc;
-  min-height: 100vh;
+  min-height: 55vh;
   position: relative;
 
-  h1 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 2rem;
+  &__title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
   }
 
   &__nombre-viaje {
@@ -300,14 +300,13 @@ async function verGraficaDeGastos(idViaje: number) {
 }
 
 .gastos__btn-add {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 9999;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 12px !important;
-  text-transform: none;
-  font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    font-size: 0.95rem;
 }
 
 .v-card {

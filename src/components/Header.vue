@@ -93,7 +93,7 @@ const router = useRouter();
 const route = useRoute()
 
 const checkViewport = () => {
-  isDesktop.value = window.innerWidth >= 768;
+  isDesktop.value = window.innerWidth >= 840;
   if (isDesktop.value) menuOpen.value = false;
 };
 
@@ -122,8 +122,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 35px;
   position: static;
-  top: 0;
-  left: 0;
+  margin-bottom: 15px;
   z-index: 50;
 
   &__container {
@@ -270,7 +269,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 840px) {
     &__menu-toggle {
       display: none;
     }

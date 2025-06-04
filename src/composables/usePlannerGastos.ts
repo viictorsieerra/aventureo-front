@@ -28,6 +28,7 @@ export const usePlannerGastos = () => {
             })
             .catch(error => {
                 console.error('ERROR:', error.message);
+                return []
             });
 
     }
