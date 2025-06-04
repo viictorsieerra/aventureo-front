@@ -12,8 +12,15 @@
       </div>
       <button type="submit" class="login-button">Iniciar sesión</button>
     </form>
+
+    <div class="register-link">
+      <p>¿No tienes cuenta? 
+        <router-link to="/registro">Regístrate</router-link>
+      </p>
+    </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { reactive } from 'vue';
@@ -125,6 +132,28 @@ button.login-button:hover {
   background-color: #121f42;
   /* azul más oscuro */
 }
+.register-link {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 1rem;
+
+  p {
+    color: #183263;
+
+    a {
+      color: #018ef6;
+      font-weight: 600;
+      text-decoration: none;
+      margin-left: 5px;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #fd6f01;
+      }
+    }
+  }
+}
+
 
 /* Tablets y pantallas más anchas */
 @media (min-width: 600px) {

@@ -47,7 +47,7 @@ const images = [
 ]
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .text-overlay {
   position: absolute;
   top: 0;

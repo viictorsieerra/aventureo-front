@@ -16,6 +16,9 @@ const userStore = useUserStore();
 // VARIABLES Y CONSTANTES
 const viajesList = ref<UpdateViaje[] | null>([]);
 const formValid = ref(false);
+const formValidEditTravel = ref(false)
+const formValidAdd = ref(false)
+const formValidEditGasto = ref(false)
 const categorias = ref<{ idCategoria: number, nombre: string }[]>([]);
 const gastosPorViaje = ref<{ [key: number]: any[] }>({});
 const gastoEditando = ref<any | null>(null);
@@ -33,11 +36,11 @@ const newGasto = ref<CreateGasto>({
 });
 
 const gastoCategoriasPorViaje = ref<{ [key: number]: any[] }>({});
-const viajeSeleccionadoParaGrafica = ref<number | null>(null);
+
 
 
 // REGLAS
-const rulesNewViaje = {
+const rulesViaje = {
   nombre: (value: string) => value.length > 3 || 'Debe haber más de 3 caracteres',
   personas: (value: number) => value >= 1 || 'Debe haber mínimo una persona',
   cantidadTotal: (value: number) => value >= 0 || 'No puede ser negativo'
@@ -45,7 +48,7 @@ const rulesNewViaje = {
 
 const rulesNewGasto = {
   nombre: (value: string) => value.length > 2 || 'Nombre demasiado corto',
-  cantidad: (value: number) => value >= 0 || 'Cantidad inválida'
+  cantidad: (value: number) => value > 0 || 'Cantidad inválida'
 };
 
 onMounted(() => {
@@ -81,21 +84,14 @@ async function toggleGastos(idViaje: number) {
     gastosPorViaje.value[idViaje] = await getGastos(idViaje);
     console.log('GASTOS POR VIAJE', gastosPorViaje.value[idViaje])
   }
-  verGraficaDeGastos(idViaje)
+  await verGraficaDeGastos(idViaje)
 }
 
 async function sendNewGasto(idViaje: number, isActive: { value: boolean }) {
   newGasto.value.idViaje = idViaje;
   await createGasto(newGasto.value);
   gastosPorViaje.value[idViaje] = await getGastos(idViaje);
-  verGraficaDeGastos(idViaje)
-  isActive.value = false;
-  newGasto.value = {
-    idViaje,
-    idCategoria: 0,
-    nombre: '',
-    cantidad: 0
-  };
+await toggleGastos(idViaje)
 }
 
 async function verGraficaDeGastos(idViaje: number) {
@@ -107,11 +103,46 @@ async function verGraficaDeGastos(idViaje: number) {
   }
 }
 
+const editGasto = async () => {
+  updateGasto(gastoEditando.value)
+  await toggleGastos(gastoEditando.value.idViaje)
+  gastoEditando.value = null
+}
+
 </script>
 
 <template>
   <div class="gastos">
-    <h1 class="text-2xl font-bold mb-6">Mis Viajes</h1>
+    <h1 class="gastos__title">Mis Viajes</h1>
+
+    <!-- Botón de nuevo viaje -->
+    <v-dialog max-width="500">
+      <template #activator="{ props }">
+        <v-btn class="gastos__btn-add" color="#0288D1" v-bind="props">
+          Agregar Viaje
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+
+      </template>
+      <template #default="{ isActive }">
+        <v-card>
+          <v-card-title>Nuevo Viaje</v-card-title>
+          <v-card-text>
+            <v-form v-model="formValid">
+              <v-text-field v-model="newViaje.nombre" label="Nombre" :rules="[rulesViaje.nombre]" />
+              <v-text-field v-model="newViaje.personas" type="number" label="Personas" :rules="[rulesViaje.personas]" />
+              <v-text-field v-model="newViaje.cantidadTotal" type="number" label="Gasto estimado (€)"
+                :rules="[rulesViaje.cantidadTotal]" />
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="#0288D1" :disabled="!formValid" @click="sendNewViaje(isActive)">Guardar</v-btn>
+            <v-btn @click="isActive.value = false">Cancelar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
 
     <v-container fluid>
       <v-row dense>
@@ -121,7 +152,7 @@ async function verGraficaDeGastos(idViaje: number) {
             <v-dialog max-width="500">
               <template #activator="{ props }">
                 <v-card-title class="d-flex justify-space-between align-center">
-                  <span class="font-weight-medium">{{ viaje.nombre }}</span>
+                  <span class="font-weight-medium gastos__nombre-viaje">{{ viaje.nombre }}</span>
                   <v-btn icon size="small" @click="toggleGastos(viaje.idViaje!)">
                     <v-icon>{{ gastosPorViaje[viaje.idViaje!] ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
                   </v-btn>
@@ -140,18 +171,18 @@ async function verGraficaDeGastos(idViaje: number) {
                 <v-card>
                   <v-card-title>Editar Viaje</v-card-title>
                   <v-card-text>
-                    <v-form v-model="formValid">
-                      <v-text-field v-model="viaje.nombre" label="Nombre" :rules="[rulesNewViaje.nombre]" />
+                    <v-form v-model="formValidEditTravel">
+                      <v-text-field v-model="viaje.nombre" label="Nombre" :rules="[rulesViaje.nombre]" />
                       <v-text-field v-model="viaje.personas" type="number" label="Personas"
-                        :rules="[rulesNewViaje.personas]" />
+                        :rules="[rulesViaje.personas]" />
                       <v-text-field v-model="viaje.cantidadTotal" type="number" label="Gasto estimado (€)"
-                        :rules="[rulesNewViaje.cantidadTotal]" />
+                        :rules="[rulesViaje.cantidadTotal]" />
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer />
-                    <v-btn color="#0288D1" :disabled="!formValid"
-                      @click="updateViaje(viaje); isActive.value = false">Guardar</v-btn>
+                    <v-btn color="#0288D1" :disabled="!formValidEditTravel"
+                      @click="updateViaje(viaje).then(() => getViajes()); isActive.value = false">Guardar</v-btn>
                     <v-btn @click="isActive.value = false">Cancelar</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -196,7 +227,7 @@ async function verGraficaDeGastos(idViaje: number) {
                 <v-card>
                   <v-card-title>Nuevo gasto</v-card-title>
                   <v-card-text>
-                    <v-form>
+                    <v-form v-model="formValidAdd">
                       <v-text-field v-model="newGasto.nombre" label="Nombre del gasto"
                         :rules="[rulesNewGasto.nombre]" />
                       <v-text-field v-model="newGasto.cantidad" type="number" label="Cantidad (€)"
@@ -207,7 +238,8 @@ async function verGraficaDeGastos(idViaje: number) {
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer />
-                    <v-btn color="#0288D1" @click="sendNewGasto(viaje.idViaje!, isActive)">Guardar</v-btn>
+                    <v-btn color="#0288D1" :disabled="!formValidAdd"
+                      @click="sendNewGasto(viaje.idViaje!, isActive)">Guardar</v-btn>
                     <v-btn @click="isActive.value = false">Cancelar</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -219,7 +251,7 @@ async function verGraficaDeGastos(idViaje: number) {
               <v-card v-if="gastoEditando">
                 <v-card-title>Editar gasto</v-card-title>
                 <v-card-text>
-                  <v-form>
+                  <v-form v-model="formValidEditGasto">
                     <v-text-field v-model="gastoEditando.nombre" label="Nombre del gasto"
                       :rules="[rulesNewGasto.nombre]" />
                     <v-text-field v-model="gastoEditando.cantidad" type="number" label="Cantidad (€)"
@@ -230,8 +262,8 @@ async function verGraficaDeGastos(idViaje: number) {
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn color="#0288D1"
-                    @click="updateGasto(gastoEditando).then(() => toggleGastos(viaje.idViaje!)); gastoEditando = null">Guardar</v-btn>
+                  <v-btn color="#0288D1" :disabled="!formValidEditGasto"
+                    @click="editGasto">Guardar</v-btn>
                   <v-btn @click="gastoEditando = null">Cancelar</v-btn>
                 </v-card-actions>
               </v-card>
@@ -246,61 +278,37 @@ async function verGraficaDeGastos(idViaje: number) {
         </v-col>
       </v-row>
     </v-container>
-
-    <!-- Botón de nuevo viaje -->
-    <v-dialog max-width="500">
-      <template #activator="{ props }">
-        <v-btn class="gastos__btn-add" color="#0288D1" v-bind="props">
-          Agregar Viaje
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-
-      </template>
-      <template #default="{ isActive }">
-        <v-card>
-          <v-card-title>Nuevo Viaje</v-card-title>
-          <v-card-text>
-            <v-form v-model="formValid">
-              <v-text-field v-model="newViaje.nombre" label="Nombre" :rules="[rulesNewViaje.nombre]" />
-              <v-text-field v-model="newViaje.personas" type="number" label="Personas"
-                :rules="[rulesNewViaje.personas]" />
-              <v-text-field v-model="newViaje.cantidadTotal" type="number" label="Gasto estimado (€)"
-                :rules="[rulesNewViaje.cantidadTotal]" />
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="#0288D1" :disabled="!formValid" @click="sendNewViaje(isActive)">Guardar</v-btn>
-            <v-btn @click="isActive.value = false">Cancelar</v-btn>
-          </v-card-actions>
-        </v-card>
-      </template>
-    </v-dialog>
   </div>
 </template>
 <style scoped lang="scss">
 .gastos {
   padding: 1.5rem;
   background-color: #f9fbfc;
-  min-height: 100vh;
+  min-height: 55vh;
   position: relative;
 
-  h1 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 2rem;
+  &__title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  &__nombre-viaje {
+    max-width: 60%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
 .gastos__btn-add {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 9999;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 12px !important;
-  text-transform: none;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  font-size: 0.95rem;
 }
 
 .v-card {
@@ -371,5 +379,4 @@ async function verGraficaDeGastos(idViaje: number) {
     color: #0288D1;
   }
 }
-
 </style>

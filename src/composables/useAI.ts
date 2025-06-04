@@ -1,15 +1,19 @@
 import { EnvironmentVariablesEnum, getEnvironmentVariable } from "@/helpers/EnvironmentVariablesHelpers"
+import { useJWTStore } from "@/stores/JwtStore"
 import { ref } from "vue"
 
 
 export const useAI = () => {
     const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/AI'
+    const jwtStore = useJWTStore()
 
     const chatWithAI = async (mensajes?: Mensaje[]) => {
         try {
             const response = await fetch(baseUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtStore.jwt}`
+                 },
                 body: JSON.stringify(mensajes)
             })
 

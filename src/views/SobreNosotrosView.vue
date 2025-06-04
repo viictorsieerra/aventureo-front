@@ -7,7 +7,7 @@
   
       <div class="sobre-nosotros__content">
         <div class="sobre-nosotros__image">
-          <img src="/public/videos/viajeAventureo.jpg" alt="Alfonso y Víctor de viaje" />
+          <img src="/public/img/viajeAventureo.jpg" alt="Alfonso y Víctor de viaje" />
         </div>
   
         <div class="sobre-nosotros__text">

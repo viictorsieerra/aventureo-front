@@ -48,9 +48,10 @@
                 <v-list-item>
                   <v-list-item-title class="navbar__actions-avatar__item" v-if="user.rolAdmin" @click="handleNavigation('/admin')">Zona de administrador
                   </v-list-item-title>
-                  <v-list-item-title class="navbar__actions-avatar__item" @click="jwtStore.logOut">
+                  <v-list-item-title class="navbar__actions-avatar__item" @click="cerrarSesion">
                     Cerrar Sesión
                   </v-list-item-title>
+
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -67,6 +68,19 @@ import { useRoute, useRouter } from 'vue-router';
 import { useJWTStore } from '@/stores/JwtStore';
 import { useUserStore } from '@/stores/UserStore';
 import LogoAventureo from './LogoAventureo.vue';
+import Swal from 'sweetalert2';
+
+const cerrarSesion = () => {
+  jwtStore.logOut();
+  Swal.fire({
+    icon: 'success',
+    title: 'Has cerrado sesión correctamente',
+    showConfirmButton: false,
+    timer: 1500,
+    background: '#f2f2f2',
+    color: '#183263'
+  });
+};
 
 const menuOpen = ref(false);
 const isDesktop = ref(false);
@@ -79,7 +93,7 @@ const router = useRouter();
 const route = useRoute()
 
 const checkViewport = () => {
-  isDesktop.value = window.innerWidth >= 768;
+  isDesktop.value = window.innerWidth >= 840;
   if (isDesktop.value) menuOpen.value = false;
 };
 
@@ -108,8 +122,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 35px;
   position: static;
-  top: 0;
-  left: 0;
+  margin-bottom: 15px;
   z-index: 50;
 
   &__container {
@@ -176,6 +189,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
       background-color: $hover-bg-color;
       color: white;
     }
+
     &--active {
       color: #fd6f01;
     }
@@ -255,7 +269,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 840px) {
     &__menu-toggle {
       display: none;
     }

@@ -39,8 +39,8 @@ function enviarFormulario() {
   const publicKey = 'FCJzqoAYWJEYNdcWb'      // pon aquí tu Public Key de EmailJS
 
   const templateParams = {
-    from_name: nombre.value,
-    from_email: email.value,
+    name: nombre.value,
+    email: email.value,
     message: mensaje.value,
   }
 

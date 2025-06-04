@@ -9,7 +9,10 @@ export const usePlannerGastos = () => {
     const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL)
 
     async function getCategorys() {
-        return await fetch(baseUrl + '/Category')
+        return await fetch(baseUrl + '/Category', {
+            headers: { 'Authorization': `Bearer ${jwtStore.jwt}` }
+        }
+        )
             .then(res => res.json())
     }
 
@@ -28,6 +31,7 @@ export const usePlannerGastos = () => {
             })
             .catch(error => {
                 console.error('ERROR:', error.message);
+                return []
             });
 
     }
@@ -35,7 +39,10 @@ export const usePlannerGastos = () => {
     async function createViaje(newTravel?: CreateViaje) {
         return await fetch(baseUrl + '/Viaje', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtStore.jwt}`
+            },
             body: JSON.stringify(newTravel)
         })
             .then(res => res.json)
@@ -45,7 +52,10 @@ export const usePlannerGastos = () => {
     async function createGasto(newGasto?: CreateGasto) {
         return await fetch(baseUrl + '/Gasto', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtStore.jwt}`
+            },
             body: JSON.stringify(newGasto)
         })
             .then(res => res.json())
@@ -53,7 +63,9 @@ export const usePlannerGastos = () => {
     }
 
     async function getGastos(idViaje?: number) {
-        return await fetch(baseUrl + '/Gasto/Viaje/' + idViaje)
+        return await fetch(baseUrl + '/Gasto/Viaje/' + idViaje, {
+            headers: { 'Authorization': `Bearer ${jwtStore.jwt}` }
+        })
             .then(res => {
                 if (!res.ok) {
                     return res.json()
@@ -69,7 +81,10 @@ export const usePlannerGastos = () => {
     }
 
     async function getGastoByCategoria(idViaje?: number) {
-        return await fetch(baseUrl + '/Gasto/Resumen/' + idViaje)
+        return await fetch(baseUrl + '/Gasto/Resumen/' + idViaje, {
+            headers: { 'Authorization': `Bearer ${jwtStore.jwt}` }
+        }
+        )
             .then(res => {
                 if (!res.ok) {
                     return res.json()
@@ -87,7 +102,10 @@ export const usePlannerGastos = () => {
     async function updateGasto(uptGasto?: UpdateGasto) {
         await fetch(baseUrl + '/Gasto', {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtStore.jwt}`
+            },
             body: JSON.stringify(uptGasto)
         }).then(res => res.json())
             .catch(error => console.log('ERROR ', error))
@@ -95,7 +113,10 @@ export const usePlannerGastos = () => {
     async function updateViaje(uptViaje?: UpdateViaje) {
         await fetch(baseUrl + '/Viaje', {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtStore.jwt}`
+            },
             body: JSON.stringify(uptViaje)
         }).then(res => res.json())
             .catch(error => console.log('ERROR ', error))
@@ -103,7 +124,8 @@ export const usePlannerGastos = () => {
 
     async function deleteViaje(idViaje: number) {
         await fetch(baseUrl + '/Viaje/' + idViaje, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${jwtStore.jwt}` }
         }).then(res => res.ok)
             .catch(error => console.log('ERROR ', error))
 
@@ -111,7 +133,8 @@ export const usePlannerGastos = () => {
 
     async function deleteGasto(idGasto: number) {
         await fetch(baseUrl + '/Gasto/' + idGasto, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${jwtStore.jwt}` }
         })
             .then(res => res.ok)
             .catch(error => console.log('ERROR ', error))
