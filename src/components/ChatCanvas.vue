@@ -1,11 +1,12 @@
 <template>
-  <div class="chat-container">
-    <div class="device-frame">
-      <div class="device-notch"></div>
-      <div class="chat-screen" ref="chatScreen"></div>
+  <div class="chat">
+    <div class="chat__device">
+      <div class="chat__notch"></div>
+      <div class="chat__screen" ref="chatScreen"></div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { onMounted, ref } from 'vue'
@@ -29,7 +30,8 @@ onMounted(() => {
       const msg = messages[i]
 
       const messageBubble = document.createElement('div')
-      messageBubble.classList.add('message', msg.align)
+      messageBubble.classList.add('chat__message')
+      messageBubble.classList.add(msg.align === 'left' ? 'chat__message--left' : 'chat__message--right')
       messageBubble.textContent = msg.text
       messageBubble.style.color = msg.color
 
@@ -52,19 +54,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.chat-container {
+.chat {
   padding: 2rem 1rem;
   text-align: center;
-  margin-top: 82%; /* mobile first */
+  margin-top: 82%;
 }
 
-.chat-title {
+.chat__title {
   font-size: 1.6rem;
   color: #183263;
   margin-bottom: 1.5rem;
 }
 
-.device-frame {
+.chat__device {
   width: 360px;
   height: 640px;
   background-color: #f7f7f7;
@@ -79,7 +81,7 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.device-notch {
+.chat__notch {
   position: absolute;
   top: 0;
   left: 50%;
@@ -92,7 +94,7 @@ onMounted(() => {
   z-index: 2;
 }
 
-.chat-screen {
+.chat__screen {
   flex: 1;
   overflow-y: auto;
   margin-top: 30px;
@@ -104,7 +106,7 @@ onMounted(() => {
   border-radius: 24px;
 }
 
-.message {
+.chat__message {
   padding: 12px 16px;
   max-width: 80%;
   border-radius: 16px;
@@ -113,22 +115,22 @@ onMounted(() => {
   word-break: break-word;
 }
 
-.message.left {
+.chat__message--left {
   background-color: #e0e7ff;
   align-self: flex-start;
 }
 
-.message.right {
+.chat__message--right {
   background-color: #f3f4f6;
   align-self: flex-end;
 }
 
-/* Desktop overrides */
+
 @media (min-width: 900px) {
-  .chat-container {
+  .chat {
     margin-top: 0;
   }
-  .device-frame {
+  .chat__device {
     width: 360px;
     height: 640px;
   }

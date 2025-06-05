@@ -3,13 +3,11 @@
     <div class="navbar__container">
       <LogoAventureo class="navbar__logo" @click="handleNavigation('/')" />
 
-      <!-- Botón hamburguesa móvil -->
       <button class="navbar__menu-toggle" @click="menuOpen = !menuOpen">
         <span v-if="!menuOpen">☰</span>
         <span v-else>×</span>
       </button>
 
-      <!-- Navegación con transición -->
       <transition name="slide-fade">
         <nav v-if="menuOpen || isDesktop" class="navbar__nav">
           <button class="navbar__btn navbar__nav-item" :class="{ 'navbar__nav-item--active': isActivePath('/booking') }"
@@ -26,7 +24,6 @@
         </nav>
       </transition>
 
-      <!-- Botones de acción -->
       <transition name="slide-fade">
         <div v-if="menuOpen || isDesktop" class="navbar__actions">
           <template v-if="!jwtStore.jwt">
@@ -104,7 +101,6 @@ onMounted(() => {
   window.addEventListener('resize', checkViewport);
 });
 
-// Cerrar menú y navegar
 const handleNavigation = (path: string) => {
   router.push(path);
   menuOpen.value = false;
@@ -252,7 +248,7 @@ $hover-bg-color: rgba(0, 142, 246, 0.2);
       display: block;
 
       &:hover {
-        background-color: rgba(253, 111, 1, 0.2); // color secundario con opacidad
+        background-color: rgba(253, 111, 1, 0.2); 
         color: $secondary-color;
       }
 

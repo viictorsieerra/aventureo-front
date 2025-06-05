@@ -6,7 +6,7 @@
   </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted, defineProps, defineEmits, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -104,7 +104,7 @@ watch(() => props.locations, (newLocations) => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .map-container {
   position: relative;
   height: 500px;
