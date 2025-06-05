@@ -1,9 +1,8 @@
 <template>
   <div class="chat-section">
-    <!-- Columna Izquierda: Card con texto -->
-    <div class="chat-card">
-      <h2>Planifica el viaje de tus sueños</h2>
-      <p>
+    <div class="chat-section__card">
+      <h2 class="chat-section__title">Planifica el viaje de tus sueños</h2>
+      <p class="chat-section__text">
         ¿Alguna vez has querido viajar pero no has sabido por dónde empezar?
         Con nuestra IA, puedes planificar tu viaje ideal en minutos.
         Desde elegir el destino perfecto hasta encontrar las mejores actividades,
@@ -12,22 +11,22 @@
         ¡Comienza ahora y descubre un mundo de posibilidades!
       </p>
       <router-link to="/chat">
-        <button>Empezar ahora</button>
+        <button class="chat-section__button">Empezar ahora</button>
       </router-link>
     </div>
 
-    <!-- Columna Derecha: Canvas -->
-    <div class="chat-canvas-container">
-      <div class="canvas-wrapper">
+    <div class="chat-section__canvas">
+      <div class="chat-section__canvas-wrapper">
         <ChatCanvas />
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ChatCanvas from '@/components/ChatCanvas.vue'
 </script>
+
 
 <style scoped lang="scss">
 .chat-section {
@@ -41,35 +40,34 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
   background-repeat: no-repeat;
   background-attachment: fixed;
   border-radius: 16px;
-}
 
-.chat-card {
-  flex: 1;
-  background: #f7f7f7;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  &__card {
+    flex: 1;
+    background: #f7f7f7;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  h2 {
+  &__title {
     font-size: 1.75rem;
     color: #183263;
     margin-bottom: 1rem;
   }
 
-  p {
+  &__text {
     font-size: 1rem;
     color: #4b5563;
     margin-bottom: 1.5rem;
     line-height: 1.5;
   }
 
-  button {
+  &__button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -106,56 +104,53 @@ import ChatCanvas from '@/components/ChatCanvas.vue'
       transform: none;
     }
   }
-}
 
-.chat-canvas-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  margin-top: 1rem;
-}
+  &__canvas {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    margin-top: 1rem;
+  }
 
-.canvas-wrapper {
-  width: 100%;
-  max-width: 100%;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  &__canvas-wrapper {
+    width: 100%;
+    max-width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-/* Desktop y tablets grandes */
-@media (min-width: 768px) {
-  .chat-section {
+  @media (min-width: 768px) {
     flex-direction: row;
     gap: 2rem;
     padding: 2rem;
-  }
 
-  .chat-card {
-    padding: 2rem;
+    &__card {
+      padding: 2rem;
+    }
 
-    h2 {
+    &__title {
       font-size: 2rem;
     }
 
-    p {
+    &__text {
       font-size: 1.125rem;
       line-height: 1.6;
     }
-  }
 
-  .chat-canvas-container {
-    min-height: 500px;
-    margin-top: 0;
-  }
+    &__canvas {
+      min-height: 500px;
+      margin-top: 0;
+    }
 
-  .canvas-wrapper {
-    width: 90%;
-    max-width: 600px;
-    height: 500px;
+    &__canvas-wrapper {
+      width: 90%;
+      max-width: 600px;
+      height: 500px;
+    }
   }
 }
 </style>

@@ -116,14 +116,14 @@ const submitForm = () => {
   border-radius: 8px;
   max-width: 450px;
   margin: 80px auto 40px auto;
-  box-shadow: 0 2px 20px rgba(24, 50, 99, 0.25); /* sombra azul oscuro */
+  box-shadow: 0 2px 20px rgba(24, 50, 99, 0.25); 
 
   margin-left: 12px;
   margin-right: 12px;
   max-width: calc(100% - 24px);
   
   @media(min-width: 1024px) {
-    max-width: 450px; /* ancho fijo en desktop */
+    max-width: 450px; 
     margin-left: auto;
     margin-right: auto;
   }
@@ -132,7 +132,7 @@ const submitForm = () => {
 h2 {
   text-align: center;
   margin-bottom: 24px;
-  color: #183263; /* azul oscuro */
+  color: #183263; 
 }
 
 .form-group {
@@ -144,36 +144,36 @@ label {
   margin-bottom: 8px;
   font-size: 1rem;
   font-weight: bold;
-  color: #183263; /* azul oscuro */
+  color: #183263; 
 }
 
 input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #018ef6; /* azul claro */
+  border: 1px solid #018ef6; 
   border-radius: 4px;
   font-size: 1rem;
   color: #183263;
   transition: border-color 0.3s ease;
 
   &:focus {
-    border-color: #fd6f01; /* naranja */
+    border-color: #fd6f01; 
     outline: none;
   }
 }
 
 input.input-error {
-  border-color: #fd6f01; /* naranja para error */
+  border-color: #fd6f01; 
 }
 
 .error-message {
-  color: #fd6f01; /* naranja */
+  color: #fd6f01;
   font-size: 0.9rem;
   margin-top: 5px;
 }
 
 button {
-  background-color: #183263; /* azul oscuro */
+  background-color: #183263; 
   color: #fff;
   padding: 12px;
   width: 100%;
@@ -186,7 +186,7 @@ button {
   box-shadow: 0 3px 8px rgba(24, 50, 99, 0.4);
 
   &:hover:not(:disabled) {
-    background-color: #018ef6; /* azul claro */
+    background-color: #018ef6; 
     box-shadow: 0 4px 12px rgba(1, 142, 246, 0.6);
   }
 

@@ -1,98 +1,136 @@
 <template>
-  <v-container>
-    <SearchBar @search="onSearch" />
+  <v-container class="plans">
+    <SearchBar class="plans__search-bar" @search="onSearch" />
 
-    <v-row>
-      <!-- Columna izquierda: explicación + planes + botón -->
-      <v-col cols="12" md="4">
-        <v-card class="info-card mb-4">
-          <v-card-title>Planifica tu aventura</v-card-title>
-          <v-card-text>
+    <v-row class="plans__row">
+      <v-col cols="12" md="4" class="plans__col-left">
+        <v-card class="plans__info-card mb-4">
+          <v-card-title class="plans__info-card-title">Planifica tu aventura</v-card-title>
+          <v-card-text class="plans__info-card-text">
             Aquí puedes buscar una ciudad para ver los planes que han creado otros viajeros.
             <br /><br />
             Si no encuentras ningún plan, puedes añadir el tuyo propio haciendo clic en el botón
-            <v-icon color="primary" class="mx-1">mdi-plus</v-icon>.
+            <v-icon color="primary" class="plans__icon mx-1">mdi-plus</v-icon>.
             <br /><br />
             Los planes incluyen nombre, duración, precio estimado y valoración, además de un comentario.
           </v-card-text>
         </v-card>
 
-        <div v-if="locationPlans.length > 0" class="location-plans">
-          <h3>Planes en {{ selectedLocation?.name }}</h3>
-          <v-list>
-            <v-list-item v-for="plan in locationPlans" :key="plan.idPlan" @click="() => irADetalle(plan.idPlan)"
-              style="cursor: pointer;">
+        <div v-if="locationPlans.length > 0" class="plans__location-plans">
+          <h3 class="plans__location-plans-title">Planes en {{ selectedLocation?.name }}</h3>
+          <v-list class="plans__list">
+            <v-list-item
+              v-for="plan in locationPlans"
+              :key="plan.idPlan"
+              @click="() => irADetalle(plan.idPlan)"
+              class="plans__list-item"
+              style="cursor: pointer;"
+            >
               <v-list-item-content>
-                <v-list-item-title>{{ plan.nombre }}</v-list-item-title>
-                <v-list-item-subtitle>
+                <v-list-item-title class="plans__list-item-title">{{ plan.nombre }}</v-list-item-title>
+                <v-list-item-subtitle class="plans__list-item-subtitle">
                   Duración: {{ plan.duracion }} días | Precio: {{ plan.precioEstimado }}€ | Valoración:
                   {{ plan.valoracion }}
                 </v-list-item-subtitle>
-                <p>{{ plan.comentario }}</p>
+                <p class="plans__list-item-comment">{{ plan.comentario }}</p>
               </v-list-item-content>
             </v-list-item>
           </v-list>
         </div>
 
-        <v-row justify="center" class="mt-4">
+        <v-row justify="center" class="plans__btn-row mt-4">
           <v-col cols="auto">
-            <v-btn color="primary" density="compact" class="add-plan-btn" @click="showAddPlanDialog = true"
-              title="Añadir nuevo plan" v-if="selectedLocation?.name && userStore.user.idUsuario">
-              <v-icon left>mdi-plus</v-icon>
+            <v-btn
+              color="primary"
+              density="compact"
+              class="plans__add-plan-btn"
+              @click="showAddPlanDialog = true"
+              title="Añadir nuevo plan"
+              v-if="selectedLocation?.name && userStore.user.idUsuario"
+            >
+              <v-icon left class="plans__btn-icon">mdi-plus</v-icon>
               Añade un plan
             </v-btn>
           </v-col>
         </v-row>
 
-        <!-- Si no hay planes pero ya hay una ubicación seleccionada -->
-        <div v-if="selectedLocation && locationPlans.length === 0" class="no-plans-message mt-3">
+        <div v-if="selectedLocation && locationPlans.length === 0" class="plans__no-plans-message mt-3">
           No hay planes para {{ selectedLocation?.name }}. Pulsa el botón para crear uno.
         </div>
       </v-col>
 
-      <!-- Columna derecha: Mapa -->
-      <v-col cols="12" md="8">
-        <Mapa :locations="mapLocations" :initialPosition="{ lat: 40.4168, lng: -3.7038 }" :initialZoom="5"
-          @location-selected="onLocationSelected" />
+      <v-col cols="12" md="8" class="plans__col-right">
+        <Mapa
+          class="plans__map"
+          :locations="mapLocations"
+          :initialPosition="{ lat: 40.4168, lng: -3.7038 }"
+          :initialZoom="5"
+          @location-selected="onLocationSelected"
+        />
       </v-col>
     </v-row>
 
-    <!-- Snackbar -->
-    <v-snackbar v-model="showSnackbar" :color="snackbarColor">
+    <v-snackbar v-model="showSnackbar" :color="snackbarColor" class="plans__snackbar">
       {{ snackbarMessage }}
     </v-snackbar>
 
-    <!-- Diálogo para añadir plan -->
-    <v-dialog v-model="showAddPlanDialog" max-width="500">
+    <v-dialog v-model="showAddPlanDialog" max-width="500" class="plans__dialog">
       <v-card>
-        <v-card-title>Añadir Plan para {{ selectedLocation?.name }}</v-card-title>
-        <v-form v-model="formValid">
+        <v-card-title class="plans__dialog-title">Añadir Plan para {{ selectedLocation?.name }}</v-card-title>
+        <v-form v-model="formValid" class="plans__form">
           <v-card-text>
-            <v-text-field v-model="newPlan.nombre" label="Nombre" :rules="rulesRequired" />
-            <v-text-field :rules="rulesNumber" v-model="newPlan.duracion" label="Duración (horas)" type="number" />
-            <v-text-field :rules="rulesNumber" v-model="newPlan.precioEstimado" label="Precio estimado (€)"
-              type="number" />
+            <v-text-field
+              v-model="newPlan.nombre"
+              label="Nombre"
+              :rules="rulesRequired"
+              class="plans__input"
+            />
+            <v-text-field
+              :rules="rulesNumber"
+              v-model="newPlan.duracion"
+              label="Duración (horas)"
+              type="number"
+              class="plans__input"
+            />
+            <v-text-field
+              :rules="rulesNumber"
+              v-model="newPlan.precioEstimado"
+              label="Precio estimado (€)"
+              type="number"
+              class="plans__input"
+            />
 
-            <div class="valoracion-container">
-              <v-label>Valoración</v-label>
-              <v-rating v-model="newPlan.valoracion" length="5" color="amber" background-color="grey lighten-2"
-                half-increments size="30" />
+            <div class="plans__rating-container">
+              <v-label class="plans__rating-label">Valoración</v-label>
+              <v-rating
+                v-model="newPlan.valoracion"
+                length="5"
+                color="amber"
+                background-color="grey lighten-2"
+                half-increments
+                size="30"
+                class="plans__rating"
+              />
             </div>
 
-            <v-textarea v-model="newPlan.comentario" label="Comentario" />
+            <v-textarea
+              v-model="newPlan.comentario"
+              label="Comentario"
+              class="plans__textarea"
+            />
           </v-card-text>
 
-          <v-card-actions>
-            <v-btn color="primary" :disabled="!formValid" @click="guardarPlan">Guardar</v-btn>
-            <v-btn text @click="showAddPlanDialog = false">Cancelar</v-btn>
+          <v-card-actions class="plans__actions">
+            <v-btn color="primary" :disabled="!formValid" @click="guardarPlan" class="plans__btn-save">
+              Guardar
+            </v-btn>
+            <v-btn text @click="showAddPlanDialog = false" class="plans__btn-cancel">Cancelar</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
-
     </v-dialog>
   </v-container>
 </template>
-
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -109,9 +147,6 @@ interface Location {
   lat: number;
   lng: number;
 }
-
-
-
 
 const router = useRouter()
 
@@ -150,17 +185,16 @@ const rulesNumber = [
 
 const rulesRequired = [
   (value: string) => {
-          if (value) return true
-                    return 'Este campo es obligatorio'
-        },
-        (value: string) => {
-          if (value?.length >= 3) return true
-          return 'Tiene que haber minimo 3 caracteres'
-        }
+    if (value) return true
+    return 'Este campo es obligatorio'
+  },
+  (value: string) => {
+    if (value?.length >= 3) return true
+    return 'Tiene que haber minimo 3 caracteres'
+  }
 ]
 
 const mapLocations = ref<Location[]>([])
-
 
 const onSearch = async (location: any) => {
   selectedLocation.value = location
@@ -203,7 +237,6 @@ const guardarPlan = async () => {
   snackbarColor.value = 'success'
   showAddPlanDialog.value = false
 
-  // Limpiar datos
   newPlan.value = {
     idUsuario: userStore.user.idUsuario,
     nombre: '',
@@ -213,88 +246,159 @@ const guardarPlan = async () => {
     comentario: ''
   }
 
-  // Recargar planes de esa ciudad
   const plans = await getPlans(selectedLocation.value.name)
   locationPlans.value = plans
 }
 </script>
 
 <style scoped lang="scss">
-.info-card {
-  background-color: #f9f9f9;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-  margin-top: 9%;
-  color: #183263;
-  /* azul oscuro */
-}
+.plans {
+  &__info-card {
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 9%;
+    color: #183263; 
+  }
 
-.location-plans {
-  background-color: #fff;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-  margin-top: 24px;
-  color: #183263;
-  /* azul oscuro */
-}
+  &__info-card-title {
+    font-weight: 700;
+  }
 
-.valoracion-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  color: #fd6f01;
-  /* naranja */
-}
+  &__info-card-text {
+    font-size: 1rem;
+  }
 
-.v-btn {
-  border-radius: 8px !important;
-  text-transform: none !important;
-  font-weight: 600 !important;
-  padding: 12px 16px !important;
-  font-size: 1.2rem !important;
-  max-width: none !important;
-  transition: background-color 0.3s ease !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  min-width: 140px !important;
-  user-select: none !important;
-}
+  &__location-plans {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 24px;
+    color: #183263; 
+  }
 
-.v-btn.btn-primary {
-  background-color: #0288d1 !important;
-  /* azul claro */
-  color: white !important;
-}
+  &__location-plans-title {
+    margin-bottom: 1rem;
+  }
 
-.v-btn.btn-primary:hover {
-  background-color: #0277bd !important;
-  /* azul más oscuro */
-}
+  &__list {
+    padding: 0;
+  }
 
-/* Icono dentro del botón */
-.v-btn .v-icon {
-  color: white !important;
-}
+  &__list-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eaeaea;
+  }
 
-/* Snackbar */
-.v-snackbar {
-  border-radius: 8px !important;
+  &__list-item-title {
+    font-weight: 600;
+    color: #183263;
+  }
 
-  &.success {
-    background-color: #018ef6 !important;
-    /* azul claro */
+  &__list-item-subtitle {
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  &__list-item-comment {
+    margin-top: 0.5rem;
+    font-style: italic;
+    color: #666;
+  }
+
+  &__btn-row {
+    margin-top: 1rem;
+  }
+
+  &__add-plan-btn {
+    border-radius: 8px !important;
+    text-transform: none !important;
+    font-weight: 600 !important;
+    padding: 12px 16px !important;
+    font-size: 1.2rem !important;
+    max-width: none !important;
+    transition: background-color 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    min-width: 140px !important;
+    user-select: none !important;
+  }
+
+  &__btn-icon {
     color: white !important;
   }
 
-  &.error {
-    background-color: #d9534f !important;
-    /* rojo para error */
-    color: white !important;
+  &__no-plans-message {
+    margin-top: 1rem;
+    font-style: italic;
+    color: #999;
+  }
+
+  &__rating-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: #fd6f01;
+  }
+
+  &__rating-label {
+    font-weight: 600;
+  }
+
+
+
+  &__textarea {
+    min-height: 100px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__btn-save {
+    border-radius: 8px;
+  }
+
+  &__btn-cancel {
+    border-radius: 8px;
+  }
+
+  &__snackbar {
+    border-radius: 8px !important;
+
+    &.success {
+      background-color: #018ef6 !important; 
+      color: white !important;
+    }
+
+    &.error {
+      background-color: #fd6f01 !important; 
+      color: white !important;
+    }
+  }
+
+  &__map {
+    height: 600px;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  }
+
+  &__col-left {
+    padding-right: 24px;
+  }
+
+  &__col-right {
+    padding-left: 24px;
+  }
+
+  &__search-bar {
+    margin-bottom: 1rem;
   }
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="planner-section">
-    <div class="planner-card">
-      <h2>Organiza tu viaje a medida!</h2>
-      <p>
+  <div class="planner">
+    <div class="planner__card">
+      <h2 class="planner__title">Organiza tu viaje a medida!</h2>
+      <p class="planner__description">
         ¿Quieres tener todo tu viaje controlado? Crea planes personalizados para cada escapada:
         asigna presupuesto, transporte, alojamiento y actividades. Gestiona tus gastos y lleva
         el control desde cualquier dispositivo.
@@ -10,7 +10,7 @@
         Inicia sesión para empezar a planificar tu viaje ideal.
       </p>
       <router-link to="/Planificador">
-        <button>Planificar ahora</button>
+        <button class="planner__button">Planificar ahora</button>
       </router-link>
     </div>
   </div>
@@ -20,7 +20,7 @@
 </script>
 
 <style scoped>
-.planner-section {
+.planner {
   z-index: 100000;
   display: flex;
   flex-wrap: wrap;
@@ -34,7 +34,7 @@
   background-attachment: fixed;
 }
 
-.planner-card {
+.planner__card {
   flex: 1;
   background-color: #f7f7f7;
   border-radius: 16px;
@@ -48,20 +48,20 @@
   text-align: center;
 }
 
-.planner-card h2 {
+.planner__title {
   font-size: 2rem;
   color: #183263;
   margin-bottom: 1rem;
 }
 
-.planner-card p {
+.planner__description {
   font-size: 1.125rem;
   color: #333333;
   margin-bottom: 1.5rem;
   line-height: 1.6;
 }
 
-.planner-card button {
+.planner__button {
   background-color: #fd6f01;
   color: #ffffff;
   border: none;
@@ -73,11 +73,11 @@
   margin: 0 auto;
 }
 
-.planner-card button:hover {
+.planner__button:hover {
   background-color: #d95c00;
 }
 
-.planner-canvas-container {
+.planner__canvas-container {
   flex: 1;
   display: flex;
   align-items: center;
@@ -85,7 +85,7 @@
   min-height: 500px;
 }
 
-.canvas-wrapper {
+.planner__canvas-wrapper {
   width: 90%;
   max-width: 600px;
   height: 500px;
@@ -95,15 +95,15 @@
 }
 
 @media (max-width: 768px) {
-  .planner-section {
+  .planner {
     flex-direction: column;
   }
 
-  .planner-canvas-container {
+  .planner__canvas-container {
     min-height: 400px;
   }
 
-  .canvas-wrapper {
+  .planner__canvas-wrapper {
     width: 100%;
     height: 400px;
   }

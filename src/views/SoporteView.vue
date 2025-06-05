@@ -34,9 +34,9 @@ const email = ref('')
 const mensaje = ref('')
 
 function enviarFormulario() {
-  const serviceID = 'service_sslr93d'      // pon aquí tu Service ID de EmailJS
-  const templateID = 'template_bysfopq'    // pon aquí tu Template ID de EmailJS
-  const publicKey = 'FCJzqoAYWJEYNdcWb'      // pon aquí tu Public Key de EmailJS
+  const serviceID = 'service_sslr93d'      
+  const templateID = 'template_bysfopq'
+  const publicKey = 'FCJzqoAYWJEYNdcWb'      
 
   const templateParams = {
     name: nombre.value,
@@ -52,7 +52,7 @@ function enviarFormulario() {
         text: 'Gracias por contactar con nosotros. Te responderemos pronto.',
         confirmButtonColor: '#018ef6'
       })
-      // Limpias los campos
+      
       nombre.value = ''
       email.value = ''
       mensaje.value = ''

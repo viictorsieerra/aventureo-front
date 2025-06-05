@@ -10,14 +10,11 @@ const { chatWithAI } = useAI()
 const sendMessage = async () => {
   if (!userInput.value.trim()) return
 
-  // Agregar el mensaje del usuario
   messages.value.push({ role: 'user', content: userInput.value })
 
   try {
-    // Esperar la respuesta de la IA
     const response = await chatWithAI(messages.value)
 
-    // Agregar la respuesta de la IA
     messages.value.push({ role: 'assistant', content: response })
   } catch (error) {
     console.error('Error en la petición:', error)
@@ -27,7 +24,6 @@ const sendMessage = async () => {
     })
   }
 
-  // Limpiar el campo de entrada
   userInput.value = ''
 }
 messages.value.push({ role: 'assistant', content: 'Hola soy Ventu, ¿En qué puedo ayudarte?' })
@@ -152,7 +148,7 @@ function checkRole(role: 'user' | 'assistant' | 'system') {
       }
     }
 
-    .btn-principal {
+    &__btn-principal {
       flex: 1 1 auto;
       width: 100%;
       margin-top: 0.5rem;
@@ -160,7 +156,7 @@ function checkRole(role: 'user' | 'assistant' | 'system') {
   }
 }
 
-/* BOTÓN PRINCIPAL — estilo Aventureo */
+.chat__input__btn-principal, 
 .btn-principal {
   display: inline-flex;
   align-items: center;
@@ -198,7 +194,6 @@ function checkRole(role: 'user' | 'assistant' | 'system') {
   }
 }
 
-/* RESPONSIVE */
 @media (min-width: 600px) {
   .chat {
     max-width: 600px;
@@ -226,7 +221,7 @@ function checkRole(role: 'user' | 'assistant' | 'system') {
         font-size: 1.05rem;
       }
 
-      .btn-principal {
+      &__btn-principal {
         flex: 0 0 auto;
         width: auto;
         margin-top: 0;
@@ -234,4 +229,5 @@ function checkRole(role: 'user' | 'assistant' | 'system') {
     }
   }
 }
+
 </style>
