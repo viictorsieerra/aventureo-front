@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import ActividadesView from '@/views/ActividadesView.vue'
-import PlanesView from '@/views/PlanesView.vue'
 import Login from '@/views/LoginView.vue'
 import Register from '@/views/RegistroView.vue'
 import ChatAI from '@/views/AIView.vue'
@@ -29,11 +28,6 @@ const router = createRouter({
       path: '/actividades',
       name: 'Actividades',
       component: ActividadesView
-    },
-    {
-      path: '/planes',
-      name: 'Planes',
-      component: PlanesView
     },
     {
       path: '/login',
@@ -112,14 +106,17 @@ router.beforeEach((to, from, next) => {
     next('/login')
     alert("HAY QUE ESTAR REGISTRADO PARA ACCEDER")
   }
-  else if (isLogin && jwtStore.jwt)
-  {
+  else if (isLogin && jwtStore.jwt) {
     next('/')
   }
   else if (isAdmin && !userStore.user.rolAdmin) {
     next('/')
     alert('NO TIENE PERMISOS PARA ACCEDER AQUI')
   }
+  else if (to.name === 'DetallesPlan' && (to.params.id != undefined || parseInt(to.params.id) < 1)) {
+    next('/actividades')
+  }
+
   else {
     next()
   }
