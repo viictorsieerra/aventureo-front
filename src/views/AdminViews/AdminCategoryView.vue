@@ -4,6 +4,7 @@ import { useAdminCategory } from '@/composables/AdminComposables/useAdminCategor
 import type { Category } from '@/models/Category';
 import type { HeaderTable } from '@/models/HeaderTable';
 import { onMounted, ref } from 'vue';
+import type { SortItem } from 'vuetify/lib/components/VDataTable/composables/sort.mjs';
 
 const { getCategorys, addCategory, updateCategory, deleteCategory } = useAdminCategory()
 
@@ -11,22 +12,28 @@ const headers = ref<HeaderTable[]>([
   { title: 'Acciones', key: 'actions', align: 'center', sortable: false },
   { title: 'IdCategoria', key: 'idCategoria', align: 'center', sortable: true },
   { title: 'Nombre', key: 'nombre', align: 'start', sortable: true },
-  { title: 'Descripción', key: 'descripcion', align: 'start', sortable: true }
+  { title: 'Descripción', key: 'descripcion', align: 'start', sortable: false }
 ]);
 
-const itemsList = ref<Array<object>>([]);
+const itemsList = ref<Category[]>([]);
+const itemsListView = ref<Category[]>([])
 const itemsPerPage = ref(5);
+const actualPage = ref(1);
+const sortBy = ref<SortItem[]>([])
 
 onMounted(async () => {
-  itemsList.value = await getCategorys();
+  await loadItems()
 });
 
-
+const loadItems = async () => {
+  itemsList.value = await getCategorys();
+  itemsPaginated()
+}
 const deleteItem = async (item: any) => {
   if (confirm(`¿Seguro que quieres eliminar a ${item.nombre}?`)) {
     console.log('Eliminar categoria:', item);
     await deleteCategory(item.idCategoria)
-    itemsList.value = await getCategorys();
+    await loadItems()
   }
 };
 
@@ -68,9 +75,49 @@ const saveItem = async () => {
     await addCategory(editedItem.value);
   }
   dialog.value = false;
-  itemsList.value = await getCategorys();
+  await loadItems()
 };
 
+const itemsPaginated = async () => {
+  const startIndex = (actualPage.value - 1) * itemsPerPage.value;
+  const endIndex = startIndex + itemsPerPage.value;
+  itemsListView.value = itemsList.value.slice(startIndex, endIndex);
+}
+
+const sortItem = async () => {
+  const sortByValue = sortBy.value[0];
+
+  if (!sortByValue) return;
+
+  switch (sortByValue.key) {
+    case "idCategoria":
+      itemsList.value.sort((a, b) => {
+        let itemA = a.idCategoria ?? 0
+        let itemB = b.idCategoria ?? 0
+        return itemA - itemB
+      });
+      break;
+
+    case "nombre":
+      itemsList.value.sort((a, b) => {
+        let itemA = a.nombre ?? ''
+        let itemB = b.nombre ?? ''
+        return itemA.localeCompare(itemB)
+      }
+      )
+      break;
+
+    default:
+      return;
+  }
+
+  if (sortByValue.order === 'desc') {
+    itemsList.value.reverse()
+  }
+
+  itemsListView.value = itemsList.value
+  itemsPaginated()
+}
 
 </script>
 
@@ -82,8 +129,9 @@ const saveItem = async () => {
       <v-icon start>mdi-plus</v-icon> Añadir Categoría
     </v-btn>
 
-    <ServerTable class="category-admin__table" :headers="headers" :serverItems="itemsList"
-      :items-per-page="itemsPerPage" :totalItems="itemsList.length" @update:items-per-page="itemsPerPage = $event">
+    <ServerTable class="category-admin__table" :headers="headers" :serverItems="itemsListView"
+      :items-per-page="itemsPerPage" v-model:page="actualPage" v-model:sort-by="sortBy" @update:sort-by="sortItem"
+      @update:page="itemsPaginated" :totalItems="itemsList.length" @update:items-per-page="itemsPaginated">
       <template #item.actions="{ item }">
         <v-btn class="category-admin__btn-icon" size="small" icon @click="openEditDialog(item)">
           <v-icon>mdi-pencil</v-icon>
@@ -168,7 +216,7 @@ const saveItem = async () => {
 
   &__table {
     margin-bottom: 2rem;
-    overflow-x: auto; 
+    overflow-x: auto;
   }
 
   &__dialog {

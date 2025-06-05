@@ -2,6 +2,7 @@
 import ServerTable from '@/components/ServerTable.vue';
 import { useAdminUser } from '@/composables/AdminComposables/useAdminUser';
 import type { HeaderTable } from '@/models/HeaderTable';
+import type { SortItem } from '@/models/SortItem';
 import type { IUsuario } from '@/models/Usuario';
 import { computed, onMounted, ref } from 'vue';
 
@@ -12,14 +13,17 @@ const headers = ref<HeaderTable[]>([
   { title: 'IdUsuario', key: 'idUsuario', align: 'start', sortable: true },
   { title: 'Nombre', key: 'nombre', align: 'start', sortable: true },
   { title: 'Apellidos', key: 'apellidos', align: 'start', sortable: true },
-  { title: 'Fecha de Nacimiento', key: 'fecNacimiento', align: 'start', sortable: true },
-  { title: 'Correo', key: 'email', align: 'start', sortable: true },
+  { title: 'Fecha de Nacimiento', key: 'fecNacimiento', align: 'start', sortable: false },
+  { title: 'Correo', key: 'email', align: 'start', sortable: false },
   { title: 'Rol', key: 'rolAdmin', align: 'center', sortable: true }
 ]);
 
-const itemsList = ref<Array<object>>([]);
+const itemsList = ref<IUsuario[]>([]);
+const itemsListView = ref<IUsuario[]>([]);
 const itemsPerPage = ref(5);
+const actualPage = ref(1)
 const password = ref('')
+const sortBy = ref<SortItem[]>([])
 
 onMounted(async () => {
   await loadUser();
@@ -87,8 +91,10 @@ const deleteItem = async (item: any) => {
 
 
 async function loadUser() {
-   itemsList.value = await getUsers()
+  itemsList.value = await getUsers()
   console.log('USER CARGADOS', itemsList.value)
+
+  itemsPaginated()
 }
 const passwordRules = computed(() => {
   return isEditMode.value
@@ -97,6 +103,61 @@ const passwordRules = computed(() => {
     (v: string) => v.length > 3 || 'Debe tener más de 3 caracteres']
 })
 
+const itemsPaginated = async () => {
+  const startIndex = (actualPage.value - 1) * itemsPerPage.value;
+  const endIndex = startIndex + itemsPerPage.value;
+  itemsListView.value = itemsList.value.slice(startIndex, endIndex);
+}
+
+const sortItem = async () => {
+    const sortByValue = sortBy.value[0];
+
+  if (!sortByValue) return;
+
+  switch (sortByValue.key) {
+    case "idUsuario":
+      itemsList.value.sort((a, b) => {
+        let itemA = a.idUsuario?? 0
+        let itemB = b.idUsuario?? 0
+        return itemA - itemB
+      });
+      break;
+    case "nombre":
+      itemsList.value.sort((a, b) => {
+        let itemA = a.nombre?? ''
+        let itemB = b.nombre?? ''
+        return itemA.localeCompare(itemB)
+      }
+      )
+      break;
+      case "apellidos":
+      itemsList.value.sort((a, b) => {
+        let itemA = a.apellidos?? ''
+        let itemB = b.apellidos?? ''
+        return itemA.localeCompare(itemB)
+      }
+      )
+      break;
+      case "rolAdmin":
+      
+        itemsList.value.sort((a, b) => {
+        let itemA = a.rolAdmin ? 1 : 0;
+        let itemB = b.rolAdmin ? 1 : 0;
+        return itemB - itemA;
+        });
+        break;
+    default:
+      return;
+    }
+
+    if (sortByValue.order === 'desc')
+    {
+      itemsList.value.reverse()
+    }
+
+    itemsListView.value = itemsList.value
+    itemsPaginated()
+}
 </script>
 
 <template>
@@ -107,8 +168,9 @@ const passwordRules = computed(() => {
       <v-icon start>mdi-plus</v-icon> Añadir Usuario
     </v-btn>
 
-    <ServerTable class="user-admin__table" :headers="headers" :serverItems="itemsList" :items-per-page="itemsPerPage"
-      :totalItems="itemsList.length" @update:items-per-page="itemsPerPage = $event">
+    <ServerTable class="user-admin__table" :headers="headers" :serverItems="itemsListView"
+      :items-per-page="itemsPerPage" v-model:page="actualPage" v-model:sort-by="sortBy" @update:sort-by="sortItem"
+      @update:page="itemsPaginated" :totalItems="itemsList.length" @update:items-per-page="itemsPaginated">
       <template #item.actions="{ item }">
         <v-btn class="user-admin__btn-icon" size="small" icon @click="openEditDialog(item)">
           <v-icon>mdi-pencil</v-icon>
