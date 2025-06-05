@@ -1,32 +1,31 @@
 <template>
-  <div class="login-container">
-    <h2>Iniciar sesión</h2>
-    <form @submit.prevent="submitForm">
-      <div class="form-group">
-        <label for="email">Correo electrónico</label>
-        <input v-model="loginUser.email" type="email" id="email" required />
+  <div class="login">
+    <h2 class="login__title">Iniciar sesión</h2>
+    <form class="login__form" @submit.prevent="submitForm">
+      <div class="login__form-group">
+        <label class="login__label" for="email">Correo electrónico</label>
+        <input v-model="loginUser.email" type="email" id="email" class="login__input" required />
       </div>
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input v-model="loginUser.contrasena" type="password" id="password" required />
+      <div class="login__form-group">
+        <label class="login__label" for="password">Contraseña</label>
+        <input v-model="loginUser.contrasena" type="password" id="password" class="login__input" required />
       </div>
-      <button type="submit" class="login-button">Iniciar sesión</button>
+      <button type="submit" class="login__button">Iniciar sesión</button>
     </form>
 
-    <div class="register-link">
-      <p>¿No tienes cuenta? 
-        <router-link to="/registro">Regístrate</router-link>
+    <div class="login__register-link">
+      <p class="login__register-text">
+        ¿No tienes cuenta?
+        <router-link to="/registro" class="login__register-link-anchor">Regístrate</router-link>
       </p>
     </div>
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useJWTStore } from '@/stores/JwtStore';
 import Swal from 'sweetalert2';
-
 
 const store = useJWTStore();
 const loginUser = reactive({
@@ -59,12 +58,10 @@ const submitForm = async () => {
     });
   }
 };
-
-
 </script>
 
 <style scoped lang="scss">
-.login-container {
+.login {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -72,75 +69,65 @@ const submitForm = async () => {
   margin: 50px auto;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
   color: #183263;
-  /* azul oscuro */
-}
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-  color: #183263;
-  /* azul oscuro */
-}
+  &__title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #183263;
+  }
 
-.form-group {
-  margin-bottom: 15px;
-}
+  &__form-group {
+    margin-bottom: 15px;
+  }
 
-label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #183263;
-  /* azul oscuro */
-}
+  &__label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #183263;
+  }
 
-input {
-  width: 100%;
-  padding: 12px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  box-sizing: border-box;
-  color: #183263;
-  /* azul oscuro */
-}
-
-input::placeholder {
-  color: #018ef6;
-  /* azul claro para placeholder */
-}
-
-button.login-button {
-  background-color: #183263;
-  /* azul oscuro */
-  color: white;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 10px;
-  user-select: none;
-}
-
-button.login-button:hover {
-  background-color: #121f42;
-  /* azul más oscuro */
-}
-.register-link {
-  margin-top: 15px;
-  text-align: center;
-  font-size: 1rem;
-
-  p {
+  &__input {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
     color: #183263;
 
-    a {
+    &::placeholder {
+      color: #018ef6;
+    }
+  }
+
+  &__button {
+    background-color: #183263;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    user-select: none;
+
+    &:hover {
+      background-color: #121f42;
+    }
+  }
+
+  &__register-link {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 1rem;
+
+    &-anchor {
       color: #018ef6;
       font-weight: 600;
       text-decoration: none;
@@ -151,29 +138,31 @@ button.login-button:hover {
         color: #fd6f01;
       }
     }
+
+    &-text {
+      color: #183263;
+    }
   }
 }
 
-
-/* Tablets y pantallas más anchas */
 @media (min-width: 600px) {
-  .login-container {
+  .login {
     max-width: 450px;
     margin: 80px auto;
     padding: 30px;
-  }
 
-  h2 {
-    font-size: 2rem;
-  }
+    &__title {
+      font-size: 2rem;
+    }
 
-  input {
-    font-size: 1.125rem;
-    padding: 14px 12px;
-  }
+    &__input {
+      font-size: 1.125rem;
+      padding: 14px 12px;
+    }
 
-  button.login-button {
-    font-size: 1.3rem;
+    &__button {
+      font-size: 1.3rem;
+    }
   }
 }
 </style>
