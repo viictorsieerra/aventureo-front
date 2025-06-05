@@ -128,6 +128,134 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { usePlans } from '@/composables/usePlans'
+import { usePartePlanes, type CreatePartePlanDTO } from '@/composables/usePartePlanes'
+import type { PartePlan } from '@/models/PartePlan'
+import type { Plan } from '@/models/Plan'
+import { useUserStore } from '@/stores/UserStore'
+
+
+const route = useRoute()
+const router = useRouter()
+const userStore = useUserStore()
+const { getPlanById, deletePlan, updatePlan } = usePlans()
+const { getPartePlansByPlanId, createPartePlan, updatePartePlan, deletePartePlan } = usePartePlanes()
+
+const formValidPlan = ref(false)
+const formValidAddActivity = ref(false)
+const formValidEditActivity = ref(false)
+const plan = ref<Plan>({
+  idPlan: 0,
+  nombre: '',
+  duracion: 0,
+  lugar: '',
+  valoracion: '',
+  comentario: '',
+  precioEstimado: 0
+})
+const partePlans = ref<PartePlan[]>([])
+
+const showAddDialog = ref(false)
+const showEditDialog = ref(false)
+const showEditPlanDialog = ref(false)
+const newParte = ref({
+  nombre: '',
+  ubicacion: '',
+  precio: 0,
+  comentario: ''
+})
+
+const editParte = ref<PartePlan>({
+  nombre: '',
+  ubicacion: '',
+  precio: 0,
+  comentario: ''
+})
+
+const openEditDialog = (item: PartePlan) => {
+  showEditDialog.value = true
+  editParte.value = { ...item };
+};
+
+const rulesNumber = [
+  (value: number) => {
+    if (value > 0)
+      return true
+    return 'No puede ser negativo'
+  }
+]
+
+const rulesRequired = [
+  (value: string) => {
+    if (value) return true
+    return 'Este campo es obligatorio'
+  },
+  (value: string) => {
+    if (value?.length >= 3) return true
+    return 'Tiene que haber minimo 3 caracteres'
+  }
+]
+const editActivity = async () => {
+  await updatePartePlan(editParte.value)
+
+  editParte.value = {
+
+  }
+
+  showEditDialog.value = false
+  await cargarDatos()
+}
+
+const deleteActivity = async (item: PartePlan) => {
+  if (confirm("Seguro que quiere eliminar la actividad: " + item.nombre)) {
+    await deletePartePlan(item.idPartePlan)
+    await cargarDatos()
+  }
+}
+const cargarDatos = async () => {
+  const id = Number(route.params.id)
+  plan.value = await getPlanById(id)
+  partePlans.value = await getPartePlansByPlanId(id)
+}
+
+async function guardarPlan() {
+  await updatePlan(plan.value)
+  showEditPlanDialog.value = false
+  await cargarDatos()
+}
+
+onMounted(cargarDatos)
+async function deletePlanSelected() {
+  if (confirm('¿Seguro que quieres eliminar este plan?')) {
+    await deletePlan(Number(route.params.id))
+    router.back()
+  }
+}
+const guardarPartePlan = async () => {
+  const idPlan = Number(route.params.id)
+
+  const dto: CreatePartePlanDTO = {
+    idPlan,
+    nombre: newParte.value.nombre,
+    ubicacion: newParte.value.ubicacion,
+    precio: newParte.value.precio,
+    comentario: newParte.value.comentario
+  }
+
+  await createPartePlan(dto)
+  showAddDialog.value = false
+  newParte.value = { nombre: '', ubicacion: '', precio: 0, comentario: '' }
+  partePlans.value = await getPartePlansByPlanId(idPlan)
+}
+
+const volver = () => {
+  router.back()
+}
+</script>
+
 <style scoped lang="scss">
 .detalles-plan {
   padding: 1.5rem;

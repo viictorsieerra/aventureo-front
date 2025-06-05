@@ -113,7 +113,7 @@ router.beforeEach((to, from, next) => {
     next('/')
     alert('NO TIENE PERMISOS PARA ACCEDER AQUI')
   }
-else if (to.name === 'DetallesPlan' && (to.params.id === undefined || isNaN(to.params.id) || to.params.id < 1)) {
+else if (to.name === 'DetallesPlan' && (to.params.id === undefined || isNaN(Number(to.params.id)) || Number(to.params.id) < 1)) {
   next('/actividades')
   console.log('ES ESTA ID', to.params.id)
 }

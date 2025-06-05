@@ -1,15 +1,5 @@
 <template>
   <v-footer class="footer text-center d-flex flex-column ga-2 py-4" color="#183263">
-    <div class="footer__icons d-flex ga-3">
-      <v-btn
-        v-for="icon in icons"
-        :key="icon"
-        :icon="icon"
-        density="comfortable"
-        variant="text"
-        class="footer__icon-btn"
-      />
-    </div>
 
     <v-divider class="footer__divider my-2" thickness="2" width="50"></v-divider>
 

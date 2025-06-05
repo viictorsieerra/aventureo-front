@@ -6,7 +6,7 @@
   </v-container>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted, onUnmounted, defineProps, defineEmits, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -104,25 +104,27 @@ watch(() => props.locations, (newLocations) => {
 })
 </script>
 
+
+
 <style scoped lang="scss">
 .map-container {
   position: relative;
   height: 500px;
   width: 100%;
-  margin: 24px auto 16px; 
+  margin: 24px auto 16px;
   border-radius: 8px;
   overflow: hidden;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
 }
 
 #map {
   width: 100%;
   max-width: 600px;
-  height: 100%; 
+  height: 100%;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 600px) {
@@ -135,5 +137,4 @@ watch(() => props.locations, (newLocations) => {
     max-width: 100%;
   }
 }
-
 </style>
