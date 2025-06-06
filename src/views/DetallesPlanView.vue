@@ -218,6 +218,7 @@ const deleteActivity = async (item: PartePlan) => {
 const cargarDatos = async () => {
   const id = Number(route.params.id)
   plan.value = await getPlanById(id)
+  partePlans.value = []
   partePlans.value = await getPartePlansByPlanId(id)
 }
 

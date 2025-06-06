@@ -1,10 +1,11 @@
 import { EnvironmentVariablesEnum, getEnvironmentVariable } from "@/helpers/EnvironmentVariablesHelpers"
 import type { Plan } from "@/models/Plan";
+import { useJWTStore } from "@/stores/JwtStore";
 
 export const usePlans = () => {
 
   const baseUrl = getEnvironmentVariable(EnvironmentVariablesEnum.API_URL) + '/Plan'
-
+  const jwtStore = useJWTStore()
 
   const getPlans = async (destino: string): Promise<any> => {
     try {
@@ -34,7 +35,10 @@ export const usePlans = () => {
   const createPlan = async (plan: CreatePlanDTO) => {
     return await fetch(baseUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtStore.jwt}`
+      },
       body: JSON.stringify(plan)
     }).then(res => {
       if (!res.ok) throw new Error("No se pudo guardar el plan")
@@ -44,7 +48,8 @@ export const usePlans = () => {
 
   const deletePlan = async (idPlan?: number) => {
     await fetch(baseUrl + '/' + idPlan, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${jwtStore.jwt}` }
     })
       .then(res => {
         if (!res.ok)
@@ -53,10 +58,13 @@ export const usePlans = () => {
       .catch(error => console.error(error))
   }
 
-    const updatePlan = async (plan: Plan) => {
+  const updatePlan = async (plan: Plan) => {
     return await fetch(baseUrl, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtStore.jwt}`
+      },
       body: JSON.stringify(plan)
     }).then(res => {
       if (!res.ok) throw new Error("No se pudo guardar el plan")
