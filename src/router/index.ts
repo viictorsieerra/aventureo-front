@@ -102,21 +102,21 @@ router.beforeEach((to, from, next) => {
   const isLogin = to.meta.isLogin
   const isAdmin = to.meta.isAdmin
 
-  if (requiresAuth && (!jwtStore.jwt || !userStore.user)) {
+  if (requiresAuth && (!jwtStore.jwt || !userStore.user.idUsuario)) {
     next('/login')
     alert("HAY QUE ESTAR REGISTRADO PARA ACCEDER")
   }
-  else if (isLogin && jwtStore.jwt) {
+  else if (isLogin && userStore.user.idUsuario) {
     next('/')
   }
   else if (isAdmin && !userStore.user.rolAdmin) {
     next('/')
     alert('NO TIENE PERMISOS PARA ACCEDER AQUI')
   }
-else if (to.name === 'DetallesPlan' && (to.params.id === undefined || isNaN(Number(to.params.id)) || Number(to.params.id) < 1)) {
-  next('/actividades')
-  console.log('ES ESTA ID', to.params.id)
-}
+  else if (to.name === 'DetallesPlan' && (to.params.id === undefined || isNaN(Number(to.params.id)) || Number(to.params.id) < 1)) {
+    next('/actividades')
+    console.log('ES ESTA ID', to.params.id)
+  }
 
 
   else {

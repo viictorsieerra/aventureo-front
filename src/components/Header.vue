@@ -26,7 +26,7 @@
 
       <transition name="slide-fade">
         <div v-if="menuOpen || isDesktop" class="navbar__actions">
-          <template v-if="!jwtStore.jwt">
+          <template v-if="!user.idUsuario">
             <router-link to="/login">
               <button class="navbar__btn navbar__login-button" @click="menuOpen = false">Iniciar sesión</button>
             </router-link>
