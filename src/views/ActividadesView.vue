@@ -29,10 +29,9 @@
               <v-list-item-content>
                 <v-list-item-title class="plans__list-item-title">{{ plan.nombre }}</v-list-item-title>
                 <v-list-item-subtitle class="plans__list-item-subtitle">
-                  Duración: {{ plan.duracion }} días | Precio: {{ plan.precioEstimado }}€ | Valoración:
+                  Duración: {{ plan.duracion }} horas | Precio: {{ plan.precioEstimado }}€ | Valoración:
                   {{ plan.valoracion }}
                 </v-list-item-subtitle>
-                <p class="plans__list-item-comment">{{ plan.comentario }}</p>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -112,12 +111,6 @@
                 class="plans__rating"
               />
             </div>
-
-            <v-textarea
-              v-model="newPlan.comentario"
-              label="Comentario"
-              class="plans__textarea"
-            />
           </v-card-text>
 
           <v-card-actions class="plans__actions">

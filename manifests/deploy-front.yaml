@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: front
-        image: a27300/aventureo-front:05
+        image: a27300/aventureo-front:06
         ports:
         - containerPort: 80

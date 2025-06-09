@@ -18,7 +18,6 @@
               readonly
             />
           </p>
-          <p><strong>Comentario:</strong> {{ plan.comentario }}</p>
         </v-card-text>
 
         <v-card-actions v-if="userStore.user.idUsuario == plan.idUsuario || userStore.user.rolAdmin">
@@ -115,7 +114,6 @@
                   size="30"
                 />
               </div>
-              <v-textarea v-model="plan.comentario" label="Comentario" />
             </v-form>
           </v-card-text>
           <v-card-actions>
